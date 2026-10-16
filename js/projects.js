@@ -1,9 +1,11 @@
 // Project list scraped from ari.ge/projects (EN + KA).
-// Optional fields: status ("ongoing" | "completed"), highlight (shown in the
-// home carousel, first 5 in list order).
+// Optional fields: status ("ongoing" | "completed"), highlight (photo pin on the
+// hero map instead of a plain dot), coords ([lat, lng] for the hero map —
+// approximate, placed by street/district; replace with exact points).
 window.PROJECTS = [
   {
     id: "toidze-street",
+    coords: [41.7083, 44.7838],
     img: "assets/img/projects/toidze-street.jpg",
     status: "ongoing",
     highlight: true,
@@ -16,6 +18,7 @@ window.PROJECTS = [
   },
   {
     id: "nutsubidze",
+    coords: [41.7262, 44.7432],
     img: "assets/img/projects/nutsubidze.webp",
     name: { en: "Nutsubidze Street", ka: "ნუცუბიძის ქუჩა" },
     location: { en: "Saburtalo, Tbilisi", ka: "საბურთალო, თბილისი" },
@@ -26,6 +29,7 @@ window.PROJECTS = [
   },
   {
     id: "saingilo",
+    coords: [41.6968, 44.8092],
     img: "assets/img/projects/saingilo.webp",
     name: { en: "Saingilo", ka: "საინგილო" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },
@@ -36,6 +40,7 @@ window.PROJECTS = [
   },
   {
     id: "lisi-lake",
+    coords: [41.7428, 44.7368],
     img: "assets/img/projects/lisi-lake.webp",
     name: { en: "Lisi Lake", ka: "ლისის ტბა" },
     location: { en: "Lisi, Tbilisi", ka: "ლისი, თბილისი" },
@@ -46,6 +51,7 @@ window.PROJECTS = [
   },
   {
     id: "modern-ezo",
+    coords: [41.7008, 44.7938],
     img: "assets/img/projects/modern-ezo.webp",
     name: { en: "Modern Ezo", ka: "მოდერნ ეზო" },
     location: { en: "Historic Tbilisi", ka: "ისტორიული თბილისი" },
@@ -56,6 +62,7 @@ window.PROJECTS = [
   },
   {
     id: "vera-hillside",
+    coords: [41.7072, 44.7792],
     img: "assets/img/projects/vera-hillside.webp",
     name: { en: "Vera Hillside", ka: "ვერა ჰილსაიდი" },
     location: { en: "Vera, Tbilisi", ka: "ვერა, თბილისი" },
@@ -66,6 +73,7 @@ window.PROJECTS = [
   },
   {
     id: "green-park",
+    coords: [41.7318, 44.7542],
     img: "assets/img/projects/green-park.webp",
     name: { en: "Green Park", ka: "მწვანე პარკი" },
     location: { en: "Tbilisi", ka: "თბილისი" },
@@ -76,6 +84,7 @@ window.PROJECTS = [
   },
   {
     id: "park-side",
+    coords: [41.7108, 44.7452],
     img: "assets/img/projects/park-side.webp",
     name: { en: "Park Side", ka: "პარკსაიდი" },
     location: { en: "Vake, Tbilisi", ka: "ვაკე, თბილისი" },
@@ -86,6 +95,7 @@ window.PROJECTS = [
   },
   {
     id: "didi-digomi",
+    coords: [41.7868, 44.7572],
     img: "assets/img/projects/didi-digomi.webp",
     name: { en: "Didi Digomi", ka: "დიდი დიღომი" },
     location: { en: "Didi Digomi, Tbilisi", ka: "დიდი დიღომი, თბილისი" },
@@ -96,6 +106,7 @@ window.PROJECTS = [
   },
   {
     id: "mukhiani-ergo",
+    coords: [41.8078, 44.7898],
     img: "assets/img/projects/mukhiani-ergo.webp",
     name: { en: "Mukhiani Ergo", ka: "მუხიანი ერგო" },
     location: { en: "Mukhiani, Tbilisi", ka: "მუხიანი, თბილისი" },
@@ -106,6 +117,7 @@ window.PROJECTS = [
   },
   {
     id: "radio-factory",
+    coords: [41.8022, 44.7828],
     img: "assets/img/projects/radio-factory.webp",
     name: { en: "Radio Factory", ka: "რადიოქარხანა" },
     location: { en: "Mukhiani, Tbilisi", ka: "მუხიანი, თბილისი" },
@@ -116,6 +128,7 @@ window.PROJECTS = [
   },
   {
     id: "the-quietude",
+    coords: [41.7232, 44.7612],
     img: "assets/img/projects/the-quietude.webp",
     name: { en: "The Quietude", ka: "მშვიდი უბანი" },
     location: { en: "Saburtalo, Tbilisi", ka: "საბურთალო, თბილისი" },
@@ -126,6 +139,7 @@ window.PROJECTS = [
   },
   {
     id: "barnovi",
+    coords: [41.7098, 44.7738],
     img: "assets/img/projects/barnovi.webp",
     name: { en: "Barnovi Apartments", ka: "ბარნოვი აპარტმენტსი" },
     location: { en: "Vake, Tbilisi", ka: "ვაკე, თბილისი" },
@@ -136,6 +150,7 @@ window.PROJECTS = [
   },
   {
     id: "gogebashvili",
+    coords: [41.6938, 44.7972],
     highlight: true,
     img: "assets/img/projects/gogebashvili.jpg",
     name: { en: "Gogebashvili Apartments", ka: "გოგებაშვილი აპარტმენტსი" },
@@ -147,6 +162,7 @@ window.PROJECTS = [
   },
   {
     id: "u-tower",
+    coords: [41.7018, 44.8038],
     highlight: true,
     img: "assets/img/projects/u-tower.jpg",
     name: { en: "U Tower", ka: "U თაუერი" },
@@ -158,6 +174,7 @@ window.PROJECTS = [
   },
   {
     id: "u2-tower",
+    coords: [41.6905, 44.8008],
     highlight: true,
     img: "assets/img/projects/u2-tower.jpg",
     name: { en: "U2 Tower", ka: "U2 თაუერი" },
@@ -169,6 +186,7 @@ window.PROJECTS = [
   },
   {
     id: "avlabari-house",
+    coords: [41.6935, 44.8138],
     img: "assets/img/projects/avlabari-house.jpg",
     name: { en: "The Avlabari House", ka: "ავლაბრის სახლი" },
     location: { en: "Avlabari, Tbilisi", ka: "ავლაბარი, თბილისი" },
@@ -179,6 +197,7 @@ window.PROJECTS = [
   },
   {
     id: "terrace-apartments",
+    coords: [41.7108, 44.8022],
     img: "assets/img/projects/terrace-apartments.jpg",
     name: { en: "The Terrace Apartments", ka: "ტერასა აპარტმენტსი" },
     location: { en: "Chughureti, Tbilisi", ka: "ჩუღურეთი, თბილისი" },
@@ -189,6 +208,7 @@ window.PROJECTS = [
   },
   {
     id: "lumina-salosi",
+    coords: [41.6958, 44.8388],
     img: "assets/img/projects/lumina-salosi.jpg",
     name: { en: "Lumina Salosi", ka: "ლუმინა სალოსი" },
     location: { en: "Isani, Tbilisi", ka: "ისანი, თბილისი" },
@@ -199,6 +219,7 @@ window.PROJECTS = [
   },
   {
     id: "skyline-varketili",
+    coords: [41.6998, 44.8782],
     img: "assets/img/projects/skyline-varketili.jpg",
     status: "completed",
     name: { en: "Skyline Varketili", ka: "სქაილაინ ვარკეთილი" },
@@ -220,6 +241,7 @@ window.PROJECTS = [
   },
   {
     id: "arch-kavtaradze",
+    coords: [41.7248, 44.7502],
     img: "assets/img/projects/arch-kavtaradze.jpg",
     name: { en: "The Arch Kavtaradze", ka: "არქი ქავთარაძე" },
     location: { en: "Vake, Tbilisi", ka: "ვაკე, თბილისი" },
@@ -230,6 +252,7 @@ window.PROJECTS = [
   },
   {
     id: "diuma",
+    coords: [41.6948, 44.8048],
     highlight: true,
     img: "assets/img/projects/diuma.jpg",
     name: { en: "Diuma Apartments", ka: "დიუმა აპარტმენტსი" },

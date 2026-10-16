@@ -10,18 +10,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600&family=Noto+Serif+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <main>
-    <section class="hero container" id="top">
-      <div class="hero-copy">
-        <h1 data-i18n="hero.title"></h1>
-        <p data-i18n="hero.text"></p>
-        <a class="btn btn-primary" href="#projects"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
-      </div>
-      <div class="hero-media">
-        <img src="assets/img/projects/u-tower.jpg" alt="ARI Development — U Tower" fetchpriority="high">
+    <section class="hero" id="top">
+      <div class="hero-map" id="projects" role="region" data-i18n-attr="aria-label:map.label"></div>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1 data-i18n="hero.title"></h1>
+          <p data-i18n="hero.text"></p>
+          <a class="btn btn-primary" href="#projects"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
+        </div>
       </div>
     </section>
 
@@ -40,24 +41,6 @@
         <span class="feature-icon"><svg><use href="#i-chart"/></svg></span>
         <h3 data-i18n="feat.investment"></h3>
         <p data-i18n="feat.investment.text"></p>
-      </div>
-    </section>
-
-    <section class="container" id="projects">
-      <div class="card projects-card">
-        <div class="card-head">
-          <h2 data-i18n="projects.title"></h2>
-          <button class="link-arrow" id="toggle-all" type="button" aria-expanded="false" aria-controls="project-grid">
-            <span data-i18n="projects.all"></span><svg><use href="#i-arrow"/></svg>
-          </button>
-        </div>
-        <div class="carousel" id="carousel" aria-roledescription="carousel">
-          <div class="carousel-track" id="carousel-track"></div>
-          <button class="carousel-btn prev" type="button" data-prev aria-label="Previous"><svg><use href="#i-arrow"/></svg></button>
-          <button class="carousel-btn next" type="button" data-next aria-label="Next"><svg><use href="#i-arrow"/></svg></button>
-          <div class="carousel-dots" id="carousel-dots"></div>
-        </div>
-        <div class="project-grid" id="project-grid" hidden></div>
       </div>
     </section>
 
@@ -141,6 +124,7 @@
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/projects.js"></script>
