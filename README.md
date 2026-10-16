@@ -1,6 +1,6 @@
 # ARI.ge Remake
 
-A static multi-page rebuild of [ari.ge](https://ari.ge) in plain HTML, CSS and JS, with Georgian (default) and English versions.
+A static one-page rebuild of [ari.ge](https://ari.ge) in plain HTML, CSS and JS, with Georgian (default) and English versions.
 
 ## Run locally
 
@@ -12,10 +12,10 @@ Then open http://localhost:5173. Add `?lang=en` to the URL to load the English v
 
 ## Structure
 
-- `index.html`, `about.html`, `projects.html`, `contacts.html`: the pages, same structure as ari.ge. Text is pulled in through `data-i18n` keys.
-- `js/layout.js`: shared header, footer, contact bar and project modal, injected into every page.
+- `index.html`: the whole site on one page (home, projects, about, contacts). Text is pulled in through `data-i18n` keys.
+- `js/layout.js`: header, footer, contact bar and project modal, injected into the page.
 - `css/style.css`: styles, built mobile-first.
 - `js/i18n.js`: all UI text in KA and EN.
 - `js/projects.js`: the project list. Fill in `floors`, `apartments` and `delivery` to show stats on the featured card.
-- `js/main.js`: language switch (remembered across pages), projects, modal, menu and counters.
+- `js/main.js`: language switch, projects, modal, menu and counters.
 - `assets/`: ARI logo (`ari-logo.svg` full, `ari-mark.svg` mark only), plus photos and video taken from ari.ge.

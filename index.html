@@ -12,13 +12,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600&family=Noto+Serif+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-page="home">
+<body>
   <main>
-    <section class="hero container">
+    <section class="hero container" id="top">
       <div class="hero-copy">
         <h1 data-i18n="hero.title"></h1>
         <p data-i18n="hero.text"></p>
-        <a class="btn btn-primary" href="projects.html"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-primary" href="#projects"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
       </div>
       <div class="hero-media">
         <img src="assets/img/projects/u-tower.jpg" alt="ARI Development — U Tower" fetchpriority="high">
@@ -43,13 +43,16 @@
       </div>
     </section>
 
-    <section class="container">
+    <section class="container" id="projects">
       <div class="card projects-card">
         <div class="card-head">
           <h2 data-i18n="projects.title"></h2>
-          <a class="link-arrow" href="projects.html"><span data-i18n="projects.all"></span><svg><use href="#i-arrow"/></svg></a>
+          <button class="link-arrow" id="toggle-all" type="button" aria-expanded="false" aria-controls="project-grid">
+            <span data-i18n="projects.all"></span><svg><use href="#i-arrow"/></svg>
+          </button>
         </div>
         <div id="featured"></div>
+        <div class="project-grid" id="project-grid" hidden></div>
       </div>
     </section>
 
@@ -72,6 +75,63 @@
           <li class="partner partner-remax">RE/MAX</li>
           <li class="partner partner-icon"><svg><use href="#i-building"/></svg></li>
         </ul>
+      </div>
+    </section>
+
+    <section class="about container" id="about">
+      <div class="about-media">
+        <img src="assets/img/about.jpg" alt="" loading="lazy">
+      </div>
+      <div class="about-copy">
+        <p class="eyebrow" data-i18n="about.eyebrow"></p>
+        <h2 data-i18n="about.title"></h2>
+        <p data-i18n="about.p1"></p>
+        <p data-i18n="about.p2"></p>
+        <p data-i18n="about.p3"></p>
+        <p data-i18n="about.p4"></p>
+      </div>
+      <dl class="stats">
+        <div><dt><span data-count="100">0</span>+</dt><dd data-i18n="about.families"></dd></div>
+        <div><dt><span data-count="23" id="project-count">0</span></dt><dd data-i18n="about.projects"></dd></div>
+        <div><dt><span data-count="2">0</span></dt><dd data-i18n="about.countries"></dd></div>
+      </dl>
+    </section>
+
+    <section class="team container">
+      <div class="team-copy">
+        <h2 data-i18n="team.title"></h2>
+        <p data-i18n="team.text"></p>
+      </div>
+      <video class="team-video" controls preload="none" poster="assets/img/video-poster.png">
+        <source src="assets/video/ari-presentation.mp4" type="video/mp4">
+      </video>
+    </section>
+
+    <section class="contacts container" id="contacts">
+      <h2 data-i18n="contacts.title"></h2>
+      <div class="offices">
+        <article class="card office">
+          <h3 data-i18n="office.tbilisi"></h3>
+          <ul class="office-list">
+            <li><svg><use href="#i-pin"/></svg><span data-i18n="office.tbilisi.addr"></span></li>
+            <li><svg><use href="#i-phone"/></svg><a href="tel:+995551002200">+995 551 00 22 00</a></li>
+            <li><svg><use href="#i-mail"/></svg><a href="mailto:info@ari.ge">info@ari.ge</a></li>
+            <li><svg><use href="#i-clock"/></svg><span data-i18n="hours"></span></li>
+          </ul>
+          <iframe class="map" title="Tbilisi office map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=95%20Lvovi%20St%2C%20Tbilisi&z=16&output=embed"></iframe>
+        </article>
+        <article class="card office">
+          <h3 data-i18n="office.limassol"></h3>
+          <ul class="office-list">
+            <li><svg><use href="#i-pin"/></svg><span data-i18n="office.limassol.addr"></span></li>
+            <li><svg><use href="#i-phone"/></svg><a href="tel:+35725055962">+357 25 05 5962</a></li>
+            <li><svg><use href="#i-mail"/></svg><a href="mailto:info@cronaproperty.com">info@cronaproperty.com</a></li>
+            <li><svg><use href="#i-clock"/></svg><span data-i18n="hours"></span></li>
+          </ul>
+          <iframe class="map" title="Limassol office map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://maps.google.com/maps?q=21%20Andrea%20Kariolou%2C%20Limassol&z=16&output=embed"></iframe>
+        </article>
       </div>
     </section>
   </main>

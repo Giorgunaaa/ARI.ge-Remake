@@ -1,9 +1,6 @@
-// Shared chrome for every page: icon sprite, header, footer, contact bar, project modal.
-// Pages set <body data-page="home|about|projects|contacts"> to highlight the active nav link.
+// Page chrome: icon sprite, header, footer, contact bar, project modal.
 (function () {
   "use strict";
-
-  var page = document.body.dataset.page || "home";
 
   var sprite =
     '<svg width="0" height="0" style="position:absolute" aria-hidden="true">' +
@@ -26,22 +23,22 @@
     "</svg>";
 
   var links = [
-    ["home", "index.html", "nav.home"],
-    ["about", "about.html", "nav.about"],
-    ["projects", "projects.html", "nav.projects"],
-    ["contacts", "contacts.html", "nav.contacts"]
+    ["#top", "nav.home"],
+    ["#about", "nav.about"],
+    ["#projects", "nav.projects"],
+    ["#contacts", "nav.contacts"]
   ];
 
   var header =
     '<header class="site-header">' +
       '<div class="container header-inner">' +
-        '<a class="brand" href="index.html" aria-label="ARI Development Company">' +
+        '<a class="brand" href="#top" aria-label="ARI Development Company">' +
           '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
           '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
         "</a>" +
         '<nav class="nav" id="nav" aria-label="Main">' +
           links.map(function (l) {
-            return '<a href="' + l[1] + '" data-i18n="' + l[2] + '"' + (l[0] === page ? ' aria-current="page"' : "") + "></a>";
+            return '<a href="' + l[0] + '" data-i18n="' + l[1] + '"></a>';
           }).join("") +
           '<div class="lang" role="group" aria-label="Language">' +
             '<button type="button" data-lang="ka">KA</button>' +
@@ -57,7 +54,7 @@
   var footer =
     '<footer class="site-footer">' +
       '<div class="container footer-inner">' +
-        '<a class="brand brand-footer" href="index.html" aria-label="ARI Development Company">' +
+        '<a class="brand brand-footer" href="#top" aria-label="ARI Development Company">' +
           '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
           '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
         "</a>" +
@@ -78,7 +75,7 @@
           '<svg><use href="#i-phone"/></svg>' +
           '<span><strong>+995 551 00 22 00</strong><small data-i18n="hours"></small></span>' +
         "</a>" +
-        '<a class="btn btn-primary" href="contacts.html"><svg><use href="#i-user"/></svg><span data-i18n="cta.contact"></span></a>' +
+        '<a class="btn btn-primary" href="#contacts"><svg><use href="#i-user"/></svg><span data-i18n="cta.contact"></span></a>' +
       "</div>" +
     "</div>" +
     '<dialog class="modal" id="project-modal">' +

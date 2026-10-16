@@ -49,6 +49,7 @@
     });
 
     renderProjects();
+    syncToggleLabel();
   }
 
   document.querySelectorAll("[data-lang]").forEach(function (b) {
@@ -59,14 +60,14 @@
 
   var featuredEl = document.getElementById("featured");
   var gridEl = document.getElementById("project-grid");
+  var toggleBtn = document.getElementById("toggle-all");
+  var featured = PROJECTS.filter(function (p) { return p.featured; })[0] || PROJECTS[0];
 
   function statusBadge(p) {
     return p.status ? '<span class="badge badge-' + p.status + '">' + esc(t("status." + p.status)) + "</span>" : "";
   }
 
   function renderFeatured() {
-    var featured = PROJECTS.filter(function (p) { return p.featured; })[0] || PROJECTS[0];
-
     var stats = [];
     if (featured.floors) stats.push(icon("building") + "<span>" + featured.floors + " " + esc(t("stat.floors")) + "</span>");
     if (featured.apartments) stats.push(icon("home") + "<span>" + featured.apartments + " " + esc(t("stat.apartments")) + "</span>");
@@ -88,7 +89,7 @@
   }
 
   function renderGrid() {
-    gridEl.innerHTML = PROJECTS.map(function (p) {
+    gridEl.innerHTML = PROJECTS.filter(function (p) { return p !== featured; }).map(function (p) {
       return '<article class="tile" data-id="' + p.id + '" tabindex="0" role="button">' +
         '<div class="tile-img"><img src="' + p.img + '" alt="' + esc(p.name[lang]) + '" loading="lazy">' + statusBadge(p) + "</div>" +
         "<h3>" + esc(p.name[lang]) + "</h3>" +
@@ -103,6 +104,18 @@
     var countEl = document.getElementById("project-count");
     if (countEl) countEl.dataset.count = PROJECTS.length;
   }
+
+  function syncToggleLabel() {
+    var open = !gridEl.hidden;
+    toggleBtn.setAttribute("aria-expanded", String(open));
+    toggleBtn.classList.toggle("is-open", open);
+    toggleBtn.querySelector("span").textContent = t(open ? "projects.less" : "projects.all");
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    gridEl.hidden = !gridEl.hidden;
+    syncToggleLabel();
+  });
 
   /* ---------- modal ---------- */
 
