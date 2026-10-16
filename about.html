@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="title.about">ARI Development</title>
+  <meta name="description" data-i18n-attr="content:meta.desc" content="">
+  <meta name="theme-color" content="#f6f1e6">
+  <link rel="icon" href="assets/img/favicon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600&family=Noto+Serif+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="about">
+  <main>
+    <section class="page-head container">
+      <p class="eyebrow" data-i18n="about.eyebrow"></p>
+      <h1 data-i18n="about.title"></h1>
+    </section>
+
+    <section class="about container">
+      <div class="about-media">
+        <img src="assets/img/about.jpg" alt="" fetchpriority="high">
+      </div>
+      <div class="about-copy">
+        <p data-i18n="about.p1"></p>
+        <p data-i18n="about.p2"></p>
+        <p data-i18n="about.p3"></p>
+        <p data-i18n="about.p4"></p>
+      </div>
+      <dl class="stats">
+        <div><dt><span data-count="100">0</span>+</dt><dd data-i18n="about.families"></dd></div>
+        <div><dt><span data-count="23" id="project-count">0</span></dt><dd data-i18n="about.projects"></dd></div>
+        <div><dt><span data-count="2">0</span></dt><dd data-i18n="about.countries"></dd></div>
+      </dl>
+    </section>
+
+    <section class="team container">
+      <div class="team-copy">
+        <h2 data-i18n="team.title"></h2>
+        <p data-i18n="team.text"></p>
+      </div>
+      <video class="team-video" controls preload="none" poster="assets/img/video-poster.png">
+        <source src="assets/video/ari-presentation.mp4" type="video/mp4">
+      </video>
+    </section>
+  </main>
+
+  <script src="js/layout.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

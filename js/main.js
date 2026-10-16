@@ -49,7 +49,6 @@
     });
 
     renderProjects();
-    syncToggleLabel();
   }
 
   document.querySelectorAll("[data-lang]").forEach(function (b) {
@@ -60,13 +59,12 @@
 
   var featuredEl = document.getElementById("featured");
   var gridEl = document.getElementById("project-grid");
-  var toggleBtn = document.getElementById("toggle-all");
 
   function statusBadge(p) {
     return p.status ? '<span class="badge badge-' + p.status + '">' + esc(t("status." + p.status)) + "</span>" : "";
   }
 
-  function renderProjects() {
+  function renderFeatured() {
     var featured = PROJECTS.filter(function (p) { return p.featured; })[0] || PROJECTS[0];
 
     var stats = [];
@@ -87,29 +85,24 @@
         "</div>" +
         '<span class="round-arrow">' + icon("arrow") + "</span>" +
       "</article>";
+  }
 
-    gridEl.innerHTML = PROJECTS.filter(function (p) { return p !== featured; }).map(function (p) {
+  function renderGrid() {
+    gridEl.innerHTML = PROJECTS.map(function (p) {
       return '<article class="tile" data-id="' + p.id + '" tabindex="0" role="button">' +
         '<div class="tile-img"><img src="' + p.img + '" alt="' + esc(p.name[lang]) + '" loading="lazy">' + statusBadge(p) + "</div>" +
         "<h3>" + esc(p.name[lang]) + "</h3>" +
         '<p class="loc">' + icon("pin") + esc(p.location[lang]) + "</p>" +
       "</article>";
     }).join("");
-
-    document.getElementById("project-count").dataset.count = PROJECTS.length;
   }
 
-  function syncToggleLabel() {
-    var open = !gridEl.hidden;
-    toggleBtn.setAttribute("aria-expanded", String(open));
-    toggleBtn.classList.toggle("is-open", open);
-    toggleBtn.querySelector("span").textContent = t(open ? "projects.less" : "projects.all");
+  function renderProjects() {
+    if (featuredEl) renderFeatured();
+    if (gridEl) renderGrid();
+    var countEl = document.getElementById("project-count");
+    if (countEl) countEl.dataset.count = PROJECTS.length;
   }
-
-  toggleBtn.addEventListener("click", function () {
-    gridEl.hidden = !gridEl.hidden;
-    syncToggleLabel();
-  });
 
   /* ---------- modal ---------- */
 
@@ -126,12 +119,12 @@
     if (modal.showModal) modal.showModal(); else modal.setAttribute("open", "");
   }
 
-  document.getElementById("projects").addEventListener("click", function (e) {
-    var card = e.target.closest("[data-id]");
+  document.addEventListener("click", function (e) {
+    var card = e.target.closest("main [data-id]");
     if (card) openProject(card.dataset.id);
   });
-  document.getElementById("projects").addEventListener("keydown", function (e) {
-    var card = e.target.closest("[data-id]");
+  document.addEventListener("keydown", function (e) {
+    var card = e.target.closest("main [data-id]");
     if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openProject(card.dataset.id); }
   });
   modal.addEventListener("click", function (e) {
@@ -174,6 +167,5 @@
     counters.forEach(function (c) { c.textContent = c.dataset.count; });
   }
 
-  document.getElementById("year").textContent = new Date().getFullYear();
   applyLang(lang);
 })();
