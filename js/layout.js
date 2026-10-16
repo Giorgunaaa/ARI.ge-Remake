@@ -22,7 +22,7 @@
     '<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>' +
     '<symbol id="i-fb" viewBox="0 0 24 24"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.5h-3c-3.3 0-4 2.4-4 4v2H8V12h2v9.5h4V12h2.7l.4-3.5H14Z" fill="currentColor"/></symbol>' +
     '<symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></symbol>' +
-    '<symbol id="i-logo" viewBox="0 0 40 40"><path d="M2 38h36M5 38V17l7-4v25M12 38V6l10-4v36M22 38V12l9 4v22M31 38V22l5 2v14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15 12h4M15 17h4M15 22h4M15 27h4M15 32h4M25 19h3M25 24h3M25 29h3" stroke="currentColor" stroke-width="1.2"/></symbol>' +
+    '<symbol id="i-ari" viewBox="164 159 494 277"><path fill="currentColor" fill-rule="evenodd" d="M354.64 352.13L340.07 354.99L360.4 402.03L376.55 402.03L354.64 352.13M276.77 194.58L278.89 199.99L322.5 310.75L336.7 308.06L277.12 160.91L166.43 434.37L180.78 434.37L274.61 199.97L276.77 194.58M557 194.23C548.66 187.94 539.31 183.26 529.21 180.32C519.04 177.36 508.65 175.86 498.34 175.86L436.44 175.86L436.44 288.52L451.24 285.73L451.24 192.17L451.24 189.87L453.54 189.87L501.1 189.87C511.32 189.87 520.81 191.59 529.33 194.99C537.75 198.39 545.06 203.1 551.08 208.98C557.1 214.85 561.74 221.72 564.88 229.37C568.02 237.02 569.61 245.31 569.61 254.01C569.61 257.17 569.4 260.34 568.98 263.47L584.54 260.53C584.72 258.16 584.81 255.76 584.81 253.23C584.81 239.66 582.24 227.89 577.16 218.23C572.06 208.54 565.27 200.47 557 194.23M641.56 202.99L641.56 241.12L656.38 238.31L656.38 202.99L641.56 202.99M645.45 295.01L645.24 295.05L645.23 295.05L641.56 295.77L641.56 402.03L656.38 402.03L656.38 292.95L649.66 294.22L645.45 295.01M235.89 344.12L230.01 359.03L327.94 339.79L549.29 296.21L549.51 296.17L549.55 296.17L553.54 295.42L567.35 292.81C569.49 290.87 571.59 288.75 573.59 286.49C576.29 283.36 578.73 279.99 580.85 276.43L574.72 277.6L235.89 344.12M451.24 333.16L436.44 336.07L436.44 402.03L451.24 402.03L451.24 333.16M513.52 321L562.53 402.03L579.92 402.03L529.36 318.01L513.52 321"/></symbol>' +
     "</svg>";
 
   var links = [
@@ -35,9 +35,9 @@
   var header =
     '<header class="site-header">' +
       '<div class="container header-inner">' +
-        '<a class="brand" href="index.html" aria-label="ARI Development">' +
-          '<svg class="brand-mark"><use href="#i-logo"/></svg>' +
-          '<span class="brand-text"><span class="brand-name">ARI</span><span class="brand-sub">DEVELOPMENT</span></span>' +
+        '<a class="brand" href="index.html" aria-label="ARI Development Company">' +
+          '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
+          '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
         "</a>" +
         '<nav class="nav" id="nav" aria-label="Main">' +
           links.map(function (l) {
@@ -57,7 +57,10 @@
   var footer =
     '<footer class="site-footer">' +
       '<div class="container footer-inner">' +
-        '<img class="footer-logo" src="assets/img/logo.png" alt="ARI Development &amp; Crona Group" loading="lazy">' +
+        '<a class="brand brand-footer" href="index.html" aria-label="ARI Development Company">' +
+          '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
+          '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
+        "</a>" +
         '<div class="footer-links">' +
           '<a href="tel:+995551002200"><small>01. <span data-i18n="footer.call"></span></small>+995 551 00 22 00</a>' +
           '<a href="mailto:info@ari.ge"><small>02. <span data-i18n="footer.write"></span></small>info@ari.ge</a>' +

@@ -60,11 +60,15 @@ svg { width: 1em; height: 1em; flex: none; }
 
 .site-header { position: sticky; top: 0; z-index: 50; background: var(--cream); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--green); }
-.brand-mark { width: 38px; height: 38px; }
-.brand-text { display: flex; flex-direction: column; line-height: 1; }
-.brand-name { font-family: Georgia, "Times New Roman", serif; font-size: 30px; letter-spacing: .08em; }
-.brand-sub { font-size: 9px; letter-spacing: .22em; margin-top: 4px; font-weight: 600; }
+.brand { display: flex; align-items: center; gap: 12px; color: #1a3732; }
+.brand-mark { width: 72px; height: 40px; }
+.brand-text {
+  display: flex; flex-direction: column; gap: 3px; padding-left: 12px; border-left: 1px solid currentColor;
+  font-size: 8.5px; line-height: 1; letter-spacing: .32em; font-weight: 500; color: var(--ink);
+}
+.brand-footer { color: #e9e2cf; }
+.brand-footer .brand-mark { width: 100px; height: 56px; }
+.brand-footer .brand-text { color: #e9e2cf; font-size: 10px; }
 
 .burger { width: 44px; height: 44px; display: grid; place-content: center; gap: 6px; }
 .burger span { display: block; width: 30px; height: 2px; background: var(--green); transition: transform .25s, opacity .25s; }
@@ -242,7 +246,6 @@ body.nav-open { overflow: hidden; }
 
 .site-footer { background: var(--green-dark); color: #e9e2cf; padding: 40px 0 28px; }
 .footer-inner { display: grid; gap: 24px; }
-.footer-logo { width: 240px; height: auto; }
 .footer-links { display: grid; gap: 14px; }
 .footer-links a { display: flex; flex-direction: column; font-size: 1.05rem; }
 .footer-links small { font-size: .75rem; opacity: .7; letter-spacing: .06em; }

@@ -18,4 +18,4 @@ Then open http://localhost:5173. Add `?lang=en` to the URL to load the English v
 - `js/i18n.js`: all UI text in KA and EN.
 - `js/projects.js`: the project list. Fill in `floors`, `apartments` and `delivery` to show stats on the featured card.
 - `js/main.js`: language switch (remembered across pages), projects, modal, menu and counters.
-- `assets/`: logo, photos and video taken from ari.ge.
+- `assets/`: ARI logo (`ari-logo.svg` full, `ari-mark.svg` mark only), plus photos and video taken from ari.ge.
