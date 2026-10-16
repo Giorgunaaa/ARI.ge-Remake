@@ -1,15 +1,12 @@
 // Project list scraped from ari.ge/projects (EN + KA).
-// Optional fields: status ("ongoing" | "completed"), floors, apartments, delivery.
-// The featured card on the home page shows stats only when they are filled in.
+// Optional fields: status ("ongoing" | "completed"), highlight (shown in the
+// home carousel, first 5 in list order).
 window.PROJECTS = [
   {
     id: "toidze-street",
     img: "assets/img/projects/toidze-street.jpg",
     status: "ongoing",
-    featured: true,
-    floors: null,
-    apartments: null,
-    delivery: null,
+    highlight: true,
     name: { en: "Toidze Street", ka: "ტოიძის ქუჩა" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },
     desc: {
@@ -139,6 +136,7 @@ window.PROJECTS = [
   },
   {
     id: "gogebashvili",
+    highlight: true,
     img: "assets/img/projects/gogebashvili.jpg",
     name: { en: "Gogebashvili Apartments", ka: "გოგებაშვილი აპარტმენტსი" },
     location: { en: "City center, Tbilisi", ka: "ცენტრი, თბილისი" },
@@ -149,6 +147,7 @@ window.PROJECTS = [
   },
   {
     id: "u-tower",
+    highlight: true,
     img: "assets/img/projects/u-tower.jpg",
     name: { en: "U Tower", ka: "U თაუერი" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },
@@ -159,6 +158,7 @@ window.PROJECTS = [
   },
   {
     id: "u2-tower",
+    highlight: true,
     img: "assets/img/projects/u2-tower.jpg",
     name: { en: "U2 Tower", ka: "U2 თაუერი" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },
@@ -230,6 +230,7 @@ window.PROJECTS = [
   },
   {
     id: "diuma",
+    highlight: true,
     img: "assets/img/projects/diuma.jpg",
     name: { en: "Diuma Apartments", ka: "დიუმა აპარტმენტსი" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },

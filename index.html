@@ -51,7 +51,12 @@
             <span data-i18n="projects.all"></span><svg><use href="#i-arrow"/></svg>
           </button>
         </div>
-        <div id="featured"></div>
+        <div class="carousel" id="carousel" aria-roledescription="carousel">
+          <div class="carousel-track" id="carousel-track"></div>
+          <button class="carousel-btn prev" type="button" data-prev aria-label="Previous"><svg><use href="#i-arrow"/></svg></button>
+          <button class="carousel-btn next" type="button" data-next aria-label="Next"><svg><use href="#i-arrow"/></svg></button>
+          <div class="carousel-dots" id="carousel-dots"></div>
+        </div>
         <div class="project-grid" id="project-grid" hidden></div>
       </div>
     </section>

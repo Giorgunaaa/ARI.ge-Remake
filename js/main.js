@@ -58,38 +58,39 @@
 
   /* ---------- projects ---------- */
 
-  var featuredEl = document.getElementById("featured");
+  var carouselEl = document.getElementById("carousel");
+  var trackEl = document.getElementById("carousel-track");
+  var dotsEl = document.getElementById("carousel-dots");
   var gridEl = document.getElementById("project-grid");
   var toggleBtn = document.getElementById("toggle-all");
-  var featured = PROJECTS.filter(function (p) { return p.featured; })[0] || PROJECTS[0];
+  var highlights = PROJECTS.filter(function (p) { return p.highlight; }).slice(0, 5);
 
   function statusBadge(p) {
     return p.status ? '<span class="badge badge-' + p.status + '">' + esc(t("status." + p.status)) + "</span>" : "";
   }
 
-  function renderFeatured() {
-    var stats = [];
-    if (featured.floors) stats.push(icon("building") + "<span>" + featured.floors + " " + esc(t("stat.floors")) + "</span>");
-    if (featured.apartments) stats.push(icon("home") + "<span>" + featured.apartments + " " + esc(t("stat.apartments")) + "</span>");
-    if (featured.delivery) stats.push(icon("calendar") + "<span>" + esc(featured.delivery[lang] || featured.delivery) + "</span>");
-
-    featuredEl.innerHTML =
-      '<article class="featured" data-id="' + featured.id + '" tabindex="0" role="button">' +
-        '<img src="' + featured.img + '" alt="' + esc(featured.name[lang]) + '" loading="lazy">' +
-        '<div class="featured-body">' +
-          "<h3>" + esc(featured.name[lang]) + "</h3>" +
-          '<p class="loc">' + esc(featured.location[lang]) + "</p>" +
-          statusBadge(featured) +
-          (stats.length
-            ? '<ul class="featured-stats">' + stats.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ul>"
-            : '<p class="featured-desc">' + esc(featured.desc[lang]) + "</p>") +
+  function renderCarousel() {
+    trackEl.innerHTML = highlights.map(function (p, i) {
+      return '<article class="slide" data-id="' + p.id + '" tabindex="0" role="button" aria-label="' + esc(p.name[lang]) + '">' +
+        '<img src="' + p.img + '" alt="" ' + (i < 2 ? "" : 'loading="lazy"') + ">" +
+        statusBadge(p) +
+        '<div class="slide-body">' +
+          "<h3>" + esc(p.name[lang]) + "</h3>" +
+          '<p class="loc">' + icon("pin") + esc(p.location[lang]) + "</p>" +
         "</div>" +
         '<span class="round-arrow">' + icon("arrow") + "</span>" +
       "</article>";
+    }).join("");
+    dotsEl.innerHTML = highlights.map(function (p, i) {
+      return '<button type="button" data-slide="' + i + '" aria-label="' + (i + 1) + " / " + highlights.length + '"></button>';
+    }).join("");
+    slideIndex = 0;
+    trackEl.scrollLeft = 0;
+    syncDots();
   }
 
   function renderGrid() {
-    gridEl.innerHTML = PROJECTS.filter(function (p) { return p !== featured; }).map(function (p) {
+    gridEl.innerHTML = PROJECTS.filter(function (p) { return highlights.indexOf(p) < 0; }).map(function (p) {
       return '<article class="tile" data-id="' + p.id + '" tabindex="0" role="button">' +
         '<div class="tile-img"><img src="' + p.img + '" alt="' + esc(p.name[lang]) + '" loading="lazy">' + statusBadge(p) + "</div>" +
         "<h3>" + esc(p.name[lang]) + "</h3>" +
@@ -99,10 +100,71 @@
   }
 
   function renderProjects() {
-    if (featuredEl) renderFeatured();
+    if (trackEl) renderCarousel();
     if (gridEl) renderGrid();
     var countEl = document.getElementById("project-count");
     if (countEl) countEl.dataset.count = PROJECTS.length;
+  }
+
+  /* carousel: native scroll-snap, arrows + dots + gentle autoplay */
+
+  function slideWidth() {
+    var s = trackEl.querySelector(".slide");
+    return s ? s.getBoundingClientRect().width + parseFloat(getComputedStyle(trackEl).columnGap || 0) : 0;
+  }
+
+  var slideIndex = 0;
+
+  function maxIndex() {
+    var w = slideWidth();
+    return w ? Math.max(0, Math.round((trackEl.scrollWidth - trackEl.clientWidth) / w)) : 0;
+  }
+
+  function goTo(i) {
+    var max = maxIndex();
+    slideIndex = i > max ? 0 : i < 0 ? max : i;
+    trackEl.scrollTo({ left: slideIndex * slideWidth(), behavior: "smooth" });
+    syncDots();
+  }
+
+  function step(dir) {
+    goTo(slideIndex + dir);
+  }
+
+  function syncDots() {
+    var active = slideIndex >= maxIndex() ? highlights.length - 1 : slideIndex;
+    dotsEl.querySelectorAll("button").forEach(function (b, n) {
+      b.setAttribute("aria-current", String(n === active));
+    });
+  }
+
+  if (carouselEl) {
+    carouselEl.querySelector("[data-prev]").addEventListener("click", function () { step(-1); });
+    carouselEl.querySelector("[data-next]").addEventListener("click", function () { step(1); });
+    dotsEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-slide]");
+      if (b) goTo(Math.min(+b.dataset.slide, maxIndex()));
+    });
+    // Keep the index in sync when the user swipes the track themselves.
+    var settle;
+    trackEl.addEventListener("scroll", function () {
+      clearTimeout(settle);
+      settle = setTimeout(function () {
+        var w = slideWidth();
+        if (!w) return;
+        slideIndex = Math.min(maxIndex(), Math.round(trackEl.scrollLeft / w));
+        syncDots();
+      }, 150);
+    }, { passive: true });
+
+    var paused = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ["mouseenter", "focusin", "touchstart"].forEach(function (ev) {
+      carouselEl.addEventListener(ev, function () { paused = true; }, { passive: true });
+    });
+    carouselEl.addEventListener("mouseleave", function () { paused = false; });
+    setInterval(function () {
+      if (!paused && !document.hidden) step(1);
+    }, 5000);
   }
 
   function syncToggleLabel() {
