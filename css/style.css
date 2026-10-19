@@ -2,7 +2,7 @@
   --green: #1d4a31;
   --green-dark: #143724;
   --green-soft: #e6ece6;
-  --pin: #d2402b;
+  --pin: #4f9a63;
   --cream: #f6f1e6;
   --beige: #f4eee2;
   --circle: #f5efe3;
@@ -127,12 +127,12 @@ body.nav-open { overflow: hidden; }
   .hero-map { height: clamp(560px, 86vh, 840px); --map-fade: 100px; }
 }
 
-/* map pins: red teardrop with the project photo */
+/* map pins: green teardrop with the project photo */
 .pin { background: none; border: 0; }
 .pin-drop {
   display: block; padding: 3px; background: var(--pin);
   border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
-  box-shadow: -2px 4px 10px rgba(80, 20, 10, .3);
+  box-shadow: -2px 4px 10px rgba(20, 55, 36, .3);
 }
 .leaflet-container .pin-drop img {
   display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
@@ -144,7 +144,7 @@ body.nav-open { overflow: hidden; }
   transition: transform .3s cubic-bezier(.2, .8, .3, 1.15);
 }
 .pin:hover .pin-inner, .pin:focus-visible .pin-inner { transform: scale(var(--grow, 2.4)); }
-.pin:hover .pin-drop { box-shadow: -4px 10px 28px rgba(60, 15, 8, .35); }
+.pin:hover .pin-drop { box-shadow: -4px 10px 28px rgba(20, 55, 36, .35); }
 
 /* zoom + reset controls, right middle */
 .map-controls {

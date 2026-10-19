@@ -129,6 +129,7 @@
   }
 
   var PIN_HOVER = 124; // px, size of a pin's photo while hovered
+  var PIN_COLOR = getComputedStyle(document.documentElement).getPropertyValue("--pin").trim() || "#4f9a63";
 
   function pinIcon(p) {
     var s = p.highlight ? 52 : 40;
@@ -230,8 +231,8 @@
       n.o.m.setLatLng(map.containerPointToLatLng([n.x, n.y + head]));
       if (Math.abs(n.x - n.x0) + Math.abs(n.y - n.y0) < 3) return;
       var tip = map.containerPointToLatLng([n.x, n.y + head]);
-      L.polyline([n.o.p.coords, tip], { color: "#d2402b", weight: 1.5, opacity: .8, interactive: false }).addTo(leaderLayer);
-      L.circleMarker(n.o.p.coords, { radius: 3, color: "#d2402b", weight: 1.5, fillColor: "#fff", fillOpacity: 1, interactive: false }).addTo(leaderLayer);
+      L.polyline([n.o.p.coords, tip], { color: PIN_COLOR, weight: 1.5, opacity: .8, interactive: false }).addTo(leaderLayer);
+      L.circleMarker(n.o.p.coords, { radius: 3, color: PIN_COLOR, weight: 1.5, fillColor: "#fff", fillOpacity: 1, interactive: false }).addTo(leaderLayer);
     });
   }
 
