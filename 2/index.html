@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apex Investments — სართულები</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root {
+    --sky: #d3d6d9;          /* JS ცვლის სურათის ზედა ფერით */
+    --navy: #3b3f57;         /* ლოგოს ფონი */
+    --gold: #f3b55c;         /* ლოგოს „A" */
+    --silver: #b4b8bf;       /* ლოგოს ტექსტი */
+    --line: rgba(255,255,255,.45);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; background: var(--sky); font-family: "Noto Sans Georgian", system-ui, sans-serif; color: #fff; }
+  body { touch-action: none; user-select: none; }
+
+  /* სცენა: სურათი + SVG ფენა ერთად მოძრაობს */
+  #stage { position: fixed; inset: 0; overflow: hidden; cursor: grab; }
+  #stage.dragging { cursor: grabbing; }
+  /* will-change: transform აქ არ გამოიყენო — ბრაუზერი სურათს პატარა ზომით „აფიქსირებს" და zoom-ზე ბუნდოვანდება */
+  #world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  #world img { display: block; width: 2000px; height: 1116px; pointer-events: none; }
+  #world svg { position: absolute; inset: 0; width: 2000px; height: 1116px; }
+  /* სურათის ზედა კიდე რბილად გადადის ცაში — „ჭრილი" არ ჩანს */
+  #world .fade { position: absolute; left: 0; right: 0; top: 0; height: 140px; background: linear-gradient(var(--sky), transparent); pointer-events: none; }
+  #world .fade.bot { top: auto; bottom: 0; height: 70px; background: linear-gradient(transparent, var(--sky)); }
+  #world .fade.side { top: 0; bottom: 0; height: auto; width: 60px; }
+  #world .fade.l { left: 0; right: auto; background: linear-gradient(90deg, var(--sky), transparent); }
+  #world .fade.r { right: 0; left: auto; background: linear-gradient(-90deg, var(--sky), transparent); }
+
+  .floor-hit { fill: rgba(243,181,92,0); stroke: transparent; stroke-width: 2; cursor: pointer; transition: fill .25s, stroke .25s; }
+  .floor-hit:hover { fill: rgba(243,181,92,.28); stroke: rgba(255,255,255,.8); }
+  .floor-hit.active { fill: rgba(243,181,92,.30); stroke: #fff; stroke-width: 3; }
+  .zoomed .floor-hit:not(.active) { fill: rgba(20,22,34,.38); }
+  .zoomed .floor-hit:not(.active):hover { fill: rgba(20,22,34,.15); }
+
+  /* ---------- ჰედერი: ლოგო + ენა ---------- */
+  #logo { position: fixed; left: 80px; top: 0; width: 290px; padding: 16px 18px; background: var(--navy); box-shadow: 0 6px 24px rgba(0,0,0,.18); z-index: 5; }
+  #logo img { display: block; width: 100%; height: auto; }
+  #lang { position: fixed; right: 0; top: 0; display: flex; flex-direction: column; z-index: 5; }
+  #lang button { width: 58px; height: 48px; border: 0; border-bottom: 1px solid rgba(255,255,255,.12); background: var(--navy); color: var(--silver); font: 600 15px "Noto Sans Georgian", sans-serif; cursor: pointer; }
+  #lang button.on { color: var(--gold); }
+
+  /* ---------- მენიუ (ანიმაციების გარეშე: იხსნება/იხურება მყისიერად, hover = მხოლოდ ფერი) ---------- */
+  #menuBtn { position: fixed; left: 14px; top: 50%; transform: translateY(-50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 6px;
+             background: none; border: 0; cursor: pointer; color: var(--navy); font: 400 12px "Noto Sans Georgian", sans-serif; }
+  #menuBtn .ico { width: 52px; height: 46px; background: #fff; display: grid; place-content: center; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+  #menuBtn .ico i { display: block; width: 28px; height: 4px; border-radius: 2px; background: var(--gold); }
+  #menuBtn:hover .ico { background: var(--navy); }
+  #menu, #menu * { transition: none !important; animation: none !important; }
+  #menuShade { position: fixed; inset: 0; z-index: 19; background: rgba(20,22,34,.5); display: none; }
+  #menu { position: fixed; left: 0; top: 0; bottom: 0; width: 420px; max-width: 100%; z-index: 20; background: var(--navy); color: #fff;
+          display: none; flex-direction: column; padding: 28px 36px; overflow-y: auto; }
+  body.menu-open #menu { display: flex; }
+  body.menu-open #menuShade { display: block; }
+  #menu .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+  #menu .top img { width: 200px; height: auto; display: block; }
+  #menuClose { width: 40px; height: 40px; border: 1px solid var(--line); background: none; color: #fff; font-size: 20px; cursor: pointer; }
+  #menuClose:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  #menu nav { display: flex; flex-direction: column; }
+  #menu nav a { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.12); color: #fff; text-decoration: none; font-size: 19px; font-weight: 400; }
+  #menu nav a:hover, #menu nav a.on { color: var(--gold); }
+  #menu .foot { margin-top: auto; padding-top: 28px; font-size: 14px; line-height: 1.8; }
+  #menu .foot b { display: block; color: var(--gold); font-weight: 400; margin-bottom: 4px; }
+  #menu .foot a { color: #fff; text-decoration: none; display: block; }
+  #menu .foot a:hover { color: var(--gold); }
+
+  /* ---------- ჰერო ტექსტი ---------- */
+  #hero { position: fixed; left: 0; right: 0; text-align: center; pointer-events: none; color: var(--navy); }
+  #hero .kicker { font-size: clamp(22px, 2.6vw, 36px); font-weight: 300; margin-bottom: 14px; }
+  #hero h1 { font-size: clamp(28px, 3.6vw, 52px); font-weight: 600; line-height: 1.15; }
+  #hero h1 span { color: #c8862c; }
+
+  /* ---------- მთავარი ზოლი (როგორც tbilisigardens-ზე) ---------- */
+  #hud { position: fixed; left: 80px; right: 98px; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 28px;
+         padding: 18px 28px; border: 1px solid var(--line); background: rgba(59,63,87,.78); backdrop-filter: blur(10px); z-index: 4; }
+  .hints { display: flex; gap: 26px; }
+  .hint { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; text-align: center; line-height: 1.15; }
+  .hint svg { width: 34px; height: 34px; stroke: #fff; fill: none; stroke-width: 1.3; }
+  #cta-main { justify-self: center; background: none; border: 0; color: #fff; font: 300 22px "Noto Sans Georgian", sans-serif; cursor: pointer; letter-spacing: .3px; }
+  #cta-main:hover { color: var(--gold); }
+  .contact { font-size: 14px; line-height: 1.7; }
+  .contact b { display: block; font-weight: 400; padding-bottom: 6px; margin-bottom: 6px; border-bottom: 1px solid var(--line); color: var(--gold); }
+  .contact a { color: #fff; text-decoration: none; display: block; }
+  #counter { display: flex; align-items: center; gap: 12px; }
+  #counter .lbl { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 12px; opacity: .85; }
+  #num { font-size: 64px; font-weight: 800; line-height: 1; min-width: 84px; text-align: center; }
+  #arrows { display: flex; flex-direction: column; gap: 10px; }
+  #arrows button { background: none; border: 0; width: 34px; height: 22px; cursor: pointer; display: grid; place-items: center; }
+  #arrows button::before { content: ""; width: 16px; height: 16px; border-left: 1.5px solid #fff; border-top: 1.5px solid #fff; transform: translateY(4px) rotate(45deg); opacity: .8; }
+  #arrows #down::before { transform: translateY(-4px) rotate(225deg); }
+  #arrows button:hover::before { border-color: var(--gold); opacity: 1; }
+  /* ქვედა წრიული ღილაკი ხაზით */
+  #chev { position: absolute; left: 50%; bottom: -19px; transform: translateX(-50%); width: 38px; height: 38px; border-radius: 50%; border: 0; background: #fff; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+  #chev::before { content: ""; position: absolute; left: 13px; top: 11px; width: 10px; height: 10px; border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy); transform: rotate(45deg); }
+  #chev::after { content: ""; position: absolute; left: 50%; top: 38px; width: 1px; height: 60px; background: rgba(255,255,255,.8); }
+
+  /* მარცხენა სართულების ზოლი — მხოლოდ სართულზე ყოფნისას */
+  #rail { position: fixed; left: 80px; top: 50%; transform: translateY(-30%); display: flex; flex-direction: column; gap: 4px; z-index: 3; }
+  #rail button { width: 42px; height: 26px; border: 0; background: rgba(59,63,87,.8); color: #fff; font: 600 12px "Noto Sans Georgian", sans-serif; cursor: pointer; transition: background .2s, width .2s; }
+  #rail button:hover { background: var(--navy); }
+  #rail button.active { background: var(--gold); color: var(--navy); width: 54px; }
+  #rail button.all { margin-bottom: 8px; font-size: 11px; font-weight: 400; }
+
+  /* ---------- სართულზე ყოფნისას ზოლი იცვლება: ბინის ტიპები + „სართულის გეგმა" ---------- */
+  .center { justify-self: center; text-align: center; min-width: 0; }
+  #types { display: none; align-items: stretch; gap: 10px; }
+  body.zoomed-ui .hints, body.zoomed-ui #cta-main { display: none; }
+  body.zoomed-ui #types { display: flex; }
+  #types .lbl { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 11px; opacity: .8; text-align: center; }
+  #types .grid { display: grid; grid-template-columns: repeat(2, minmax(150px, auto)); border: 1px solid var(--line); }
+  .tcell { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+           background: none; color: #fff; font: 400 13px "Noto Sans Georgian", sans-serif; cursor: pointer; text-align: left; transition: background .2s; }
+  .tcell:nth-child(2n) { border-right: 0; }
+  .tcell:nth-last-child(-n+2) { border-bottom: 0; }
+  .tcell:hover { background: rgba(255,255,255,.1); }
+  .tcell b { color: var(--gold); font-size: 15px; min-width: 18px; }
+  .tcell small { margin-left: auto; opacity: .7; font-size: 11px; white-space: nowrap; }
+  .tcell.none { opacity: .4; }
+
+  #planBtn { display: none; flex-direction: column; align-items: center; gap: 2px; padding: 12px 34px; border: 1px solid #fff; outline: 1px solid var(--line); outline-offset: 4px;
+             background: rgba(255,255,255,.06); color: #fff; font: 600 22px "Noto Sans Georgian", sans-serif; cursor: pointer; transition: background .2s, color .2s; }
+  #planBtn small { font-size: 12px; font-weight: 400; opacity: .8; }
+  #planBtn:hover { background: var(--gold); color: var(--navy); }
+  body.zoomed-ui #planBtn { display: inline-flex; }
+
+  /* ---------- სართულის გეგმის ფანჯარა ---------- */
+  #plan { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 24px; background: rgba(20,22,34,.55); backdrop-filter: blur(6px); visibility: hidden; opacity: 0; }
+  #plan .box { width: min(1240px, 100%); max-height: calc(100vh - 48px); overflow: auto; background: #f5f3ef; color: var(--navy); display: grid; grid-template-columns: 1fr 320px; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+  #plan header { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 14px 22px; background: var(--navy); color: #fff; }
+  #plan header h3 { font-size: 20px; font-weight: 600; }
+  #plan header .nav { display: flex; gap: 6px; }
+  #plan header .nav button, #plan header .x { width: 34px; height: 34px; border: 1px solid var(--line); background: none; color: #fff; font-size: 16px; cursor: pointer; }
+  #plan header .nav button:hover, #plan header .x:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  #plan header .x { margin-left: auto; font-size: 20px; }
+  .legend { display: flex; gap: 16px; font-size: 12px; padding: 14px 22px 0; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border: 1px solid rgba(59,63,87,.4); }
+  .st-free { fill: rgba(243,181,92,.35); } .st-reserved { fill: rgba(180,184,191,.55); } .st-sold { fill: rgba(59,63,87,.75); }
+  .legend .free { background: rgba(243,181,92,.35); } .legend .reserved { background: rgba(180,184,191,.55); } .legend .sold { background: rgba(59,63,87,.75); }
+  #planSvg { display: block; width: 100%; height: auto; padding: 10px 18px 18px; }
+  #planSvg .unit { stroke: #3b3f57; stroke-width: 2; cursor: pointer; transition: fill .2s, opacity .2s; }
+  #planSvg .unit:hover, #planSvg .unit.sel { fill: rgba(243,181,92,.85); }
+  #planSvg .unit.dim { opacity: .25; }
+  #planSvg text { font-family: "Noto Sans Georgian", sans-serif; pointer-events: none; fill: #3b3f57; }
+  #planSvg .sold-t { fill: #fff; }
+  .detail { padding: 22px; border-left: 1px solid rgba(59,63,87,.12); display: flex; flex-direction: column; gap: 14px; }
+  .detail h4 { font-size: 22px; }
+  .detail .sub { font-size: 13px; opacity: .7; margin-top: -10px; }
+  .detail dl { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 14px; }
+  .detail dt { opacity: .65; } .detail dd { font-weight: 600; text-align: right; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips button { padding: 6px 10px; border: 1px solid rgba(59,63,87,.3); background: #fff; color: var(--navy); font: 400 12px "Noto Sans Georgian", sans-serif; cursor: pointer; }
+  .chips button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .badge { display: inline-block; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+  .badge.free { background: var(--gold); color: var(--navy); } .badge.reserved { background: #b4b8bf; color: var(--navy); } .badge.sold { background: var(--navy); color: #fff; }
+  .acts { display: grid; gap: 8px; margin-top: auto; }
+  .acts a { display: block; text-align: center; padding: 11px; text-decoration: none; font-size: 14px; font-weight: 600; }
+  .acts .p { background: var(--gold); color: var(--navy); } .acts .s { border: 1px solid var(--navy); color: var(--navy); }
+  .note { font-size: 11px; opacity: .55; }
+
+  @media (max-width: 1100px) {
+    .contact { display: none; }
+    #hud { grid-template-columns: auto 1fr auto; }
+  }
+  @media (max-width: 760px) {
+    #logo { left: 12px; width: 170px; padding: 10px 12px; }
+    #lang button { width: 46px; height: 40px; font-size: 13px; }
+    #hud { left: 12px; right: 12px; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 16px; }
+    .hints { display: none; }
+    .center { justify-self: start; text-align: left; }
+    #cta-main { font-size: 16px; text-align: left; }
+    body.zoomed-ui #types { display: none; }
+    #planBtn { padding: 8px 16px; font-size: 16px; outline: 0; }
+    #plan { padding: 0; }
+    #plan .box { grid-template-columns: 1fr; max-height: 100vh; height: 100vh; }
+    .detail { border-left: 0; border-top: 1px solid rgba(59,63,87,.12); }
+    #num { font-size: 42px; min-width: 56px; }
+    #rail { display: none; }
+    #menuBtn { left: auto; right: 46px; top: 0; transform: none; gap: 0; }
+    #menuBtn span { display: none; }
+    #menuBtn .ico { width: 46px; height: 40px; background: var(--navy); box-shadow: none; border-right: 1px solid rgba(255,255,255,.12); }
+    #menuBtn .ico i { width: 22px; height: 3px; }
+    #menu { width: 100%; padding: 20px 22px; }
+    #menu .top img { width: 160px; }
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <img id="photo" src="building.jpg" alt="საცხოვრებელი კომპლექსის ფასადი">
+    <div class="fade"></div><div class="fade bot"></div><div class="fade side l"></div><div class="fade side r"></div>
+    <svg viewBox="0 0 2000 1116" id="floorsSvg"></svg>
+  </div>
+</div>
+
+<a id="logo" href="#" aria-label="Apex Investments"><img src="logo.png" alt="Apex Investments"></a>
+<div id="lang"><button>ENG</button><button class="on">ქარ</button></div>
+
+<button id="menuBtn" aria-label="მენიუ" aria-controls="menu" aria-expanded="false"><span class="ico"><i></i><i></i><i></i></span><span>მენიუ</span></button>
+<div id="menuShade"></div>
+<aside id="menu" aria-label="მენიუ">
+  <div class="top">
+    <img src="logo.png" alt="Apex Investments">
+    <button id="menuClose" aria-label="დახურვა">✕</button>
+  </div>
+  <!-- data-act: შიდა მოქმედება; href: სხვა გვერდი. „#" ბმულები ჯერ placeholder-ია -->
+  <nav>
+    <a href="#" data-act="home">მთავარი</a>
+    <a href="#" data-act="floors">სართულები და ბინები</a>
+    <a href="#" data-act="plan">სართულის გეგმა</a>
+    <a href="#">პროექტის შესახებ</a>
+    <a href="#">გალერეა</a>
+    <a href="#">მდებარეობა</a>
+    <a href="#">მშენებლობის პროგრესი</a>
+    <a href="#">გადახდის პირობები</a>
+    <a href="../projects.html">ყველა პროექტი</a>
+  </nav>
+  <div class="foot">
+    <b>დაგვიკავშირდი</b>
+    <a href="mailto:info@apexinvestments.ge">info@apexinvestments.ge</a>
+    <a href="tel:+995599712710">+995 599 71 27 10</a>
+  </div>
+</aside>
+
+<!-- ტექსტი შეცვალე შენი პროექტის სლოგანით -->
+<section id="hero">
+  <div class="kicker">წარმოიდგინე</div>
+  <h1>შენი ახალი სახლი <span>ქალაქის გულში</span></h1>
+</section>
+
+<header id="hud">
+  <div class="hints">
+    <div class="hint"><svg viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v5m0-1V4a1.5 1.5 0 0 1 3 0v6m0-2a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7 6 6 0 0 1-5-3l-3-5a1.5 1.5 0 0 1 2.5-1.5L9 14"/></svg>ჩამოწიე</div>
+    <div class="hint"><svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="7" rx="1"/><rect x="8" y="11" width="8" height="7" rx="1"/><rect x="1" y="11" width="6" height="7" rx="1"/><rect x="17" y="11" width="6" height="7" rx="1"/></svg>გამოიყენე<br>ისრები</div>
+    <div class="hint"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="5"/><line x1="12" y1="6" x2="12" y2="9"/></svg>ან დასქროლე</div>
+  </div>
+  <div id="types"><span class="lbl">ბინის ტიპი</span><div class="grid" id="typeGrid"></div></div>
+  <div class="center">
+    <button id="cta-main">გაეცანი სრულ პროექტს</button>
+    <button id="planBtn">სართულის გეგმა<small id="planSub"></small></button>
+  </div>
+  <div class="contact">
+    <b>დაგვიკავშირდი</b>
+    <a href="mailto:info@apexinvestments.ge">info@apexinvestments.ge</a>
+    <a href="tel:+995599712710">+995 599 71 27 10</a>
+  </div>
+  <div id="counter">
+    <span class="lbl">სართული</span>
+    <span id="num">12</span>
+    <div id="arrows">
+      <button id="up" aria-label="ზემოთ"></button>
+      <button id="down" aria-label="ქვემოთ"></button>
+    </div>
+  </div>
+  <button id="chev" aria-label="სართულებზე გადასვლა"></button>
+</header>
+
+<nav id="rail"></nav>
+
+<!-- სართულის გეგმა -->
+<div id="plan" role="dialog" aria-modal="true" aria-label="სართულის გეგმა">
+  <div class="box">
+    <header>
+      <h3 id="pTitle"></h3>
+      <div class="nav"><button id="pUp" aria-label="ზედა სართული">▲</button><button id="pDown" aria-label="ქვედა სართული">▼</button></div>
+      <button class="x" id="pClose" aria-label="დახურვა">✕</button>
+    </header>
+    <div>
+      <div class="legend">
+        <span><i class="free"></i>თავისუფალი</span><span><i class="reserved"></i>დაჯავშნილი</span><span><i class="sold"></i>გაყიდული</span>
+      </div>
+      <svg id="planSvg" viewBox="0 0 1000 500"></svg>
+    </div>
+    <aside class="detail" id="detail"></aside>
+  </div>
+</div>
+
+
+<script>
+/* ---------- მონაცემები ----------
+   ყველა კოორდინატი სურათის პიქსელებშია (2000 × 1116).
+   სხვა სურათზე გადასვლისას მხოლოდ ეს ბლოკი უნდა შეცვალო. */
+const IMG_W = 2000, IMG_H = 1116;
+const BUILDING_TOP = 52;                  // შენობის სახურავის ხაზი სურათზე
+const BX1 = 336, BX2 = 1722;              // საცხოვრებელი ნაწილის საზღვრები X-ზე
+const BLD_X1 = 290, BLD_X2 = 1745;        // მთელი შენობა პოდიუმის ჩათვლით — zoom-ზე ეს მთლიანად ჩანს
+const RES_BOTTOM = 788, PITCH = 72.6;     // პოდიუმის ზედა ხაზი და ერთი სართულის სიმაღლე
+const floors = [
+  { n: 1, top: 905, bottom: 1012, x1: 302, x2: 1730, type: 'commercial' },
+  { n: 2, top: 788, bottom: 905,  x1: 302, x2: 1730, type: 'commercial' },
+];
+for (let i = 0; i < 10; i++) {
+  const bottom = RES_BOTTOM - i * PITCH;
+  floors.push({ n: i + 3, top: bottom - PITCH, bottom, x1: BX1, x2: BX2, type: 'residential' });
+}
+/* ---------- ბინები ----------
+   ქვემოთ ყველაფერი სადემონსტრაციოა. რეალურ პროექტში ეს მოვა JSON-იდან ან ადმინ-პანელიდან:
+   თითო ბინა = { id, type, area, price, status, x, y, w, h } (x/y/w/h — მდებარეობა გეგმაზე). */
+const CONTACT = { email: 'info@apexinvestments.ge', phone: '+995599712710', phoneText: '+995 599 71 27 10' };
+const TYPES = {
+  A: { name: 'სტუდიო',       rooms: 1, area: 42 },
+  B: { name: 'ორ-ოთახიანი',  rooms: 2, area: 64 },
+  C: { name: 'სამ-ოთახიანი', rooms: 3, area: 86 },
+  D: { name: 'ოთხ-ოთახიანი', rooms: 4, area: 118 },
+  K: { name: 'კომერციული',   rooms: 0, area: 0 },
+};
+const STATUS = { free: 'თავისუფალი', reserved: 'დაჯავშნილი', sold: 'გაყიდული' };
+// გეგმის სქემა (SVG 1000×470): ზედა რიგი, დერეფანი შუაში, ქვედა რიგი; ცენტრში კიბე და ლიფტები
+const PLAN_RES = {
+  top:    [['D', 190], ['B', 160], ['A', 130], ['A', 130], ['B', 160], ['C', 190]],
+  bottom: [['C', 190], ['B', 160], ['core', 260], ['B', 160], ['C', 190]],
+};
+const PLAN_COM = {
+  top:    [['K', 320], ['K', 320], ['K', 320]],
+  bottom: [['K', 350], ['core', 260], ['K', 350]],
+};
+const PX = 20, ROW_H = 180, TOP_Y = 40, COR_H = 70, BOT_Y = TOP_Y + ROW_H + COR_H;
+floors.forEach(f => {
+  const scheme = f.type === 'commercial' ? PLAN_COM : PLAN_RES;
+  const ppm = 1150 + f.n * 25;                       // ფასი მ²-ზე
+  f.units = []; let k = 0;
+  [['top', TOP_Y], ['bottom', BOT_Y]].forEach(([row, y]) => {
+    let x = PX;
+    scheme[row].forEach(([t, w]) => {
+      if (t !== 'core') {
+        k++;
+        const area = t === 'K' ? Math.round(w * 0.55) : TYPES[t].area + ((f.n + k) % 3) * 2;
+        const h = (f.n * 7 + k * k * 3 + k) % 10;
+        f.units.push({ id: `${f.n}-${String(k).padStart(2, '0')}`, type: t, area, price: area * ppm,
+                       status: h < 5 ? 'free' : h < 7 ? 'reserved' : 'sold', x, y, w, h: ROW_H, row });
+      } else f.core = { x, w };
+      x += w;
+    });
+  });
+  f.free = f.units.filter(u => u.status === 'free').length;
+});
+const money = v => '$' + v.toLocaleString('en-US');
+
+/* მდგომარეობა: -1 = ჰერო (პირველი ეკრანი), 0..N-1 = order[] ინდექსი, ზემოდან ქვემოთ */
+const order = floors.map((_, i) => i).reverse();
+let pos = -1, locked = false, counterState = {};
+
+const $ = s => document.querySelector(s);
+const world = $('#world'), stage = $('#stage'), svg = $('#floorsSvg'), hud = $('#hud'), hero = $('#hero');
+const isMobile = () => innerWidth <= 760;
+
+/* ცის ფერი სურათის ზედა ზოლიდან, რომ გადასვლა უხილავი იყოს */
+const photo = $('#photo');
+function sampleSky() {
+  try {
+    const c = document.createElement('canvas'); c.width = 200; c.height = 1;
+    const g = c.getContext('2d'); g.drawImage(photo, 0, 0, IMG_W, 12, 0, 0, 200, 1);
+    const d = g.getImageData(0, 0, 200, 1).data; let r = 0, gg = 0, b = 0;
+    for (let i = 0; i < d.length; i += 4) { r += d[i]; gg += d[i + 1]; b += d[i + 2]; }
+    const n = d.length / 4;
+    document.documentElement.style.setProperty('--sky', `rgb(${r / n | 0},${gg / n | 0},${b / n | 0})`);
+  } catch (e) { /* file:// — ვტოვებთ ნაგულისხმევ ფერს */ }
+}
+photo.complete ? sampleSky() : photo.addEventListener('load', sampleSky);
+
+/* SVG ზონები */
+floors.forEach((f, i) => {
+  const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  r.setAttribute('x', f.x1); r.setAttribute('y', f.top);
+  r.setAttribute('width', f.x2 - f.x1); r.setAttribute('height', f.bottom - f.top);
+  r.setAttribute('class', 'floor-hit');
+  r.addEventListener('click', () => { if (!dragMoved) go(order.indexOf(i)); });
+  svg.appendChild(r); f.el = r;
+});
+
+/* მარცხენა ზოლი */
+const rail = $('#rail');
+const allBtn = document.createElement('button');
+allBtn.className = 'all'; allBtn.textContent = 'მთავარი'; allBtn.onclick = () => go(-1);
+rail.appendChild(allBtn);
+order.forEach((fi, p) => {
+  const b = document.createElement('button');
+  b.textContent = floors[fi].n; b.onclick = () => go(p);
+  rail.appendChild(b); floors[fi].railBtn = b;
+});
+
+/* განლაგება: სად დგას ზოლი და ჰერო ტექსტი თითოეულ მდგომარეობაში */
+function layout() {
+  const vh = innerHeight, m = isMobile();
+  const logoH = $('#logo').offsetHeight;
+  const hudH = hud.offsetHeight;
+  // ჰეროში: ზოლი ეკრანის ~45%-ზე, ტექსტი ლოგოსა და ზოლს შორის
+  const heroHudTop = Math.max(logoH + (m ? 120 : 170), vh * (m ? 0.42 : 0.44));
+  const zoomHudTop = m ? logoH + 10 : 20;
+  return { heroHudTop, zoomHudTop, hudH, logoH };
+}
+
+/* კამერა */
+function cameraFor(p) {
+  const vw = innerWidth, vh = innerHeight, L = layout();
+  if (p < 0) {
+    // ჰერო: შენობა სიგანეში ავსებს ეკრანს და სახურავი ზოლის ქვემოთ იწყება (როგორც tbilisigardens-ზე)
+    const avail = vh - (L.heroHudTop + L.hudH + 40);
+    let s = Math.max(vw / IMG_W, avail / (IMG_H - BUILDING_TOP));
+    if (isMobile()) s = Math.max(s, vw / (BX2 - BX1 + 120));
+    const x = vw / 2 - ((BX1 + BX2) / 2) * s;
+    const y = L.heroHudTop + L.hudH + 40 - BUILDING_TOP * s;
+    return { s, x: Math.min(0, Math.max(vw - IMG_W * s, x)), y };
+  }
+  const f = floors[order[p]];
+  // 1) შენობა სიგანეში მთლიანად უნდა ჩანდეს (მარცხნივ სართულების ზოლისთვის ადგილი რჩება)
+  const sideGap = isMobile() ? 8 : 150;
+  let s = (vw - sideGap * 2) / (BLD_X2 - BLD_X1);
+  // 2) ზედმეტად არ გავადიდოთ: ~4.5 სართულზე მეტი ზომა არ სჭირდება
+  s = Math.min(s, vh / (PITCH * 4.5));
+  // 3) ხარისხის ზღვარი: სურათის რეალურ რეზოლუციაზე 25%-ზე მეტად არ გავწელოთ.
+  //    უფრო დიდ სურათს (მაგ. 4000px) თუ ჩასვამ, ზღვარი თავისით გაიზრდება.
+  s = Math.min(s, (photo.naturalWidth || IMG_W) / IMG_W * 1.25);
+  const cx = (BLD_X1 + BLD_X2) / 2, cy = (f.top + f.bottom) / 2;
+  const freeTop = L.zoomHudTop + L.hudH, freeBottom = vh;
+  let x = vw / 2 - cx * s, y = (freeTop + freeBottom) / 2 - cy * s;
+  // ვერტიკალურად: სურათის კიდეს გარეთ არ გავიდეთ (თუ სურათი ეკრანზე მაღალია)
+  if (IMG_H * s > vh - freeTop) y = Math.min(freeTop, Math.max(vh - IMG_H * s, y));
+  else y = freeTop + (vh - freeTop - IMG_H * s) / 2;
+  return { s, x, y };
+}
+
+function render(instant) {
+  const d = instant ? 0 : 1.1, L = layout(), inHero = pos < 0;
+  gsap.to(hud, { top: inHero ? L.heroHudTop : L.zoomHudTop, duration: d, ease: 'power3.inOut' });
+  gsap.to(hero, { top: inHero ? (L.logoH + (L.heroHudTop - L.logoH) / 2 - hero.offsetHeight / 2) : -200,
+                  autoAlpha: inHero ? 1 : 0, duration: d * .8, ease: 'power3.inOut' });
+  gsap.to('#logo', { autoAlpha: inHero || isMobile() ? 1 : 0, y: inHero || isMobile() ? 0 : -30, duration: d * .6 });
+  gsap.to('#chev', { autoAlpha: inHero ? 1 : 0, duration: d * .5 });
+  gsap.to('#rail', { autoAlpha: inHero ? 0 : 1, x: inHero ? -20 : 0, duration: d * .6 });
+  document.body.classList.toggle('zoomed-ui', !inHero);
+
+  stage.classList.toggle('zoomed', !inHero);
+  floors.forEach(f => { f.el.classList.remove('active'); f.railBtn.classList.remove('active'); });
+  allBtn.classList.toggle('active', inHero);
+
+  // მთვლელი: ჰეროში ზედა სართული, მერე — მიმდინარე
+  const num = $('#num'), target = inHero ? floors.length : floors[order[pos]].n;
+  const from = parseInt(num.textContent) || target;
+  const o = { v: from };
+  gsap.killTweensOf(counterState); counterState = o;
+  gsap.to(o, { v: target, duration: instant ? 0 : .6, ease: 'power2.out',
+               onUpdate: () => num.textContent = Math.round(o.v), onComplete: () => num.textContent = target });
+
+  if (!inHero) {
+    const f = floors[order[pos]];
+    f.el.classList.add('active'); f.railBtn.classList.add('active');
+    // ბინის ტიპების უჯრები (როგორც tbilisigardens-ის მწვანე ზოლში)
+    const types = f.type === 'commercial' ? ['K'] : ['A', 'B', 'C', 'D'];
+    $('#typeGrid').innerHTML = types.map(t => {
+      const all = f.units.filter(u => u.type === t), free = all.filter(u => u.status === 'free').length;
+      return `<button class="tcell${free ? '' : ' none'}" data-t="${t}"><b>${t}</b>${TYPES[t].name}<small>${free}/${all.length} თავ.</small></button>`;
+    }).join('');
+    $('#typeGrid').querySelectorAll('.tcell').forEach(b => b.onclick = () => openPlan(b.dataset.t));
+    $('#planSub').textContent = `${f.free} თავისუფალი ${f.type === 'commercial' ? 'ფართი' : 'ბინა'}`;
+    gsap.fromTo('#types, #planBtn', { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: instant ? 0 : .4 });
+    if (planOpen) drawPlan();
+  }
+  // კამერა ბოლოს — ბარათის სიმაღლე უკვე ცნობილია
+  const cam = cameraFor(pos);
+  gsap.to(world, { x: cam.x, y: cam.y, scale: cam.s, duration: d, ease: 'power3.inOut' });
+}
+
+function go(p) {
+  p = Math.max(-1, Math.min(order.length - 1, p));
+  if (p === pos) return;
+  pos = p; locked = true; render();
+  setTimeout(() => locked = false, 700); // ერთ ჟესტზე ბევრი სართული რომ არ გამოტოვოს
+}
+const step = d => { if (!locked) go(pos + d); };
+
+/* ---------- სართულის გეგმა ---------- */
+let planOpen = false, typeFilter = null, selUnit = null;
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, text) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  return e;
+}
+function openPlan(t) {
+  if (pos < 0) return;
+  typeFilter = t || null; selUnit = null; planOpen = true;
+  drawPlan();
+  gsap.to('#plan', { autoAlpha: 1, duration: .3 });
+  gsap.fromTo('#plan .box', { y: 24, scale: .98 }, { y: 0, scale: 1, duration: .4, ease: 'power3.out' });
+}
+function closePlan() {
+  planOpen = false;
+  gsap.to('#plan', { autoAlpha: 0, duration: .25 });
+}
+function drawPlan() {
+  const f = floors[order[pos]], s = $('#planSvg');
+  $('#pTitle').textContent = `სართული ${f.n} — ${f.type === 'commercial' ? 'კომერციული ფართები' : 'ბინების გეგმა'}`;
+  s.innerHTML = '';
+  // კედლები, დერეფანი, აივნები
+  s.appendChild(el('rect', { x: PX - 6, y: TOP_Y - 6, width: 972, height: ROW_H * 2 + COR_H + 12, fill: '#fff', stroke: '#3b3f57', 'stroke-width': 6 }));
+  s.appendChild(el('rect', { x: PX, y: TOP_Y + ROW_H, width: 960, height: COR_H, fill: '#e9e6e0' }));
+  s.appendChild(el('text', { x: 500, y: TOP_Y + ROW_H + COR_H / 2 + 5, 'text-anchor': 'middle', 'font-size': 13, opacity: .5 }, 'დერეფანი'));
+  if (f.type !== 'commercial') {
+    s.appendChild(el('rect', { x: PX, y: TOP_Y - 26, width: 960, height: 14, fill: 'none', stroke: '#3b3f57', 'stroke-dasharray': '4 4', opacity: .5 }));
+    s.appendChild(el('rect', { x: PX, y: BOT_Y + ROW_H + 12, width: 960, height: 14, fill: 'none', stroke: '#3b3f57', 'stroke-dasharray': '4 4', opacity: .5 }));
+  }
+  // კიბე + ლიფტები
+  const c = f.core;
+  s.appendChild(el('rect', { x: c.x, y: BOT_Y, width: c.w, height: ROW_H, fill: '#d9d5cd', stroke: '#3b3f57', 'stroke-width': 2 }));
+  for (let i = 0; i < 9; i++) s.appendChild(el('line', { x1: c.x + 14 + i * 12, y1: BOT_Y + 20, x2: c.x + 14 + i * 12, y2: BOT_Y + ROW_H - 20, stroke: '#3b3f57', opacity: .35 }));
+  [0, 1].forEach(i => {
+    const lx = c.x + 140 + i * 58;
+    s.appendChild(el('rect', { x: lx, y: BOT_Y + 50, width: 48, height: 60, fill: 'none', stroke: '#3b3f57', 'stroke-width': 1.5 }));
+    s.appendChild(el('line', { x1: lx, y1: BOT_Y + 50, x2: lx + 48, y2: BOT_Y + 110, stroke: '#3b3f57', opacity: .4 }));
+    s.appendChild(el('line', { x1: lx + 48, y1: BOT_Y + 50, x2: lx, y2: BOT_Y + 110, stroke: '#3b3f57', opacity: .4 }));
+  });
+  s.appendChild(el('text', { x: c.x + c.w / 2, y: BOT_Y + ROW_H - 30, 'text-anchor': 'middle', 'font-size': 12, opacity: .6 }, 'კიბე · ლიფტი'));
+  // ბინები
+  f.units.forEach(u => {
+    const dim = typeFilter && u.type !== typeFilter;
+    const r = el('rect', { x: u.x, y: u.y, width: u.w, height: u.h,
+                           class: `unit st-${u.status}${dim ? ' dim' : ''}${selUnit === u.id ? ' sel' : ''}` });
+    r.addEventListener('mouseenter', () => showUnit(u));
+    r.addEventListener('mouseleave', () => showUnit(selUnit ? f.units.find(x => x.id === selUnit) : null));
+    r.addEventListener('click', () => { selUnit = u.id; drawPlan(); });
+    s.appendChild(r);
+    // კარის „ღიობი" დერეფნისკენ
+    const dy = u.row === 'top' ? u.y + u.h : u.y;
+    s.appendChild(el('line', { x1: u.x + u.w / 2 - 14, y1: dy, x2: u.x + u.w / 2 + 14, y2: dy, stroke: '#e9e6e0', 'stroke-width': 5 }));
+    const tc = u.status === 'sold' && !dim ? 'sold-t' : '';
+    const cy = u.y + u.h / 2;
+    s.appendChild(el('text', { x: u.x + u.w / 2, y: cy - 14, 'text-anchor': 'middle', 'font-size': 22, 'font-weight': 700, class: tc, opacity: dim ? .3 : 1 }, u.type === 'K' ? 'K' : u.type));
+    s.appendChild(el('text', { x: u.x + u.w / 2, y: cy + 10, 'text-anchor': 'middle', 'font-size': 13, class: tc, opacity: dim ? .3 : .85 }, u.id));
+    s.appendChild(el('text', { x: u.x + u.w / 2, y: cy + 30, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 600, class: tc, opacity: dim ? .3 : .85 }, `${u.area} მ²`));
+  });
+  s.appendChild(el('text', { x: 975, y: 496, 'text-anchor': 'end', 'font-size': 11, opacity: .45 }, 'სქემა — არ არის მასშტაბში'));
+  showUnit(selUnit ? f.units.find(x => x.id === selUnit) : null);
+}
+function showUnit(u) {
+  const f = floors[order[pos]], d = $('#detail');
+  if (!u) {
+    const types = [...new Set(f.units.map(x => x.type))];
+    d.innerHTML = `
+      <h4>სართული ${f.n}</h4><div class="sub">${f.units.length} ${f.type === 'commercial' ? 'ფართი' : 'ბინა'} · ${f.free} თავისუფალი</div>
+      <div><div class="note" style="margin-bottom:6px">ფილტრი ტიპით</div><div class="chips">
+        <button data-t="" class="${typeFilter ? '' : 'on'}">ყველა</button>
+        ${types.map(t => `<button data-t="${t}" class="${typeFilter === t ? 'on' : ''}">${t} · ${TYPES[t].name}</button>`).join('')}
+      </div></div>
+      <dl>${types.map(t => {
+        const us = f.units.filter(x => x.type === t), a = us.map(x => x.area);
+        const lo = Math.min(...a), hi = Math.max(...a);
+        return `<dt>${t} · ${TYPES[t].name}</dt><dd>${lo === hi ? lo : `${lo}–${hi}`} მ²</dd>`;
+      }).join('')}<dt>ფასი მ²-ზე</dt><dd>${money(1150 + f.n * 25)}</dd></dl>
+      <p class="note">მიიტანე მაუსი ან დააჭირე ბინას გეგმაზე დეტალების სანახავად.</p>
+      <div class="acts"><a class="p" href="tel:${CONTACT.phone}">დარეკვა · ${CONTACT.phoneText}</a>
+        <a class="s" href="mailto:${CONTACT.email}">${CONTACT.email}</a></div>`;
+    d.querySelectorAll('.chips button').forEach(b => b.onclick = () => { typeFilter = b.dataset.t || null; drawPlan(); });
+    return;
+  }
+  const t = TYPES[u.type];
+  const subj = encodeURIComponent(`ბინა ${u.id} — დაინტერესება`);
+  d.innerHTML = `
+    <h4>${u.type === 'K' ? 'ფართი' : 'ბინა'} ${u.id}</h4>
+    <div class="sub">${u.type} · ${t.name}${t.rooms ? ` · ${t.rooms} საძინებელი` : ''}</div>
+    <div><span class="badge ${u.status}">${STATUS[u.status]}</span></div>
+    <dl><dt>სართული</dt><dd>${f.n}</dd><dt>ფართი</dt><dd>${u.area} მ²</dd>
+        <dt>ფასი მ²-ზე</dt><dd>${money(1150 + f.n * 25)}</dd>
+        <dt>სრული ფასი</dt><dd>${u.status === 'sold' ? '—' : money(u.price)}</dd></dl>
+    ${u.status === 'sold' ? '<p class="note">ეს ბინა გაყიდულია. იხილე თავისუფალი ბინები ამავე ან სხვა სართულზე.</p>' : ''}
+    <div class="acts">
+      <a class="p" href="tel:${CONTACT.phone}">დარეკვა · ${CONTACT.phoneText}</a>
+      <a class="s" href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე ამ ბინაზე</a>
+    </div>`;
+}
+$('#planBtn').onclick = () => openPlan();
+$('#pClose').onclick = closePlan;
+$('#plan').addEventListener('click', e => { if (e.target.id === 'plan') closePlan(); });
+$('#pUp').onclick = () => { if (pos > 0) { selUnit = null; go(pos - 1); } };
+$('#pDown').onclick = () => { if (pos < order.length - 1) { selUnit = null; go(pos + 1); } };
+
+/* ---------- მენიუ ---------- */
+let menuOpen = false;
+function setMenu(open) {
+  menuOpen = open;
+  document.body.classList.toggle('menu-open', open);
+  $('#menuBtn').setAttribute('aria-expanded', open);
+  // მიმდინარე განყოფილების მონიშვნა
+  document.querySelectorAll('#menu nav a').forEach(a => a.classList.toggle('on',
+    (a.dataset.act === 'home' && pos < 0) || (a.dataset.act === 'floors' && pos >= 0)));
+}
+$('#menuBtn').onclick = () => setMenu(true);
+$('#menuClose').onclick = () => setMenu(false);
+$('#menuShade').onclick = () => setMenu(false);
+document.querySelectorAll('#menu nav a[data-act]').forEach(a => a.onclick = e => {
+  e.preventDefault(); setMenu(false);
+  if (a.dataset.act === 'home') go(-1);
+  if (a.dataset.act === 'floors') go(Math.max(pos, 0));
+  if (a.dataset.act === 'plan') { if (pos < 0) { pos = 0; render(true); } openPlan(); }
+});
+
+/* ---------- მართვა ---------- */
+let wheelAcc = 0;
+addEventListener('wheel', e => {
+  if (planOpen || menuOpen) return;   // გეგმის/მენიუს ფანჯარაში ჩვეულებრივი სქროლი
+  e.preventDefault();
+  wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) > 40) { step(Math.sign(wheelAcc)); wheelAcc = 0; }
+}, { passive: false });
+
+addEventListener('keydown', e => {
+  if (menuOpen) { if (e.key === 'Escape') setMenu(false); return; }
+  if (planOpen) {
+    if (e.key === 'Escape') closePlan();
+    if (e.key === 'ArrowUp') { e.preventDefault(); $('#pUp').click(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); $('#pDown').click(); }
+    return;
+  }
+  if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); step(1); }
+  if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); step(-1); }
+  if (e.key === 'Home' || e.key === 'Escape') go(-1);
+  if (e.key === 'End') go(order.length - 1);
+});
+
+let dragY = null, dragMoved = false;
+stage.addEventListener('pointerdown', e => { dragY = e.clientY; dragMoved = false; stage.classList.add('dragging'); });
+addEventListener('pointermove', e => {
+  if (dragY === null) return;
+  const dy = e.clientY - dragY;
+  if (Math.abs(dy) > 50) { step(dy < 0 ? 1 : -1); dragY = e.clientY; dragMoved = true; }
+});
+addEventListener('pointerup', () => { dragY = null; stage.classList.remove('dragging'); setTimeout(() => dragMoved = false, 0); });
+
+$('#up').onclick = () => go(pos - 1);
+$('#down').onclick = () => go(pos + 1);
+$('#chev').onclick = () => go(0);
+$('#cta-main').onclick = () => go(0);
+document.querySelectorAll('#lang button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#lang button').forEach(x => x.classList.toggle('on', x === b));
+});
+
+addEventListener('resize', () => render(true));
+document.fonts.ready.then(() => render(true));
+render(true);
+
+if (location.search.includes('debug')) floors.forEach(f => f.el.style.stroke = 'red');
+</script>
+</body>
+</html>
