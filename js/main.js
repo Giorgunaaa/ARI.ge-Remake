@@ -67,42 +67,102 @@
 
   // Static map of central Tbilisi: no panning, zoom only (buttons, pinch, double-click).
   var mapEl = document.getElementById("projects");
-  var map, mapLayer;
+  var map, mapLayer, leaderLayer, markers = [];
   var MAP_CENTER = [41.708, 44.795];
+
+  // Fisheye-lens version of a project photo, drawn once on a canvas and cached as a data URL.
+  var fisheyeCache = {};
+
+  function fisheye(p, done) {
+    if (fisheyeCache[p.id]) return done(fisheyeCache[p.id]);
+    var focus = p.fisheye || { x: .5, y: .45 };
+    var img = new Image();
+    img.onload = function () {
+      var OUT = 360, SRC = OUT * 2;
+      // square crop around the focus point, sampled at 2x for a crisp result
+      var side = Math.min(img.naturalWidth, img.naturalHeight);
+      var sx = Math.max(0, Math.min(img.naturalWidth - side, img.naturalWidth * focus.x - side / 2));
+      var sy = Math.max(0, Math.min(img.naturalHeight - side, img.naturalHeight * focus.y - side / 2));
+      var src = document.createElement("canvas");
+      src.width = src.height = SRC;
+      var sctx = src.getContext("2d");
+      sctx.filter = "saturate(1.3) contrast(1.1) brightness(1.05)";
+      sctx.drawImage(img, sx, sy, side, side, 0, 0, SRC, SRC);
+      var from = sctx.getImageData(0, 0, SRC, SRC).data;
+
+      var out = document.createElement("canvas");
+      out.width = out.height = OUT;
+      var ctx = out.getContext("2d");
+      var dst = ctx.createImageData(OUT, OUT);
+      var c = OUT / 2;
+      for (var y = 0; y < OUT; y++) {
+        for (var x = 0; x < OUT; x++) {
+          var dx = (x + .5 - c) / c, dy = (y + .5 - c) / c;
+          var r = Math.sqrt(dx * dx + dy * dy);
+          if (r > 1) continue;
+          // barrel distortion: centre gently magnified, edges squeezed like a fisheye lens
+          var k = 0.78 + 0.22 * r * r;
+          var u = Math.min(SRC - 1, Math.max(0, Math.round((dx * k + 1) / 2 * (SRC - 1))));
+          var v = Math.min(SRC - 1, Math.max(0, Math.round((dy * k + 1) / 2 * (SRC - 1))));
+          var i = (y * OUT + x) * 4, j = (v * SRC + u) * 4;
+          dst.data[i] = from[j]; dst.data[i + 1] = from[j + 1]; dst.data[i + 2] = from[j + 2]; dst.data[i + 3] = 255;
+        }
+      }
+      ctx.putImageData(dst, 0, 0);
+
+      // glass sphere: darker rim + soft highlight at the top
+      var rim = ctx.createRadialGradient(c, c, c * .7, c, c, c);
+      rim.addColorStop(0, "rgba(0,0,0,0)");
+      rim.addColorStop(1, "rgba(0,0,0,.22)");
+      ctx.fillStyle = rim;
+      ctx.beginPath(); ctx.arc(c, c, c, 0, Math.PI * 2); ctx.fill();
+      var shine = ctx.createRadialGradient(c * .7, c * .45, 0, c * .7, c * .45, c * .75);
+      shine.addColorStop(0, "rgba(255,255,255,.35)");
+      shine.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = shine;
+      ctx.beginPath(); ctx.arc(c, c, c, 0, Math.PI * 2); ctx.fill();
+
+      done(fisheyeCache[p.id] = out.toDataURL("image/jpeg", .9));
+    };
+    img.src = p.img;
+  }
+
+  var PIN_HOVER = 92; // px, size of a pin's photo while hovered
 
   function pinIcon(p) {
     var s = p.highlight ? 52 : 40;
     var tip = Math.round(s / 2 + s * 0.7071);
+    var src = fisheyeCache[p.id] || p.img;
     return L.divIcon({
       className: "pin" + (p.highlight ? " pin-lg" : ""),
-      html: '<span class="pin-inner"><span class="pin-drop" style="width:' + s + "px;height:" + s + 'px"><img src="' + p.img + '" alt=""></span></span>',
+      // every pin grows to the same size on hover, whatever its resting size
+      html: '<span class="pin-inner" style="--grow:' + (PIN_HOVER / s).toFixed(3) + '"><span class="pin-drop" style="width:' + s + "px;height:" + s + 'px"><img src="' + src + '" alt=""></span></span>',
       iconSize: [s, tip],
       iconAnchor: [s / 2, tip],
       popupAnchor: [0, -tip - 4]
     });
   }
 
-  function mapCard(p) {
-    return '<button type="button" class="map-card" data-id="' + p.id + '">' +
-      '<img src="' + p.img + '" alt="">' +
-      '<span class="map-card-body"><strong>' + esc(p.name[lang]) + "</strong>" +
-      '<span class="loc">' + icon("pin") + esc(p.location[lang]) + "</span></span>" +
-      '<span class="map-card-go">' + icon("arrow") + "</span>" +
-    "</button>";
-  }
-
   function isWide() {
     return mapEl.clientWidth >= 900;
   }
 
-  // Where the map's visual centre sits: pushed right on wide screens so the copy stays clear.
   function focusPoint() {
-    return L.point(mapEl.clientWidth * (isWide() ? 0.7 : 0.5), mapEl.clientHeight / 2);
+    return L.point(mapEl.clientWidth / 2, mapEl.clientHeight / 2);
   }
 
+  // Frame every project pin: room on top for the faded edge plus the pin height,
+  // on the right for the zoom buttons.
   function fitMap() {
-    map.setView(MAP_CENTER, isWide() ? 13 : 12, { animate: false });
-    if (isWide()) map.panBy([-mapEl.clientWidth * 0.2, 0], { animate: false });
+    var pts = PROJECTS.filter(function (p) { return p.coords; }).map(function (p) { return p.coords; });
+    if (!pts.length) return map.setView(MAP_CENTER, 12, { animate: false });
+    var fade = parseFloat(getComputedStyle(mapEl).getPropertyValue("--map-fade")) || 80;
+    map.fitBounds(L.latLngBounds(pts), {
+      paddingTopLeft: [isWide() ? 60 : 30, fade + 64],
+      paddingBottomRight: [isWide() ? 90 : 60, 12],
+      animate: false
+    });
+    declutter();
   }
 
   function zoomBy(delta) {
@@ -123,9 +183,54 @@
       var z = e.target.closest("[data-zoom]");
       if (z) return zoomBy(+z.dataset.zoom);
       if (e.target.closest("[data-reset]")) {
-        map.closePopup();
         fitMap();
       }
+    });
+  }
+
+  // Pins in the dense centre overlap, so push their heads apart until none touch.
+  // A displaced pin keeps a dot + thin line back to its real address.
+  function declutter() {
+    if (!map || !markers.length) return;
+    leaderLayer.clearLayers();
+    var nodes = markers.map(function (o) {
+      var pt = map.latLngToContainerPoint(o.p.coords);
+      var head = o.s * 0.7071;
+      return { o: o, x: pt.x, y: pt.y - head, x0: pt.x, y0: pt.y - head, r: o.s / 2 + 3 };
+    });
+    // keep every head inside the visible map: below the faded top, clear of the zoom buttons
+    var W = mapEl.clientWidth, H = mapEl.clientHeight;
+    var fade = parseFloat(getComputedStyle(mapEl).getPropertyValue("--map-fade")) || 80;
+    var right = W - (isWide() ? 76 : 64);
+    function clamp(n) {
+      var head = n.o.s * 0.7071;
+      n.x = Math.max(n.r + 4, Math.min(right - n.r, n.x));
+      n.y = Math.max(fade * .7 + n.r, Math.min(H - 8 - head, n.y));
+    }
+    for (var it = 0; it < 200; it++) {
+      var moved = false;
+      for (var i = 0; i < nodes.length; i++) {
+        for (var j = i + 1; j < nodes.length; j++) {
+          var a = nodes[i], b = nodes[j];
+          var dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy), min = a.r + b.r;
+          if (d >= min) continue;
+          if (d < .01) { dx = Math.cos(i + j); dy = Math.sin(i + j); d = 1; }
+          var push = (min - d) / 2 + .5;
+          a.x -= dx / d * push; a.y -= dy / d * push;
+          b.x += dx / d * push; b.y += dy / d * push;
+          moved = true;
+        }
+      }
+      nodes.forEach(clamp);
+      if (!moved) break;
+    }
+    nodes.forEach(function (n) {
+      var head = n.o.s * 0.7071;
+      n.o.m.setLatLng(map.containerPointToLatLng([n.x, n.y + head]));
+      if (Math.abs(n.x - n.x0) + Math.abs(n.y - n.y0) < 3) return;
+      var tip = map.containerPointToLatLng([n.x, n.y + head]);
+      L.polyline([n.o.p.coords, tip], { color: "#d2402b", weight: 1.5, opacity: .8, interactive: false }).addTo(leaderLayer);
+      L.circleMarker(n.o.p.coords, { radius: 3, color: "#d2402b", weight: 1.5, fillColor: "#fff", fillOpacity: 1, interactive: false }).addTo(leaderLayer);
     });
   }
 
@@ -141,18 +246,20 @@
         keyboard: false,
         touchZoom: "center",
         doubleClickZoom: "center",
-        minZoom: 12,
+        minZoom: 10,
         maxZoom: 16,
-        zoomSnap: 0.5,
+        zoomSnap: 0.1,
         fadeAnimation: false
       });
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-      // Bottom corners sit under the fade and the features card, so attribution goes up top.
-      map.attributionControl.setPosition("topright");
+      // The top edge fades out, so attribution goes bottom right.
+      map.attributionControl.setPosition("bottomright");
       addControls();
+      leaderLayer = L.layerGroup().addTo(map);
+      map.on("zoomend", declutter);
       fitMap();
       var resizeTimer;
       window.addEventListener("resize", function () {
@@ -164,15 +271,19 @@
     if (mapLayer) mapLayer.remove();
     mapLayer = L.layerGroup().addTo(map);
 
-    var opened;
+    markers = [];
     PROJECTS.forEach(function (p) {
       if (!p.coords) return;
-      var m = L.marker(p.coords, { icon: pinIcon(p), title: p.name[lang], riseOnHover: true, zIndexOffset: p.highlight ? 500 : 0 })
-        .bindPopup(mapCard(p), { className: "map-popup", closeButton: false, autoPan: false, maxWidth: 320, minWidth: 260 })
+      var m = L.marker(p.coords, { icon: pinIcon(p), title: p.name[lang], riseOnHover: true, riseOffset: 100000, zIndexOffset: p.highlight ? 500 : 0 })
+        .on("click", function () { openProject(p.id); })
         .addTo(mapLayer);
-      if (p.highlight && !opened) opened = m;
+      fisheye(p, function (url) {
+        var el = m.getElement();
+        if (el) el.querySelector("img").src = url;
+      });
+      markers.push({ p: p, m: m, s: p.highlight ? 52 : 40 });
     });
-    if (opened && isWide()) opened.openPopup();
+    declutter();
   }
 
   /* ---------- modal ---------- */

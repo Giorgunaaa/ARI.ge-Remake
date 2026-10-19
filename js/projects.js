@@ -9,6 +9,8 @@ window.PROJECTS = [
     img: "assets/img/projects/toidze-street.jpg",
     status: "ongoing",
     highlight: true,
+    // focus point of the fisheye pin photo (0..1); default is the centre
+    fisheye: { x: 0.62, y: 0.45 },
     name: { en: "Toidze Street", ka: "ტოიძის ქუჩა" },
     location: { en: "Old Tbilisi, Tbilisi", ka: "ძველი თბილისი, თბილისი" },
     desc: {
@@ -53,6 +55,7 @@ window.PROJECTS = [
     id: "modern-ezo",
     coords: [41.7008, 44.7938],
     img: "assets/img/projects/modern-ezo.webp",
+    fisheye: { x: 0.57, y: 0.45 },
     name: { en: "Modern Ezo", ka: "მოდერნ ეზო" },
     location: { en: "Historic Tbilisi", ka: "ისტორიული თბილისი" },
     desc: {

@@ -15,15 +15,15 @@
 </head>
 <body>
   <main>
-    <section class="hero" id="top">
-      <div class="hero-map" id="projects" role="region" data-i18n-attr="aria-label:map.label"></div>
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <h1 data-i18n="hero.title"></h1>
-          <p data-i18n="hero.text"></p>
-          <a class="btn btn-primary" href="#projects"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
-        </div>
+    <section class="hero container" id="top">
+      <div class="hero-copy">
+        <h1 data-i18n="hero.title"></h1>
+        <p data-i18n="hero.text"></p>
+        <a class="btn btn-primary" href="#projects"><span data-i18n="hero.cta"></span><svg><use href="#i-arrow"/></svg></a>
       </div>
+      <figure class="hero-media">
+        <img src="assets/img/projects/u-tower.jpg" alt="" fetchpriority="high">
+      </figure>
     </section>
 
     <section class="features container" aria-label="Values">
@@ -42,6 +42,10 @@
         <h3 data-i18n="feat.investment"></h3>
         <p data-i18n="feat.investment.text"></p>
       </div>
+    </section>
+
+    <section class="project-map">
+      <div class="hero-map" id="projects" role="region" data-i18n-attr="aria-label:map.label"></div>
     </section>
 
     <section class="container">
