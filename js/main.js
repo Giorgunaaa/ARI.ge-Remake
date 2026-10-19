@@ -50,6 +50,7 @@
 
     renderProjects();
     renderMap();
+    document.dispatchEvent(new CustomEvent("langchange", { detail: lang }));
   }
 
   document.querySelectorAll("[data-lang]").forEach(function (b) {
@@ -298,6 +299,7 @@
     modal.querySelector(".modal-title").textContent = p.name[lang];
     modal.querySelector(".modal-loc span").textContent = p.location[lang];
     modal.querySelector(".modal-desc").textContent = p.desc[lang];
+    modal.querySelector(".modal-link").href = "project.html?id=" + encodeURIComponent(p.id);
     if (modal.showModal) modal.showModal(); else modal.setAttribute("open", "");
   }
 

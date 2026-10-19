@@ -22,23 +22,28 @@
     '<symbol id="i-ari" viewBox="164 159 494 277"><path fill="currentColor" fill-rule="evenodd" d="M354.64 352.13L340.07 354.99L360.4 402.03L376.55 402.03L354.64 352.13M276.77 194.58L278.89 199.99L322.5 310.75L336.7 308.06L277.12 160.91L166.43 434.37L180.78 434.37L274.61 199.97L276.77 194.58M557 194.23C548.66 187.94 539.31 183.26 529.21 180.32C519.04 177.36 508.65 175.86 498.34 175.86L436.44 175.86L436.44 288.52L451.24 285.73L451.24 192.17L451.24 189.87L453.54 189.87L501.1 189.87C511.32 189.87 520.81 191.59 529.33 194.99C537.75 198.39 545.06 203.1 551.08 208.98C557.1 214.85 561.74 221.72 564.88 229.37C568.02 237.02 569.61 245.31 569.61 254.01C569.61 257.17 569.4 260.34 568.98 263.47L584.54 260.53C584.72 258.16 584.81 255.76 584.81 253.23C584.81 239.66 582.24 227.89 577.16 218.23C572.06 208.54 565.27 200.47 557 194.23M641.56 202.99L641.56 241.12L656.38 238.31L656.38 202.99L641.56 202.99M645.45 295.01L645.24 295.05L645.23 295.05L641.56 295.77L641.56 402.03L656.38 402.03L656.38 292.95L649.66 294.22L645.45 295.01M235.89 344.12L230.01 359.03L327.94 339.79L549.29 296.21L549.51 296.17L549.55 296.17L553.54 295.42L567.35 292.81C569.49 290.87 571.59 288.75 573.59 286.49C576.29 283.36 578.73 279.99 580.85 276.43L574.72 277.6L235.89 344.12M451.24 333.16L436.44 336.07L436.44 402.03L451.24 402.03L451.24 333.16M513.52 321L562.53 402.03L579.92 402.03L529.36 318.01L513.52 321"/></symbol>' +
     "</svg>";
 
+  // Sub-pages (data-page on <body>) link back into the home page sections.
+  var page = document.body.dataset.page || "home";
+  var home = page === "home" ? "" : "index.html";
+
   var links = [
-    ["#top", "nav.home"],
-    ["#about", "nav.about"],
-    ["#projects", "nav.projects"],
-    ["#contacts", "nav.contacts"]
+    [home + "#top", "nav.home"],
+    [home + "#about", "nav.about"],
+    ["projects.html", "nav.projects"],
+    [home + "#contacts", "nav.contacts"]
   ];
 
   var header =
     '<header class="site-header">' +
       '<div class="container header-inner">' +
-        '<a class="brand" href="#top" aria-label="ARI Development Company">' +
+        '<a class="brand" href="' + home + '#top" aria-label="ARI Development Company">' +
           '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
           '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
         "</a>" +
         '<nav class="nav" id="nav" aria-label="Main">' +
           links.map(function (l) {
-            return '<a href="' + l[0] + '" data-i18n="' + l[1] + '"></a>';
+            var current = l[0] === "projects.html" && page !== "home";
+            return '<a href="' + l[0] + '" data-i18n="' + l[1] + '"' + (current ? ' aria-current="page"' : "") + "></a>";
           }).join("") +
           '<div class="lang" role="group" aria-label="Language">' +
             '<button type="button" data-lang="ka">KA</button>' +
@@ -54,7 +59,7 @@
   var footer =
     '<footer class="site-footer">' +
       '<div class="container footer-inner">' +
-        '<a class="brand brand-footer" href="#top" aria-label="ARI Development Company">' +
+        '<a class="brand brand-footer" href="' + home + '#top" aria-label="ARI Development Company">' +
           '<svg class="brand-mark" aria-hidden="true"><use href="#i-ari"/></svg>' +
           '<span class="brand-text"><span>DEVELOPMENT</span><span>COMPANY</span></span>' +
         "</a>" +
@@ -69,15 +74,17 @@
         '<p class="copyright">© ' + new Date().getFullYear() + ' ARI AND CRONA. <span data-i18n="footer.rights"></span></p>' +
       "</div>" +
     "</footer>" +
+    // The project page fills the screen with its slider, so it goes without the sticky bar.
+    (page === "project" ? "" :
     '<div class="contact-bar">' +
       '<div class="container contact-bar-inner">' +
         '<a class="contact-phone" href="tel:+995551002200">' +
           '<svg><use href="#i-phone"/></svg>' +
           '<span><strong>+995 551 00 22 00</strong><small data-i18n="hours"></small></span>' +
         "</a>" +
-        '<a class="btn btn-primary" href="#contacts"><svg><use href="#i-user"/></svg><span data-i18n="cta.contact"></span></a>' +
+        '<a class="btn btn-primary" href="' + home + '#contacts"><svg><use href="#i-user"/></svg><span data-i18n="cta.contact"></span></a>' +
       "</div>" +
-    "</div>" +
+    "</div>") +
     '<dialog class="modal" id="project-modal">' +
       '<button class="modal-close" type="button" data-close data-i18n-attr="aria-label:modal.close"><svg><use href="#i-close"/></svg></button>' +
       '<img class="modal-img" alt="">' +
@@ -85,6 +92,7 @@
         '<h3 class="modal-title"></h3>' +
         '<p class="modal-loc"><svg><use href="#i-pin"/></svg><span></span></p>' +
         '<p class="modal-desc"></p>' +
+        '<a class="btn btn-primary modal-link" href="#"><span data-i18n="modal.more"></span><svg><use href="#i-arrow"/></svg></a>' +
       "</div>" +
     "</dialog>";
 
