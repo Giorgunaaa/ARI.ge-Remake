@@ -128,7 +128,7 @@
     img.src = p.img;
   }
 
-  var PIN_HOVER = 92; // px, size of a pin's photo while hovered
+  var PIN_HOVER = 124; // px, size of a pin's photo while hovered
 
   function pinIcon(p) {
     var s = p.highlight ? 52 : 40;

@@ -92,7 +92,10 @@
         '<h3 class="modal-title"></h3>' +
         '<p class="modal-loc"><svg><use href="#i-pin"/></svg><span></span></p>' +
         '<p class="modal-desc"></p>' +
-        '<a class="btn btn-primary modal-link" href="#"><span data-i18n="modal.more"></span><svg><use href="#i-arrow"/></svg></a>' +
+        '<div class="modal-actions">' +
+          '<a class="btn btn-primary modal-link" href="#"><span data-i18n="modal.full"></span><svg><use href="#i-arrow"/></svg></a>' +
+          '<a class="modal-all" href="projects.html"><span data-i18n="modal.all"></span><svg><use href="#i-arrow"/></svg></a>' +
+        "</div>" +
       "</div>" +
     "</dialog>";
 
