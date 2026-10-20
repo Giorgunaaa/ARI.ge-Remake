@@ -3,16 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apex Investments — სართულები</title>
+<title>ARI — სართულები</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;600;800&family=Noto+Serif+Georgian:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
   :root {
     --sky: #d3d6d9;          /* JS ცვლის სურათის ზედა ფერით */
-    --navy: #3b3f57;         /* ლოგოს ფონი */
-    --gold: #f3b55c;         /* ლოგოს „A" */
-    --silver: #b4b8bf;       /* ლოგოს ტექსტი */
+    --navy: #1d4a31;         /* designhub-ის მთავარი მწვანე */
+    --gold: #e9dcbf;         /* კრემისფერი აქცენტი მუქ ფონზე */
+    --silver: #cfd8cf;
+    --cream: #f6f1e6;        /* მთავარი გვერდის ჰედერი */
+    --pin: #4f9a63;
+    --serif: "Noto Serif Georgian", Georgia, serif;
     --line: rgba(255,255,255,.45);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,21 +30,23 @@
   #world img { display: block; width: 2000px; height: 1116px; pointer-events: none; }
   #world svg { position: absolute; inset: 0; width: 2000px; height: 1116px; }
   /* სურათის ზედა კიდე რბილად გადადის ცაში — „ჭრილი" არ ჩანს */
-  #world .fade { position: absolute; left: 0; right: 0; top: 0; height: 140px; background: linear-gradient(var(--sky), transparent); pointer-events: none; }
+  #world .fade { position: absolute; left: 0; right: 0; top: 0; height: 46px; background: linear-gradient(var(--sky), transparent); pointer-events: none; }
   #world .fade.bot { top: auto; bottom: 0; height: 70px; background: linear-gradient(transparent, var(--sky)); }
   #world .fade.side { top: 0; bottom: 0; height: auto; width: 60px; }
   #world .fade.l { left: 0; right: auto; background: linear-gradient(90deg, var(--sky), transparent); }
   #world .fade.r { right: 0; left: auto; background: linear-gradient(-90deg, var(--sky), transparent); }
 
-  .floor-hit { fill: rgba(243,181,92,0); stroke: transparent; stroke-width: 2; cursor: pointer; transition: fill .25s, stroke .25s; }
-  .floor-hit:hover { fill: rgba(243,181,92,.28); stroke: rgba(255,255,255,.8); }
-  .floor-hit.active { fill: rgba(243,181,92,.30); stroke: #fff; stroke-width: 3; }
-  .zoomed .floor-hit:not(.active) { fill: rgba(20,22,34,.38); }
-  .zoomed .floor-hit:not(.active):hover { fill: rgba(20,22,34,.15); }
+  .floor-hit { fill: rgba(246,241,230,0); stroke: transparent; stroke-width: 2; cursor: pointer; transition: fill .25s, stroke .25s; }
+  .floor-hit:hover { fill: rgba(246,241,230,.3); stroke: rgba(255,255,255,.8); }
+  .floor-hit.active { fill: rgba(246,241,230,.32); stroke: #fff; stroke-width: 3; }
+  .zoomed .floor-hit:not(.active) { fill: rgba(16,36,25,.38); }
+  .zoomed .floor-hit:not(.active):hover { fill: rgba(16,36,25,.15); }
 
   /* ---------- ჰედერი: ლოგო + ენა ---------- */
-  #logo { position: fixed; left: 80px; top: 0; width: 290px; padding: 16px 18px; background: var(--navy); box-shadow: 0 6px 24px rgba(0,0,0,.18); z-index: 5; }
-  #logo img { display: block; width: 100%; height: auto; }
+  #logo { position: fixed; left: 80px; top: 0; display: flex; align-items: center; gap: 14px; padding: 18px 26px; background: var(--cream); color: #1a3732;
+          text-decoration: none; box-shadow: 0 6px 24px rgba(0,0,0,.12); z-index: 5; }
+  #logo img, #menu .top a img, .fp .brand img { display: block; width: 76px; height: 43px; }
+  .bt { display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid currentColor; font: 600 10px/1.25 "Noto Sans Georgian", sans-serif; letter-spacing: 2.2px; }
   #lang { position: fixed; right: 0; top: 0; display: flex; flex-direction: column; z-index: 5; }
   #lang button { width: 58px; height: 48px; border: 0; border-bottom: 1px solid rgba(255,255,255,.12); background: var(--navy); color: var(--silver); font: 600 15px "Noto Sans Georgian", sans-serif; cursor: pointer; }
   #lang button.on { color: var(--gold); }
@@ -50,16 +55,17 @@
   #menuBtn { position: fixed; left: 14px; top: 50%; transform: translateY(-50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 6px;
              background: none; border: 0; cursor: pointer; color: var(--navy); font: 400 12px "Noto Sans Georgian", sans-serif; }
   #menuBtn .ico { width: 52px; height: 46px; background: #fff; display: grid; place-content: center; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
-  #menuBtn .ico i { display: block; width: 28px; height: 4px; border-radius: 2px; background: var(--gold); }
+  #menuBtn .ico i { display: block; width: 28px; height: 4px; border-radius: 2px; background: var(--navy); }
+  #menuBtn:hover .ico i { background: var(--gold); }
   #menuBtn:hover .ico { background: var(--navy); }
   #menu, #menu * { transition: none !important; animation: none !important; }
-  #menuShade { position: fixed; inset: 0; z-index: 19; background: rgba(20,22,34,.5); display: none; }
+  #menuShade { position: fixed; inset: 0; z-index: 19; background: rgba(16,36,25,.5); display: none; }
   #menu { position: fixed; left: 0; top: 0; bottom: 0; width: 420px; max-width: 100%; z-index: 20; background: var(--navy); color: #fff;
           display: none; flex-direction: column; padding: 28px 36px; overflow-y: auto; }
   body.menu-open #menu { display: flex; }
   body.menu-open #menuShade { display: block; }
   #menu .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
-  #menu .top img { width: 200px; height: auto; display: block; }
+  #menu .top a { display: flex; align-items: center; gap: 14px; color: #efe7d6; text-decoration: none; }
   #menuClose { width: 40px; height: 40px; border: 1px solid var(--line); background: none; color: #fff; font-size: 20px; cursor: pointer; }
   #menuClose:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
   #menu nav { display: flex; flex-direction: column; }
@@ -73,12 +79,12 @@
   /* ---------- ჰერო ტექსტი ---------- */
   #hero { position: fixed; left: 0; right: 0; text-align: center; pointer-events: none; color: var(--navy); }
   #hero .kicker { font-size: clamp(22px, 2.6vw, 36px); font-weight: 300; margin-bottom: 14px; }
-  #hero h1 { font-size: clamp(28px, 3.6vw, 52px); font-weight: 600; line-height: 1.15; }
-  #hero h1 span { color: #c8862c; }
+  #hero h1 { font-family: var(--serif); font-size: clamp(30px, 3.8vw, 56px); font-weight: 500; line-height: 1.15; }
+  #hero h1 span { color: var(--pin); }
 
   /* ---------- მთავარი ზოლი (როგორც tbilisigardens-ზე) ---------- */
   #hud { position: fixed; left: 80px; right: 98px; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 28px;
-         padding: 18px 28px; border: 1px solid var(--line); background: rgba(59,63,87,.78); backdrop-filter: blur(10px); z-index: 4; }
+         padding: 18px 28px; border: 1px solid var(--line); background: rgba(29,74,49,.84); backdrop-filter: blur(10px); z-index: 4; }
   .hints { display: flex; gap: 26px; }
   .hint { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; text-align: center; line-height: 1.15; }
   .hint svg { width: 34px; height: 34px; stroke: #fff; fill: none; stroke-width: 1.3; }
@@ -102,10 +108,10 @@
 
   /* მარცხენა სართულების ზოლი — მხოლოდ სართულზე ყოფნისას */
   #rail { position: fixed; left: 80px; top: 50%; transform: translateY(-30%); display: flex; flex-direction: column; gap: 4px; z-index: 3; }
-  #rail button { width: 42px; height: 26px; border: 0; background: rgba(59,63,87,.8); color: #fff; font: 600 12px "Noto Sans Georgian", sans-serif; cursor: pointer; transition: background .2s, width .2s; }
+  #rail button { width: 42px; height: 26px; border: 0; background: rgba(29,74,49,.82); color: #fff; font: 600 12px "Noto Sans Georgian", sans-serif; cursor: pointer; transition: background .2s, width .2s; }
   #rail button:hover { background: var(--navy); }
   #rail button.active { background: var(--gold); color: var(--navy); width: 54px; }
-  #rail button.all { margin-bottom: 8px; font-size: 11px; font-weight: 400; }
+  #rail button.all { width: auto; min-width: 54px; padding: 0 8px; margin-bottom: 8px; font-size: 11px; font-weight: 400; white-space: nowrap; }
 
   /* ---------- სართულზე ყოფნისას ზოლი იცვლება: ბინის ტიპები + „სართულის გეგმა" ---------- */
   .center { justify-self: center; text-align: center; min-width: 0; }
@@ -130,14 +136,13 @@
   body.zoomed-ui #planBtn { display: inline-flex; }
 
   /* ---------- სართულის ხედი (სრულ ეკრანზე, როგორც tbilisigardens / ari.ge) ---------- */
-  .fp { --coral: #ef7464; --brown: #9a8670; --green: #6fba8b; --ink: #2f3140; --rule: #ece8e2; }
+  .fp { --coral: #ef7464; --brown: #4c5751; --green: #4f9a63; --ink: #1d2a22; --rule: #e3ddd0; --accent: #1d4a31; }
   .fp { position: fixed; inset: 0; z-index: 10; background: #fff; color: var(--ink); display: none; user-select: none; touch-action: auto; }
   body.fv-open #fv, body.av-open #av { display: grid; }
   #av { z-index: 11; }
   .fp .col { border-right: 1px solid var(--rule); min-width: 0; min-height: 0; }
   .fp .col:last-child { border-right: 0; }
-  .fp .brand { display: block; width: 210px; background: var(--navy); padding: 12px 14px; }
-  .fp .brand img { display: block; width: 100%; height: auto; }
+  .fp .brand { display: flex; align-items: center; gap: 14px; padding: 22px 0 6px; color: #1a3732; text-decoration: none; }
   .fp .ghost { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; padding: 15px 18px; border: 1px solid var(--green); background: #fff; color: var(--ink);
                font: 400 15px "Noto Sans Georgian", sans-serif; cursor: pointer; transition: background .2s, color .2s; }
   .fp .ghost:hover { background: var(--green); color: #fff; }
@@ -169,14 +174,14 @@
   .fv-floors { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; position: relative; padding-right: 34px; }
   .fv-floors .cap { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-size: 15px; color: var(--brown); }
   .fv-floors .arr { width: 44px; height: 30px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
-  .fv-floors .arr::before { content: ""; width: 14px; height: 14px; border-left: 1.5px solid var(--coral); border-top: 1.5px solid var(--coral); transform: translateY(4px) rotate(45deg); }
+  .fv-floors .arr::before { content: ""; width: 14px; height: 14px; border-left: 1.5px solid var(--accent); border-top: 1.5px solid var(--accent); transform: translateY(4px) rotate(45deg); }
   .fv-floors #fvDown::before { transform: translateY(-4px) rotate(225deg); }
   .fv-floors .arr:disabled { opacity: .2; cursor: default; }
   .fv-floors .list { display: flex; flex-direction: column; align-items: center; }
   .fv-floors .n { width: 96px; height: 88px; display: grid; place-items: center; border: 1px solid transparent; background: none; cursor: pointer;
                   font: 600 44px/1 "Noto Sans Georgian", sans-serif; color: var(--brown); }
-  .fv-floors .n:hover { color: var(--coral); }
-  .fv-floors .n.on { border-color: var(--coral); color: var(--coral); font-size: 72px; width: 120px; height: 120px; }
+  .fv-floors .n:hover { color: var(--accent); }
+  .fv-floors .n.on { border-color: var(--accent); color: var(--accent); font-size: 72px; width: 120px; height: 120px; }
   .fv-floors .n.far { font-size: 30px; height: 56px; opacity: .5; }
 
   #tip { position: fixed; z-index: 30; pointer-events: none; background: #fff; color: var(--navy); box-shadow: 0 8px 28px rgba(0,0,0,.18); padding: 12px 16px; min-width: 190px; font-size: 13px; display: none; }
@@ -194,7 +199,7 @@
   .av-mark .sq i { background: var(--green); opacity: .8; }
   .av-mark b { display: block; font-size: 22px; color: var(--brown); }
   .av-mark small { font-size: 14px; color: var(--brown); }
-  .av-left h2 { font-size: 30px; color: var(--brown); padding-bottom: 12px; border-bottom: 2px solid var(--brown); margin-top: 18px; }
+  .av-left h2 { font-family: var(--serif); font-weight: 500; font-size: 30px; color: var(--accent); padding-bottom: 12px; border-bottom: 2px solid var(--accent); margin-top: 18px; }
   .av-rooms { list-style: none; display: grid; gap: 18px; }
   .av-rooms li { display: flex; align-items: center; gap: 20px; font-size: 15px; color: var(--brown); line-height: 1.3; }
   .av-rooms li b { flex: none; width: 46px; height: 46px; display: grid; place-items: center; background: var(--green); color: #fff; font-weight: 400; font-size: 17px; }
@@ -209,7 +214,7 @@
   #avSvg .mk text { fill: #fff; text-anchor: middle; dominant-baseline: central; font-family: "Noto Sans Georgian", sans-serif; }
   .av-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); margin-top: 22px; padding-top: 18px; font-size: 15px; color: var(--brown); }
   .av-right { padding: 70px 34px 34px; display: flex; flex-direction: column; overflow-y: auto; }
-  .av-right h1 { font-size: 44px; color: var(--coral); line-height: 1.1; }
+  .av-right h1 { font-family: var(--serif); font-weight: 500; font-size: 44px; color: var(--accent); line-height: 1.1; }
   .av-right .fl { font-size: 26px; color: var(--navy); margin: 14px 0 22px; }
   .av-right .tot { font-size: 52px; font-weight: 700; color: var(--navy); line-height: 1; }
   .av-right .tot sup { font-size: 26px; }
@@ -223,7 +228,7 @@
   .av-st .badge { padding: 5px 14px; font-size: 13px; font-weight: 600; background: var(--green); color: #fff; }
   .av-st .badge.sold { background: var(--coral); }
   .av-st a { font-size: 14px; color: var(--navy); text-decoration: none; border-bottom: 1px solid currentColor; }
-  .av-st a:hover { color: var(--coral); }
+  .av-st a:hover { color: var(--green); }
   .av-right .mcap { font-size: 15px; color: var(--brown); margin: 34px 0 16px; }
   #avMini { display: block; width: 100%; height: auto; cursor: pointer; }
   #avMini .apt { fill: #fff; fill-opacity: 0; } #avMini .apt.sold { fill: var(--coral); fill-opacity: .6; }
@@ -264,7 +269,9 @@
     #hud { grid-template-columns: auto 1fr auto; }
   }
   @media (max-width: 760px) {
-    #logo { left: 12px; width: 170px; padding: 10px 12px; }
+    #logo { left: 12px; padding: 10px 14px; gap: 10px; }
+    #logo img { width: 64px; height: 36px; }
+    #logo .bt { font-size: 8px; letter-spacing: 1.6px; padding-left: 10px; }
     #lang button { width: 46px; height: 40px; font-size: 13px; }
     #hud { left: 12px; right: 12px; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 16px; }
     .hints { display: none; }
@@ -292,14 +299,14 @@
   </div>
 </div>
 
-<a id="logo" href="#" aria-label="Apex Investments"><img src="logo.png" alt="Apex Investments"></a>
+<a id="logo" href="../" aria-label="ARI Development Company"><img src="../assets/img/ari-mark.svg" alt=""><span class="bt"><span>DEVELOPMENT</span><span>COMPANY</span></span></a>
 <div id="lang"><button>ENG</button><button class="on">ქარ</button></div>
 
 <button id="menuBtn" aria-label="მენიუ" aria-controls="menu" aria-expanded="false"><span class="ico"><i></i><i></i><i></i></span><span>მენიუ</span></button>
 <div id="menuShade"></div>
 <aside id="menu" aria-label="მენიუ">
   <div class="top">
-    <img src="logo.png" alt="Apex Investments">
+    <a href="../" aria-label="ARI Development Company"><img src="ari-logo-light.svg" alt=""><span class="bt"><span>DEVELOPMENT</span><span>COMPANY</span></span></a>
     <button id="menuClose" aria-label="დახურვა">✕</button>
   </div>
   <!-- data-act: შიდა მოქმედება; href: სხვა გვერდი. „#" ბმულები ჯერ placeholder-ია -->
@@ -316,8 +323,8 @@
   </nav>
   <div class="foot">
     <b>დაგვიკავშირდი</b>
-    <a href="mailto:info@apexinvestments.ge">info@apexinvestments.ge</a>
-    <a href="tel:+995599712710">+995 599 71 27 10</a>
+    <a href="mailto:info@ari.ge">info@ari.ge</a>
+    <a href="tel:+995551002200">+995 551 00 22 00</a>
   </div>
 </aside>
 
@@ -340,8 +347,8 @@
   </div>
   <div class="contact">
     <b>დაგვიკავშირდი</b>
-    <a href="mailto:info@apexinvestments.ge">info@apexinvestments.ge</a>
-    <a href="tel:+995599712710">+995 599 71 27 10</a>
+    <a href="mailto:info@ari.ge">info@ari.ge</a>
+    <a href="tel:+995551002200">+995 551 00 22 00</a>
   </div>
   <div id="counter">
     <span class="lbl">სართული</span>
@@ -359,7 +366,7 @@
 <!-- სართულის ხედი: გაყიდული ბინები წითელია, თავისუფალი — hover-ზე თეთრდება -->
 <section id="fv" class="fp" aria-label="სართულის გეგმა">
   <div class="col fv-side">
-    <a class="brand" href="#" id="fvLogo" aria-label="Apex Investments"><img src="logo.png" alt="Apex Investments"></a>
+    <a class="brand" href="#" id="fvLogo" aria-label="ARI Development Company"><img src="../assets/img/ari-mark.svg" alt=""><span class="bt"><span>DEVELOPMENT</span><span>COMPANY</span></span></a>
     <button class="ghost" id="fvBack"><svg viewBox="0 0 14 14"><path d="M9 2 4 7l5 5"/></svg>შენობა</button>
     <div class="info" id="fvInfo"></div>
     <div class="info lg"><span><i class="sold"></i>გაყიდული</span><span><i class="free"></i>იყიდება</span></div>
@@ -425,7 +432,7 @@ for (let i = 0; i < 10; i++) {
 /* ---------- ბინები ----------
    საცხოვრებელ სართულზე (3–12) 14 ბინაა; გეგმა და ფართები — floorplan.js (CAD PDF-იდან).
    ნომრები PDF-ისაა: სართული 3 (+8.00) → №1–14, სართული 4 (+11.20) → №15–28 ... */
-const CONTACT = { email: 'info@apexinvestments.ge', phone: '+995599712710', phoneText: '+995 599 71 27 10' };
+const CONTACT = { email: 'info@ari.ge', phone: '+995551002200', phoneText: '+995 551 00 22 00' };
 const APTS = FloorPlan.apts;                      // APTS(სართული) → 14 ბინა; n = ადგილი სართულზე (1–14)
 const RES_FLOORS = floors.filter(f => f.type === 'residential').map(f => f.n);
 const aptNo = (fl, n) => APTS(fl)[n - 1].no;
