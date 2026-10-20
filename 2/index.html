@@ -162,6 +162,8 @@
   #fvSvg .apt.sold:hover { fill-opacity: .86; }
   .fp .lbl { pointer-events: none; text-anchor: middle; font-family: "Noto Sans Georgian", sans-serif; }
   .fp .lbl.w { fill: #fff; }
+  .fp .lbl.b { font-weight: 600; letter-spacing: .1px; }
+  .fp .lbl.d.b { fill: var(--brown); stroke-width: 2px; }
   .fp .lbl.d { fill: var(--ink); paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
 
   .fv-floors { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; position: relative; padding-right: 34px; }
@@ -620,6 +622,7 @@ function drawFloorView() {
     const [x, y] = a.lp, c = st === 'sold' ? 'lbl w' : 'lbl d';
     el('text', { x, y: y - 1.5, class: c, 'font-size': 8.6, 'font-weight': 600 }, fvLayer, `ბინა №${no}`);
     el('text', { x, y: y + 9, class: c, 'font-size': 8 }, fvLayer, st === 'sold' ? STATUS.sold : `${a.total} m²`);
+    balcLabels(a, fvLayer, st === 'sold' ? 'lbl w b' : 'lbl d b', 5.6);
   });
   const A = APTS(fl), free = A.filter(a => statusOf(fl, a.pos) === 'free').length, tot = A.map(a => a.total);
   $('#fvInfo').innerHTML = `<h5>სართულის შესახებ</h5><dl>
@@ -649,6 +652,11 @@ $('#fvBack').onclick = closeFloor;
 $('#fvLogo').onclick = e => { e.preventDefault(); closeFloor(); go(-1); };
 $('.fv-floors').addEventListener('wheel', e => { e.preventDefault(); fvStep(e.deltaY < 0 ? 1 : -1); }, { passive: false });
 
+/* აივნის ფართი თავის აივანზე (ადგილი — PDF-ის წარწერიდან) */
+function balcLabels(a, g, cls, size) {
+  a.bl.forEach(([v, x, y]) => el('text', { x, y: y + size * .35, class: cls, 'font-size': size }, g, `${a.terrace ? 'ტერასა' : 'აივანი'} ${v.toFixed(1)} მ²`));
+}
+
 /* hover ბარათი */
 const tip = $('#tip');
 function showTip(fl, a, e) {
@@ -672,6 +680,7 @@ function hideTip() { tip.style.display = 'none'; }
 const avSvg = $('#avSvg');
 const [VX, VY, VW, VH] = FloorPlan.VIEW;
 const avMask = el('mask', { id: 'avMask', maskUnits: 'userSpaceOnUse', x: VX, y: VY, width: VW, height: VH }, el('defs', {}, avSvg));
+const avBal = el('g', {}, avSvg);
 const avEdge = el('polygon', { fill: 'none', stroke: '#6fba8b', 'stroke-width': 1, 'stroke-linejoin': 'round' }, avSvg);
 const avMini = $('#avMini'), miniLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 avMini.setAttribute('viewBox', FloorPlan.VIEW.join(' '));
@@ -689,7 +698,8 @@ function drawApt() {
   const balName = a.terrace ? 'ტერასა' : 'აივანი';
   setHash();
   // ნახაზიდან მხოლოდ ეს ბინა (აივნის ჩათვლით) ჩანს
-  FloorPlan.draw(avSvg, fl).setAttribute('mask', 'url(#avMask)'); avSvg.appendChild(avEdge);
+  FloorPlan.draw(avSvg, fl).setAttribute('mask', 'url(#avMask)'); avSvg.appendChild(avEdge); avSvg.appendChild(avBal);
+  avBal.innerHTML = ''; balcLabels(a, avBal, 'lbl d b', 5.2);
   avMask.innerHTML = '';
   el('polygon', { points: pts(a.poly), fill: '#fff', stroke: '#fff', 'stroke-width': 1.6, 'stroke-linejoin': 'round' }, avMask);
   avEdge.setAttribute('points', pts(a.poly));
