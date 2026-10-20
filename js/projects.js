@@ -1,6 +1,7 @@
 // Project list scraped from ari.ge/projects (EN + KA).
 // gallery: photo groups from the project's ari.ge page; kind is "completed",
 // "construction", "renders" or null (no heading).
+// pin: the photo shown in the map pin (a gallery render/photo; falls back to img).
 // Optional fields: status ("ongoing" | "completed"), highlight (photo pin on the
 // hero map instead of a plain dot), coords ([lat, lng] for the hero map —
 // approximate, placed by street/district; replace with exact points).
@@ -9,6 +10,7 @@ window.PROJECTS = [
     id: "toidze-street",
     coords: [41.7083, 44.7838],
     img: "assets/img/projects/toidze-street.jpg",
+    pin: "assets/img/projects/toidze-street/03.jpg",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/toidze-street/01.jpg",
@@ -34,6 +36,7 @@ window.PROJECTS = [
     id: "nutsubidze",
     coords: [41.7262, 44.7432],
     img: "assets/img/projects/nutsubidze.webp",
+    pin: "assets/img/projects/nutsubidze/03.png",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/nutsubidze/01.jpg",
@@ -53,6 +56,7 @@ window.PROJECTS = [
     id: "saingilo",
     coords: [41.6968, 44.8092],
     img: "assets/img/projects/saingilo.webp",
+    pin: "assets/img/projects/saingilo/04.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/saingilo/01.jpg",
@@ -74,6 +78,7 @@ window.PROJECTS = [
     id: "lisi-lake",
     coords: [41.7428, 44.7368],
     img: "assets/img/projects/lisi-lake.webp",
+    pin: "assets/img/projects/lisi-lake/03.webp",
     gallery: [
       { kind: "construction", photos: [
         "assets/img/projects/lisi-lake/01.jpg",
@@ -95,6 +100,7 @@ window.PROJECTS = [
     id: "modern-ezo",
     coords: [41.7008, 44.7938],
     img: "assets/img/projects/modern-ezo.webp",
+    pin: "assets/img/projects/modern-ezo/04.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/modern-ezo/01.jpg",
@@ -117,6 +123,7 @@ window.PROJECTS = [
     id: "vera-hillside",
     coords: [41.7072, 44.7792],
     img: "assets/img/projects/vera-hillside.webp",
+    pin: "assets/img/projects/vera-hillside/03.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/vera-hillside/01.jpg",
@@ -138,6 +145,7 @@ window.PROJECTS = [
     id: "green-park",
     coords: [41.7318, 44.7542],
     img: "assets/img/projects/green-park.webp",
+    pin: "assets/img/projects/green-park/03.png",
     gallery: [
       { kind: "construction", photos: [
         "assets/img/projects/green-park/01.jpg",
@@ -159,6 +167,7 @@ window.PROJECTS = [
     id: "park-side",
     coords: [41.7108, 44.7452],
     img: "assets/img/projects/park-side.webp",
+    pin: "assets/img/projects/park-side/03.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/park-side/01.jpg",
@@ -178,6 +187,7 @@ window.PROJECTS = [
     id: "didi-digomi",
     coords: [41.7868, 44.7572],
     img: "assets/img/projects/didi-digomi.webp",
+    pin: "assets/img/projects/didi-digomi/01.webp",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/didi-digomi/01.webp",
@@ -206,6 +216,7 @@ window.PROJECTS = [
     id: "mukhiani-ergo",
     coords: [41.8078, 44.7898],
     img: "assets/img/projects/mukhiani-ergo.webp",
+    pin: "assets/img/projects/mukhiani-ergo/03.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/mukhiani-ergo/01.jpg",
@@ -227,6 +238,7 @@ window.PROJECTS = [
     id: "radio-factory",
     coords: [41.8022, 44.7828],
     img: "assets/img/projects/radio-factory.webp",
+    pin: "assets/img/projects/radio-factory/04.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/radio-factory/01.jpg",
@@ -248,6 +260,7 @@ window.PROJECTS = [
     id: "the-quietude",
     coords: [41.7232, 44.7612],
     img: "assets/img/projects/the-quietude.webp",
+    pin: "assets/img/projects/the-quietude/03.png",
     gallery: [
       { kind: "construction", photos: [
         "assets/img/projects/the-quietude/01.jpg",
@@ -269,6 +282,7 @@ window.PROJECTS = [
     id: "barnovi",
     coords: [41.7098, 44.7738],
     img: "assets/img/projects/barnovi.webp",
+    pin: "assets/img/projects/barnovi/01.png",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/barnovi/01.png",
@@ -288,6 +302,7 @@ window.PROJECTS = [
     coords: [41.6938, 44.7972],
     highlight: true,
     img: "assets/img/projects/gogebashvili.jpg",
+    pin: "assets/img/projects/gogebashvili/03.webp",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/gogebashvili/01.jpg",
@@ -310,6 +325,7 @@ window.PROJECTS = [
     coords: [41.7018, 44.8038],
     highlight: true,
     img: "assets/img/projects/u-tower.jpg",
+    pin: "assets/img/projects/u-tower/02.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/u-tower/01.jpg",
@@ -335,6 +351,7 @@ window.PROJECTS = [
     coords: [41.6905, 44.8008],
     highlight: true,
     img: "assets/img/projects/u2-tower.jpg",
+    pin: "assets/img/projects/u2-tower/01.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/u2-tower/01.jpg",
@@ -356,6 +373,7 @@ window.PROJECTS = [
     id: "avlabari-house",
     coords: [41.6935, 44.8138],
     img: "assets/img/projects/avlabari-house.jpg",
+    pin: "assets/img/projects/avlabari-house/05.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/avlabari-house/01.jpg",
@@ -383,6 +401,7 @@ window.PROJECTS = [
     id: "terrace-apartments",
     coords: [41.7108, 44.8022],
     img: "assets/img/projects/terrace-apartments.jpg",
+    pin: "assets/img/projects/terrace-apartments/02.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/terrace-apartments/01.jpg",
@@ -402,6 +421,7 @@ window.PROJECTS = [
     id: "lumina-salosi",
     coords: [41.6958, 44.8388],
     img: "assets/img/projects/lumina-salosi.jpg",
+    pin: "assets/img/projects/lumina-salosi/03.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/lumina-salosi/01.jpg",
@@ -422,6 +442,7 @@ window.PROJECTS = [
     id: "skyline-varketili",
     coords: [41.6998, 44.8782],
     img: "assets/img/projects/skyline-varketili.jpg",
+    pin: "assets/img/projects/skyline-varketili/01.jpg",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/skyline-varketili/01.jpg",
@@ -443,6 +464,7 @@ window.PROJECTS = [
   {
     id: "bridge-manglisi",
     img: "assets/img/projects/bridge-manglisi.jpg",
+    pin: "assets/img/projects/bridge-manglisi/05.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/bridge-manglisi/01.jpg",
@@ -464,6 +486,7 @@ window.PROJECTS = [
     id: "arch-kavtaradze",
     coords: [41.7248, 44.7502],
     img: "assets/img/projects/arch-kavtaradze.jpg",
+    pin: "assets/img/projects/arch-kavtaradze/04.jpg",
     gallery: [
       { kind: "completed", photos: [
         "assets/img/projects/arch-kavtaradze/01.jpg",
@@ -486,6 +509,7 @@ window.PROJECTS = [
     coords: [41.6948, 44.8048],
     highlight: true,
     img: "assets/img/projects/diuma.jpg",
+    pin: "assets/img/projects/diuma/04.jpg",
     gallery: [
       { kind: null, photos: [
         "assets/img/projects/diuma/01.jpg",

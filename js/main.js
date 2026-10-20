@@ -76,7 +76,7 @@
 
   function fisheye(p, done) {
     if (fisheyeCache[p.id]) return done(fisheyeCache[p.id]);
-    var focus = p.fisheye || { x: .5, y: .45 };
+    var focus = (p.pin ? p.pinFocus : p.fisheye) || { x: .5, y: .45 };
     var img = new Image();
     img.onload = function () {
       var OUT = 360, SRC = OUT * 2;
@@ -125,7 +125,7 @@
 
       done(fisheyeCache[p.id] = out.toDataURL("image/jpeg", .9));
     };
-    img.src = p.img;
+    img.src = p.pin || p.img;
   }
 
   var PIN_HOVER = 124; // px, size of a pin's photo while hovered
@@ -134,7 +134,7 @@
   function pinIcon(p) {
     var s = p.highlight ? 52 : 40;
     var tip = Math.round(s / 2 + s * 0.7071);
-    var src = fisheyeCache[p.id] || p.img;
+    var src = fisheyeCache[p.id] || p.pin || p.img;
     return L.divIcon({
       className: "pin" + (p.highlight ? " pin-lg" : ""),
       // every pin grows to the same size on hover, whatever its resting size
