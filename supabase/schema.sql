@@ -10,6 +10,8 @@ create table if not exists public.units (
 -- ძველ ცხრილზეც (სტატუსი „დაჯავშნილი" მოგვიანებით დაემატა)
 alter table public.units drop constraint if exists units_status_check;
 alter table public.units add constraint units_status_check check (status in ('free', 'reserved', 'sold'));
+-- ფასდაკლებით ფასი (ცარიელი = ფასდაკლება არ არის)
+alter table public.units add column if not exists sale_price numeric check (sale_price >= 0);
 
 -- ვისაც შეუძლია ცვლილება (ელფოსტა, რომლითაც Authentication-ში მომხმარებელი შექმენი)
 create table if not exists public.admins (

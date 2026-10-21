@@ -37,7 +37,7 @@
 
   /* სია */
   .list { background: #fff; border: 1px solid var(--line); }
-  .row { display: grid; grid-template-columns: 1.4fr 1fr .6fr .7fr 1.1fr 2fr; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 1.3fr 1fr .5fr .6fr 1fr 1fr 2fr; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
   .row:first-child { border-top: 0; }
   .row.head { color: var(--muted); font-size: 13px; }
   .row a { color: inherit; text-decoration: none; font-weight: 600; }
@@ -56,6 +56,8 @@
   .seg button.on.sold { background: var(--coral); color: #fff; }
   .row.changed { background: #fbf6e8; box-shadow: inset 3px 0 var(--amber); }
   .price.bad { border-color: var(--coral); }
+  .price { position: relative; }
+  .price em { position: absolute; top: -9px; right: -6px; font-style: normal; font-size: 11px; line-height: 1.3; font-weight: 600; color: #fff; background: var(--coral); padding: 1px 5px; }
   .res { grid-column: 1 / -1; display: none; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: 13px; color: var(--muted); }
   .row.is-res .res { display: flex; }
   .res label { display: flex; align-items: center; gap: 8px; }
@@ -110,6 +112,7 @@
         <option value="free">იყიდება</option>
         <option value="reserved">დაჯავშნილია</option>
         <option value="sold">გაყიდულია</option>
+        <option value="sale">ფასდაკლებით</option>
       </select>
       <input type="search" id="fSearch" placeholder="№ ძებნა" aria-label="ნომრით ძებნა">
       <div class="sum" id="sum"></div>
@@ -150,25 +153,27 @@ if (!Sales.configured) {
   const res = {};     // id → { client, until }        — reservations (მხოლოდ ადმინი)
 
   async function load() {
-    const [u, r] = await Promise.all([db.from('units').select('id,status,price'), db.from('reservations').select('id,client,until')]);
+    const [u, r] = await Promise.all([db.from('units').select('id,status,price,sale_price'), db.from('reservations').select('id,client,until')]);
     if (u.error || r.error) return alert('მონაცემები ვერ ჩაიტვირთა: ' + (u.error || r.error).message);
     u.data.forEach(x => state[x.id] = x);
     r.data.forEach(x => res[x.id] = { client: x.client, until: x.until });
     draw();
   }
-  const get = id => ({ status: 'free', price: null, client: null, until: null, ...state[id], ...res[id], id });
+  const get = id => ({ status: 'free', price: null, sale_price: null, client: null, until: null, ...state[id], ...res[id], id });
   const esc = t => String(t ?? '').replace(/[&<>"]/g, c => `&#${c.charCodeAt(0)};`);
   const today = () => new Date().toLocaleDateString('sv');   // YYYY-MM-DD, ადგილობრივი დროით
+  const onSale = s => s.price != null && s.sale_price != null && s.sale_price < s.price;
   const expired = s => s.status === 'reserved' && s.until && s.until < today();
 
   function draw() {
     const fl = $('#fFloor').value, st = $('#fStatus').value, q = $('#fSearch').value.trim();
-    const rows = UNITS.filter(u => (fl === '' || u.fl === +fl) && (!st || cur(u.id).status === st) && (!q || String(u.no ?? u.name).includes(q)));
+    const rows = UNITS.filter(u => (fl === '' || u.fl === +fl) && (!st || (st === 'sale' ? onSale(cur(u.id)) : cur(u.id).status === st)) && (!q || String(u.no ?? u.name).includes(q)));
     const count = k => UNITS.filter(u => cur(u.id).status === k).length;
-    const late = UNITS.filter(u => expired(cur(u.id))).length;
+    const late = UNITS.filter(u => expired(cur(u.id))).length, sale = UNITS.filter(u => onSale(cur(u.id))).length;
     $('#sum').innerHTML = Object.keys(STATUS).map(k => `${STATUS[k]} <b>${count(k)}</b>`).join(' · ') +
+      (sale ? ` · ფასდაკლებით <b>${sale}</b>` : '') +
       (late ? ` · <span class="late">ვადაგასული ჯავშანი <b>${late}</b></span>` : '');
-    $('#list').innerHTML = rows.length ? `<div class="row head"><span>ერთეული</span><span>ტიპი</span><span>სართული</span><span>ფართი</span><span>ფასი</span><span>სტატუსი</span></div>` +
+    $('#list').innerHTML = rows.length ? `<div class="row head"><span>ერთეული</span><span>ტიპი</span><span>სართული</span><span>ფართი</span><span>ფასი</span><span>ფასდაკლებით</span><span>სტატუსი</span></div>` +
       rows.map(u => {
         const s = cur(u.id);
         return `<div class="row${u.id in edits ? ' changed' : ''}${s.status === 'reserved' ? ' is-res' : ''}" data-id="${u.id}">
@@ -176,7 +181,8 @@ if (!Sales.configured) {
           <span class="m">${u.type}</span>
           <span class="m">${u.fl}</span>
           <span class="m">${u.area ? u.area + ' მ²' : '—'}</span>
-          <label class="price"><span>$</span><input inputmode="numeric" value="${s.price ?? ''}" placeholder="—" aria-label="ფასი"></label>
+          <label class="price"><span>$</span><input inputmode="numeric" data-k="price" value="${s.price ?? ''}" placeholder="—" aria-label="ფასი"></label>
+          <label class="price sale"><span>$</span><input inputmode="numeric" data-k="sale_price" value="${s.sale_price ?? ''}" placeholder="—" aria-label="ფასდაკლებით ფასი">${onSale(s) ? `<em>-${Math.round((1 - s.sale_price / s.price) * 100)}%</em>` : ''}</label>
           <div class="seg">${Object.keys(STATUS).map(k => `<button class="${k}${s.status === k ? ' on' : ''}" data-st="${k}">${STATUS[k]}</button>`).join('')}</div>
           <div class="res${expired(s) ? ' late' : ''}">
             <label>ვისზეა <input data-f="client" value="${esc(s.client)}" placeholder="სახელი, ტელეფონი"></label>
@@ -206,7 +212,9 @@ if (!Sales.configured) {
 
   async function saveAll() {
     const ids = Object.keys(edits); if (!ids.length) return;
-    const rows = ids.map(id => ({ id, status: cur(id).status, price: cur(id).price }));
+    const wrong = ids.filter(id => cur(id).sale_price != null && !onSale(cur(id)));
+    if (wrong.length) return bar(`<span class="bad">ფასდაკლებით ფასი ძველ ფასზე ნაკლები უნდა იყოს: ${wrong.map(id => UNITS.find(u => u.id === id).name).join(', ')}</span>`);
+    const rows = ids.map(id => ({ id, status: cur(id).status, price: cur(id).price, sale_price: cur(id).sale_price }));
     // ჯავშნის დეტალები: დაჯავშნილზე ვინახავთ, სხვა სტატუსზე გადასვლისას ვშლით (პირადი მონაცემი ზედმეტად არ დარჩეს)
     const keep = ids.filter(id => cur(id).status === 'reserved').map(id => ({ id, client: cur(id).client || null, until: cur(id).until || null }));
     const drop = ids.filter(id => cur(id).status !== 'reserved' && id in res);
@@ -242,7 +250,10 @@ if (!Sales.configured) {
     const id = e.target.closest('.row').dataset.id, raw = e.target.value.replace(/[\s,$]/g, '');
     const ok = raw === '' || +raw >= 0;
     e.target.closest('.price').classList.toggle('bad', !ok);
-    if (ok) edit(id, { price: raw === '' ? null : +raw });
+    if (ok) edit(id, { [e.target.dataset.k]: raw === '' ? null : +raw });
+    const em = e.target.closest('.row').querySelector('.sale em'), s = cur(id);
+    if (em) em.remove();
+    if (onSale(s)) e.target.closest('.row').querySelector('.sale').insertAdjacentHTML('beforeend', `<em>-${Math.round((1 - s.sale_price / s.price) * 100)}%</em>`);
   });
   $('#list').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.price input')) saveAll(); });
   $('#saveBtn').onclick = saveAll;

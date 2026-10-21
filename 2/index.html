@@ -236,6 +236,9 @@
   .av-st .badge.sold { background: var(--coral); }
   .av-st .badge.reserved { background: var(--amber); }
   .av-st .price { flex-basis: 100%; font: 500 28px/1.2 var(--serif); color: var(--navy); }
+  .av-st .price s, #tip s { font-size: .6em; opacity: .5; margin-right: 4px; }
+  .av-st .price .off, #tip .off { font: 600 12px/1 "Noto Sans Georgian", sans-serif; font-style: normal; background: #ef7464; color: #fff; padding: 3px 6px; vertical-align: middle; }
+  #tip s { font-size: 1em; }
   .av-st a { font-size: 14px; color: var(--navy); text-decoration: none; border-bottom: 1px solid currentColor; }
   .av-st a:hover { color: var(--green); }
   .av-right .mcap { font-size: 15px; color: var(--brown); margin: 34px 0 16px; }
@@ -460,8 +463,11 @@ const M_PER_PT = 0.0906;                                   // 1:500 ფურც
 const pStatus = no => Sales.status(Sales.id.park(no));
 const cStatus = (fl, n) => Sales.status(Sales.id.com(fl, n));
 /* ფასი ჩანს მხოლოდ გასაყიდ ერთეულზე, თუ ადმინში შეყვანილია */
-const priceRow = (id, st) => st === 'free' && Sales.price(id) != null ? `<div class="row"><span>ფასი</span><b>${Sales.fmt(Sales.price(id))}</b></div>` : '';
-const priceTag = (id, st) => st === 'free' && Sales.price(id) != null ? `<span class="price">${Sales.fmt(Sales.price(id))}</span>` : '';
+const pct = id => Math.round((1 - Sales.sale(id) / Sales.price(id)) * 100);
+const priceHtml = id => Sales.sale(id) == null ? Sales.fmt(Sales.price(id))
+  : `<s>${Sales.fmt(Sales.price(id))}</s> ${Sales.fmt(Sales.sale(id))} <i class="off">-${pct(id)}%</i>`;
+const priceRow = (id, st) => st === 'free' && Sales.price(id) != null ? `<div class="row"><span>ფასი</span><b>${priceHtml(id)}</b></div>` : '';
+const priceTag = (id, st) => st === 'free' && Sales.price(id) != null ? `<span class="price">${priceHtml(id)}</span>` : '';
 const spaceD = b => [b.poly, ...b.holes].map(q => 'M' + q.map(v => v.join(',')).join('L') + 'Z').join('');
 const FV_FLOORS = [-3, -2, -1, 1, 2, ...RES_FLOORS];
 const countUnits = () => floors.forEach(f => {

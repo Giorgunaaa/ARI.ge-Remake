@@ -13,14 +13,16 @@ window.Sales = (() => {
   const data = {};
   const configured = !!(URL && KEY);
   const ready = !configured ? Promise.resolve() :
-    fetch(`${URL}/rest/v1/units?select=id,status,price`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } })
+    fetch(`${URL}/rest/v1/units?select=*`,{ headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } })
       .then(r => r.ok ? r.json() : [])
       .then(rows => rows.forEach(r => data[r.id] = r))
       .catch(() => {});   // ქსელის შეცდომისას ყველაფერი „იყიდება" რჩება
 
   const status = id => ['sold', 'reserved'].includes(data[id]?.status) ? data[id].status : 'free';
   const price = id => data[id]?.price ?? null;
+  // ფასდაკლება მოქმედებს მხოლოდ მაშინ, თუ ძველ ფასზე ნაკლებია
+  const sale = id => { const p = price(id), s = data[id]?.sale_price; return p != null && s != null && s < p ? s : null; };
   const fmt = v => v == null ? '' : CURRENCY + ' ' + Math.round(v).toLocaleString('en-US').replace(/,/g, ' ');
   const id = { apt: no => 'a' + no, park: no => 'p' + no, com: (fl, n) => `k${fl}.${n}` };
-  return { URL, KEY, configured, data, ready, status, price, fmt, id };
+  return { URL, KEY, configured, data, ready, status, price, sale, fmt, id };
 })();
