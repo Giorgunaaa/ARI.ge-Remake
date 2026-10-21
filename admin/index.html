@@ -18,7 +18,7 @@
   header span { color: var(--muted); margin-left: 8px; }
   .ghost { background: none; border: 1px solid var(--line); padding: 7px 14px; cursor: pointer; }
   .ghost:hover { border-color: var(--navy); }
-  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
   .note { background: #fff; border: 1px solid var(--line); padding: 18px 20px; }
 
   /* შესვლა */
@@ -37,12 +37,12 @@
 
   /* სია */
   .list { background: #fff; border: 1px solid var(--line); }
-  .row { display: grid; grid-template-columns: 1.3fr 1fr .5fr .6fr 1fr 1fr 2fr; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,.6fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,1fr) minmax(0,2.1fr); gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
   .row:first-child { border-top: 0; }
   .row.head { color: var(--muted); font-size: 13px; }
   .row a { color: inherit; text-decoration: none; font-weight: 600; }
   .row a:hover { color: var(--green); }
-  .row .m { color: var(--muted); }
+  .row .m { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .price { display: flex; align-items: center; border: 1px solid var(--line); }
   .price span { padding: 0 8px; color: var(--muted); }
   .price input { width: 100%; min-width: 0; border: 0; padding: 7px 8px 7px 0; background: none; }
@@ -59,7 +59,12 @@
   .price { position: relative; }
   .price em { position: absolute; top: -9px; right: -6px; font-style: normal; font-size: 11px; line-height: 1.3; font-weight: 600; color: #fff; background: var(--coral); padding: 1px 5px; }
   .res { grid-column: 1 / -1; display: none; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: 13px; color: var(--muted); }
-  .row.is-res .res { display: flex; }
+  .row.is-res.open .res { display: flex; }
+  .rt { display: none; margin-top: 3px; max-width: 100%; border: 0; background: none; padding: 0; cursor: pointer; font-size: 12px; color: #b07d22;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+  .rt::after { content: " ▾"; } .row.open .rt::after { content: " ▴"; }
+  .rt.late { color: var(--coral); font-weight: 600; }
+  .row.is-res .rt { display: block; }
   .res label { display: flex; align-items: center; gap: 8px; }
   .res input { padding: 6px 9px; border: 1px solid var(--line); background: #fff; color: var(--navy); }
   .res input[data-f="client"] { width: 240px; max-width: 60vw; }
@@ -163,6 +168,8 @@ if (!Sales.configured) {
   const esc = t => String(t ?? '').replace(/[&<>"]/g, c => `&#${c.charCodeAt(0)};`);
   const today = () => new Date().toLocaleDateString('sv');   // YYYY-MM-DD, ადგილობრივი დროით
   const onSale = s => s.price != null && s.sale_price != null && s.sale_price < s.price;
+  const open = new Set();   // ჯავშნის დეტალები გაშლილია
+  const rtLabel = s => esc(s.client || 'ჯავშნის დეტალები') + (s.until ? ` · ${s.until.split('-').reverse().join('.')}` : '');
   const expired = s => s.status === 'reserved' && s.until && s.until < today();
 
   function draw() {
@@ -176,8 +183,8 @@ if (!Sales.configured) {
     $('#list').innerHTML = rows.length ? `<div class="row head"><span>ერთეული</span><span>ტიპი</span><span>სართული</span><span>ფართი</span><span>ფასი</span><span>ფასდაკლებით</span><span>სტატუსი</span></div>` +
       rows.map(u => {
         const s = cur(u.id);
-        return `<div class="row${u.id in edits ? ' changed' : ''}${s.status === 'reserved' ? ' is-res' : ''}" data-id="${u.id}">
-          <a href="../2/#${u.link}" target="_blank">${u.name}</a>
+        return `<div class="row${u.id in edits ? ' changed' : ''}${s.status === 'reserved' ? ' is-res' : ''}${open.has(u.id) ? ' open' : ''}" data-id="${u.id}">
+          <div><a href="../2/#${u.link}" target="_blank">${u.name}</a><button type="button" class="rt${expired(s) ? ' late' : ''}">${rtLabel(s)}</button></div>
           <span class="m">${u.type}</span>
           <span class="m">${u.fl}</span>
           <span class="m">${u.area ? u.area + ' მ²' : '—'}</span>
@@ -232,18 +239,25 @@ if (!Sales.configured) {
   }
 
   $('#list').addEventListener('click', e => {
+    const t = e.target.closest('.rt');
+    if (t) { const row = t.closest('.row'), id = row.dataset.id; open.has(id) ? open.delete(id) : open.add(id); row.classList.toggle('open', open.has(id)); return; }
     const b = e.target.closest('.seg button'); if (!b) return;
     const id = b.closest('.row').dataset.id;
     edit(id, { status: b.dataset.st });
     b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
-    b.closest('.row').classList.toggle('is-res', b.dataset.st === 'reserved');
+    const row = b.closest('.row'), r = b.dataset.st === 'reserved';
+    row.classList.toggle('is-res', r);
+    if (r && !open.has(id)) { open.add(id); row.classList.add('open'); }   // ახლად დაჯავშნილზე ვხსნით, რომ ველები შეავსო
   });
   $('#list').addEventListener('input', e => {
     const f = e.target.dataset.f;
     if (f) {
       const id = e.target.closest('.row').dataset.id;
       edit(id, { [f]: e.target.value.trim() || null });
-      if (f === 'until') e.target.closest('.res').classList.toggle('late', expired(cur(id)));
+      const row = e.target.closest('.row'), late = expired(cur(id));
+      row.querySelector('.res').classList.toggle('late', late);
+      row.querySelector('.rt').classList.toggle('late', late);
+      row.querySelector('.rt').innerHTML = rtLabel(cur(id));
       return;
     }
     if (!e.target.matches('.price input')) return;
