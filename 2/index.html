@@ -136,7 +136,7 @@
   body.zoomed-ui #planBtn { display: inline-flex; }
 
   /* ---------- სართულის ხედი (სრულ ეკრანზე, როგორც tbilisigardens / ari.ge) ---------- */
-  .fp { --coral: #ef7464; --brown: #4c5751; --green: #4f9a63; --ink: #1d2a22; --rule: #e3ddd0; --accent: #1d4a31; }
+  .fp { --coral: #ef7464; --brown: #4c5751; --green: #4f9a63; --ink: #1d2a22; --rule: #e3ddd0; --accent: #1d4a31; --amber: #e0a43a; }
   .fp { position: fixed; inset: 0; z-index: 10; background: #fff; color: var(--ink); display: none; user-select: none; touch-action: auto; }
   body.fv-open #fv, body.av-open #av { display: grid; }
   #av { z-index: 11; }
@@ -156,6 +156,7 @@
   .fv-side .lg { display: grid; gap: 10px; font-size: 13px; }
   .fv-side .lg i { display: inline-block; width: 16px; height: 16px; margin-right: 10px; vertical-align: -3px; border: 1px solid #d6d1ca; }
   .fv-side .lg .sold { background: var(--coral); opacity: .8; border-color: transparent; }
+  .fv-side .lg .reserved { background: var(--amber); opacity: .85; border-color: transparent; }
   .fv-side .lg .free { background: #fff; }
   #fv.base .lg, #av.base .av-sel, #av.base .w-apt, #av:not(.base) .w-sp { display: none; }
   #fv.park .lg { display: grid; }
@@ -168,6 +169,8 @@
   #fvSvg .apt.free:hover, #fvSvg .apt.free:focus-visible { fill: #e9f2ec; fill-opacity: .82; }   /* თავისუფალი: hover-ზე თეთრდება */
   #fvSvg .apt.sold { fill: var(--coral); fill-opacity: .74; }                                   /* გაყიდული: წითელი */
   #fvSvg .apt.sold:hover { fill-opacity: .86; }
+  #fvSvg .apt.reserved { fill: var(--amber); fill-opacity: .7; }                              /* დაჯავშნილი: ყვითელი */
+  #fvSvg .apt.reserved:hover { fill-opacity: .84; }
   .fp .lbl { pointer-events: none; text-anchor: middle; font-family: "Noto Sans Georgian", sans-serif; }
   .fp .lbl.w { fill: #fff; }
   .fp .lbl.b { font-weight: 600; letter-spacing: .1px; }
@@ -193,6 +196,7 @@
   #tip .row span { opacity: .6; }
   #tip .st { display: inline-block; margin-top: 6px; padding: 2px 10px; font-size: 12px; font-weight: 600; background: #6fba8b; color: #fff; }
   #tip .st.sold { background: #ef7464; }
+  #tip .st.reserved { background: #e0a43a; }
 
   /* ---------- ბინის ხედი ---------- */
   #av { grid-template-columns: 290px 1fr 390px; }
@@ -230,11 +234,13 @@
   .av-st { display: flex; align-items: center; gap: 12px; margin: 22px 0 0; flex-wrap: wrap; }
   .av-st .badge { padding: 5px 14px; font-size: 13px; font-weight: 600; background: var(--green); color: #fff; }
   .av-st .badge.sold { background: var(--coral); }
+  .av-st .badge.reserved { background: var(--amber); }
+  .av-st .price { flex-basis: 100%; font: 500 28px/1.2 var(--serif); color: var(--navy); }
   .av-st a { font-size: 14px; color: var(--navy); text-decoration: none; border-bottom: 1px solid currentColor; }
   .av-st a:hover { color: var(--green); }
   .av-right .mcap { font-size: 15px; color: var(--brown); margin: 34px 0 16px; }
   #avMini { display: block; width: 100%; height: auto; cursor: pointer; }
-  #avMini .apt { fill: #fff; fill-opacity: 0; } #avMini .apt.sold { fill: var(--coral); fill-opacity: .6; }
+  #avMini .apt { fill: #fff; fill-opacity: 0; } #avMini .apt.sold { fill: var(--coral); fill-opacity: .6; } #avMini .apt.reserved { fill: var(--amber); fill-opacity: .6; }
   #avMini .apt.me { fill: var(--green); fill-opacity: .85; }
 
   @media (max-width: 1200px) {
@@ -372,7 +378,7 @@
     <a class="brand" href="#" id="fvLogo" aria-label="ARI Development Company"><img src="../assets/img/ari-mark.svg" alt=""><span class="bt"><span>DEVELOPMENT</span><span>COMPANY</span></span></a>
     <button class="ghost" id="fvBack"><svg viewBox="0 0 14 14"><path d="M9 2 4 7l5 5"/></svg>შენობა</button>
     <div class="info" id="fvInfo"></div>
-    <div class="info lg"><span><i class="sold"></i>გაყიდული</span><span><i class="free"></i>იყიდება</span></div>
+    <div class="info lg"><span><i class="sold"></i>გაყიდული</span><span><i class="reserved"></i>დაჯავშნილი</span><span><i class="free"></i>იყიდება</span></div>
     <p class="hint2">მიიტანე მაუსი ბინაზე დეტალებისთვის, დააჭირე — ნახავ ბინის გეგმას.</p>
   </div>
   <div class="col fv-main"><svg id="fvSvg" role="img" aria-label="სართულის გეგმა"></svg></div>
@@ -413,6 +419,8 @@
 <div id="tip"></div>
 
 <script src="floorplan.js"></script>
+<script src="units.js"></script>
+<script src="sales.js"></script>
 
 
 <script>
@@ -442,52 +450,28 @@ const CONTACT = { email: 'info@ari.ge', phone: '+995551002200', phoneText: '+995
 const APTS = FloorPlan.apts;                      // APTS(სართული) → 14 ბინა; n = ადგილი სართულზე (1–14)
 const RES_FLOORS = floors.filter(f => f.type === 'residential').map(f => f.n);
 const aptNo = (fl, n) => APTS(fl)[n - 1].no;
-/* გაყიდული ბინების ნომრები. ახლა სადემონსტრაციოა — ჩაწერე რეალური, მაგ.: new Set([16, 19, 23, 31]) */
-const SOLD = new Set(RES_FLOORS.flatMap(fl => APTS(fl).filter(a => (fl * 5 + a.pos * 3) % 7 < 2).map(a => a.no)));
-const statusOf = (fl, n) => SOLD.has(aptNo(fl, n)) ? 'sold' : 'free';
-const STATUS = { free: 'იყიდება', sold: 'გაყიდულია' };
+/* სტატუსი და ფასი — Supabase-იდან (sales.js); რედაქტირება — /admin/ */
+const statusOf = (fl, n) => Sales.status(Sales.id.apt(aptNo(fl, n)));
+const STATUS = { free: 'იყიდება', reserved: 'დაჯავშნილია', sold: 'გაყიდულია' };
 const TYPES = { 1: 'ერთ-საძინებლიანი', 2: 'ორ-საძინებლიანი', K: 'კომერციული', S: 'სავაჭრო სივრცე', P: 'პარკინგის ადგილი' };
-/* კომერციული სართულები (PDF: -1 — გვ. 3, 1 — გვ. 4, 2 — გვ. 5). თითო ფართი: poly — კონტური (ტერასით/აივნით),
-   holes — კიბის უჯრედები, ლიფტები და სადარბაზოები (არ ინიშნება), terr — ტერასა/აივანი [სახელი, მ², x, y] */
-const CORE1 = [[400,288],[455,288],[455,280],[494,280],[494,403],[400,403]];
-const COM = {
-  '-1': { elev: '-3.30', info: [['სავაჭრო ფართი', 1114.3], ['კიბის უჯრედები', 68.4], ['დამხმარე ფართი', 28.0]], units: [
-    { name: 'სავაჭრო სივრცე', area: 1114.3, lp: [640, 338], terr: [],
-      poly: [[246.5,201.5],[885.5,201.5],[885.5,466],[350,466]],
-      holes: [[[400,287.5],[438,287.5],[438,305],[495.5,305],[495.5,378.5],[439,378.5],[439,403.5],[400,403.5]],
-              [[811.7,238.3],[885.5,238.3],[885.5,341.7],[811.7,341.7]]] }] },
-  '1': { elev: '±0.00', info: [['კომერციული ფართი', 934.7], ['ტერასები', 144.2], ['კიბის უჯრედები', 130.0], ['დამხმარე ფართი', 31.4]], units: [
-    { name: 'სავაჭრო სივრცე №1', area: 182.4, lp: [343, 306], terr: [['ტერასა', 29.0, 387, 447]], holes: [],
-      poly: [[242.7,189.3],[360,189.3],[360,288],[400,288],[400,426.7],[437,426.7],[437,466.7],[351,466.7]] },
-    { name: 'სავაჭრო სივრცე №2', area: 752.3, lp: [680, 322], terr: [['ტერასა', 115.2, 700, 452]],
-      poly: [[494,189.3],[531,189.3],[531,238.3],[603,238.3],[603,189.3],[885,189.3],[885,466.7],[437,466.7],[437,426.7],[400,426.7],[400,403],[494,403]],
-      holes: [[[805,218],[885,218],[885,322],[805,322]]] }] },
-  '2': { elev: '+4.00', info: [['კომერციული ფართი', 980.6], ['აივანი', 38.6], ['კიბის უჯრედები', 78.4]], units: [
-    { name: 'სავაჭრო სივრცე', area: 980.6, lp: [700, 296], terr: [['აივანი', 38.6, 430, 414]],
-      poly: [[242.7,189.3],[531,189.3],[531,238.3],[603,238.3],[603,189.3],[885,189.3],[885,436],[531,436],[531,426.7],[336,426.7]],
-      holes: [CORE1, [[812,238],[885,238],[885,350],[812,350]]] }] },
-};
 const isCom = fl => String(fl) in COM;
-/* პარკინგი (PDF: -2 — გვ. 2, -3 — გვ. 1). ადგილი: [№, x, y, სიგანე, სიგრძე] pt-ში, მანქანის ბლოკიდან (A-BLOCK-CAR).
-   PDF-ში -2-ზე „N-24" ორჯერ წერია და №28 აკლია — მარცხენა ზედა ადგილი №28-ად ჩავთვალეთ. */
-const PARK = {
-  '-2': { elev: '-6.30', area: 1250.2, stairs: 70.2, spots: [[1,753.2,407.8,27.6,58.3],[2,674.6,346.8,27.6,58.3],[3,639.9,346.8,27.6,58.3],[4,612.3,346.8,27.6,58.3],[5,568.1,346.8,27.6,58.3],[6,540.5,346.8,27.6,58.3],[7,501.0,346.8,27.6,58.3],[8,372.2,334.8,27.6,58.4],[9,501.0,291.9,27.6,58.3],[10,540.5,291.9,27.6,58.3],[11,568.1,291.9,27.6,58.3],[12,612.3,291.9,27.6,58.3],[13,639.9,291.9,27.6,58.3],[14,674.6,291.9,27.6,58.3],[15,702.2,291.9,27.6,58.3],[16,779.2,171.2,27.6,58.4],[17,751.6,171.2,27.6,58.4],[18,706.4,171.2,27.6,58.4],[19,678.8,171.2,27.6,58.4],[20,638.0,171.2,27.6,58.4],[21,610.4,171.2,27.6,58.4],[22,569.6,171.2,27.6,58.4],[23,542.0,171.2,27.6,58.4],[24,501.0,171.2,27.6,58.4],[25,473.4,171.2,27.6,58.4],[26,409.7,175.6,27.6,58.3],[27,364.0,175.6,27.6,58.3],[28,337.5,175.6,27.6,58.3]] },
-  '-3': { elev: '-9.30', area: 1250.2, stairs: 70.2, spots: [[29,794.8,407.8,27.6,58.3],[30,767.2,407.8,27.6,58.3],[31,693.8,346.8,27.6,58.3],[32,657.1,346.8,27.5,58.3],[33,629.6,346.8,27.5,58.3],[34,585.4,346.8,27.6,58.3],[35,557.8,346.8,27.6,58.3],[36,518.3,346.8,27.6,58.3],[37,389.4,334.8,27.6,58.4],[38,518.3,291.9,27.6,58.3],[39,557.8,291.9,27.6,58.3],[40,585.4,291.9,27.6,58.3],[41,629.6,291.9,27.5,58.3],[42,657.1,291.9,27.5,58.3],[43,696.9,291.9,27.6,58.3],[44,724.5,291.9,27.5,58.3],[45,796.5,170.7,27.6,58.3],[46,768.9,170.7,27.6,58.3],[47,723.6,170.7,27.6,58.3],[48,696.0,170.7,27.6,58.3],[49,655.2,170.7,27.6,58.3],[50,627.6,170.7,27.6,58.3],[51,586.7,170.7,27.6,58.3],[52,559.1,170.7,27.6,58.3],[53,518.3,170.7,27.6,58.3],[54,490.7,170.7,27.6,58.3],[55,451.1,175.6,27.6,58.3],[56,423.5,175.6,27.6,58.3],[57,375.0,175.6,27.6,58.3]] },
-};
 const isPark = fl => String(fl) in PARK;
 const M_PER_PT = 0.0906;                                   // 1:500 ფურცელზე
-/* გაყიდული ადგილები — სადემონსტრაციო. ჩაწერე რეალური ნომრები, მაგ.: new Set([3, 17, 41]) */
-const PSOLD = new Set(Object.values(PARK).flatMap(f => f.spots.map(s => s[0]).filter(n => n * 7 % 5 < 2)));
-const pStatus = no => PSOLD.has(no) ? 'sold' : 'free';
+const pStatus = no => Sales.status(Sales.id.park(no));
+const cStatus = (fl, n) => Sales.status(Sales.id.com(fl, n));
+/* ფასი ჩანს მხოლოდ გასაყიდ ერთეულზე, თუ ადმინში შეყვანილია */
+const priceRow = (id, st) => st === 'free' && Sales.price(id) != null ? `<div class="row"><span>ფასი</span><b>${Sales.fmt(Sales.price(id))}</b></div>` : '';
+const priceTag = (id, st) => st === 'free' && Sales.price(id) != null ? `<span class="price">${Sales.fmt(Sales.price(id))}</span>` : '';
 const spaceD = b => [b.poly, ...b.holes].map(q => 'M' + q.map(v => v.join(',')).join('L') + 'Z').join('');
 const FV_FLOORS = [-3, -2, -1, 1, 2, ...RES_FLOORS];
-floors.forEach(f => {
+const countUnits = () => floors.forEach(f => {
   f.units = f.type === 'parking' ? PARK[f.n].spots.map(sp => ({ type: 'P', status: pStatus(sp[0]) }))
-    : f.type === 'basement' ? [{ type: 'S', status: 'free' }]
-    : f.type === 'commercial' ? COM[f.n].units.map(() => ({ type: 'K', status: 'free' }))
+    : f.type === 'basement' ? [{ type: 'S', status: cStatus(-1, 0) }]
+    : f.type === 'commercial' ? COM[f.n].units.map((_, n) => ({ type: 'K', status: cStatus(f.n, n) }))
     : APTS(f.n).map(a => ({ type: a.rooms, status: statusOf(f.n, a.pos) }));
   f.free = f.units.filter(u => u.status === 'free').length;
 });
+countUnits();
 
 /* მდგომარეობა: -1 = ჰერო (პირველი ეკრანი), 0..N-1 = order[] ინდექსი, ზემოდან ქვემოთ */
 const order = floors.map((_, i) => i).reverse();
@@ -680,10 +664,10 @@ function drawFloorView() {
     p.addEventListener('mouseleave', hideTip);
     p.addEventListener('click', () => openApt(fl, a.pos));
     p.addEventListener('keydown', e => { if (e.key === 'Enter') openApt(fl, a.pos); });
-    const [x, y] = a.lp, c = st === 'sold' ? 'lbl w' : 'lbl d';
+    const [x, y] = a.lp, c = st === 'free' ? 'lbl d' : 'lbl w';
     el('text', { x, y: y - 1.5, class: c, 'font-size': 8.6, 'font-weight': 600 }, fvLayer, `ბინა №${no}`);
-    el('text', { x, y: y + 9, class: c, 'font-size': 8 }, fvLayer, st === 'sold' ? STATUS.sold : `${a.total} m²`);
-    balcLabels(a, fvLayer, st === 'sold' ? 'lbl w b' : 'lbl d b', 5.6);
+    el('text', { x, y: y + 9, class: c, 'font-size': 8 }, fvLayer, st === 'free' ? `${a.total} m²` : STATUS[st]);
+    balcLabels(a, fvLayer, c + ' b', 5.6);
   });
   const A = APTS(fl), free = A.filter(a => statusOf(fl, a.pos) === 'free').length, tot = A.map(a => a.total);
   $('#fvInfo').innerHTML = `<h5>სართულის შესახებ</h5><dl>
@@ -713,15 +697,16 @@ const terrLabels = (u, g, cls, size) => u.terr.forEach(([n, v, x, y]) => el('tex
 function drawComView(fl) {
   const F = COM[fl], big = F.units.length === 1;
   F.units.forEach((u, n) => {
-    const p = el('path', { d: spaceD(u), 'fill-rule': 'evenodd', class: 'apt free', tabindex: 0, role: 'button', 'aria-label': `${u.name}, ${u.area} მ²` }, fvLayer);
-    p.addEventListener('mousemove', e => showTip(fl, u, e));
+    const st = cStatus(fl, n), c = st === 'free' ? 'lbl d' : 'lbl w';
+    const p = el('path', { d: spaceD(u), 'fill-rule': 'evenodd', class: `apt ${st}`, tabindex: 0, role: 'button', 'aria-label': `${u.name}, ${u.area} მ², ${STATUS[st]}` }, fvLayer);
+    p.addEventListener('mousemove', e => showTip(fl, n, e));
     p.addEventListener('mouseleave', hideTip);
     p.addEventListener('click', () => openApt(fl, n));
     p.addEventListener('keydown', e => { if (e.key === 'Enter') openApt(fl, n); });
     const [x, y] = u.lp, s = big ? 13 : 11;
-    el('text', { x, y: y - 3, class: 'lbl d', 'font-size': s, 'font-weight': 600 }, fvLayer, u.name);
-    el('text', { x, y: y + s, class: 'lbl d', 'font-size': s - 2 }, fvLayer, `${u.area} m²`);
-    terrLabels(u, fvLayer, 'lbl d b', 6.5);
+    el('text', { x, y: y - 3, class: c, 'font-size': s, 'font-weight': 600 }, fvLayer, u.name);
+    el('text', { x, y: y + s, class: c, 'font-size': s - 2 }, fvLayer, st === 'free' ? `${u.area} m²` : STATUS[st]);
+    terrLabels(u, fvLayer, c + ' b', 6.5);
   });
   $('#fvInfo').innerHTML = `<h5>სართულის შესახებ</h5><dl>
     <dt>სართული</dt><dd>${fl}</dd><dt>ნიშნული</dt><dd>${F.elev}</dd>
@@ -736,7 +721,7 @@ function drawParkView(fl) {
     r.addEventListener('mouseleave', hideTip);
     r.addEventListener('click', () => openApt(fl, i));
     r.addEventListener('keydown', e => { if (e.key === 'Enter') openApt(fl, i); });
-    el('text', { x: x + w / 2, y: y + h / 2 + 3, class: st === 'sold' ? 'lbl w' : 'lbl d', 'font-size': 8.5, 'font-weight': 600 }, fvLayer, no);
+    el('text', { x: x + w / 2, y: y + h / 2 + 3, class: st === 'free' ? 'lbl d' : 'lbl w', 'font-size': 8.5, 'font-weight': 600 }, fvLayer, no);
   });
   const free = F.spots.filter(s => pStatus(s[0]) === 'free').length;
   $('#fvInfo').innerHTML = `<h5>სართულის შესახებ</h5><dl>
@@ -777,14 +762,18 @@ function showTip(fl, a, e) {
     tip.innerHTML = `<h4>პარკინგი №${sp[0]}</h4>
       <div class="row"><span>სართული</span>${fl}</div><div class="row"><span>ნიშნული</span>${PARK[fl].elev}</div>
       <div class="row"><span>ზომა</span>${spotSize(sp)}</div>
+      ${priceRow(Sales.id.park(sp[0]), st)}
       <span class="st ${st}">${STATUS[st]}</span>`;
     return placeTip(e);
   }
   if (isCom(fl)) {
-    tip.innerHTML = `<h4>${a.name}</h4>
+    const u = COM[fl].units[a], st = cStatus(fl, a);
+    tip.innerHTML = `<h4>${u.name}</h4>
       <div class="row"><span>სართული</span>${fl}</div><div class="row"><span>ნიშნული</span>${COM[fl].elev}</div>
-      ${a.terr.map(([n, v]) => `<div class="row"><span>${n}</span>${v.toFixed(1)} მ²</div>`).join('')}
-      <div class="row"><span>ფართი</span><b>${a.area} მ²</b></div>`;
+      ${u.terr.map(([n, v]) => `<div class="row"><span>${n}</span>${v.toFixed(1)} მ²</div>`).join('')}
+      <div class="row"><span>ფართი</span><b>${u.area} მ²</b></div>
+      ${priceRow(Sales.id.com(fl, a), st)}
+      <span class="st ${st}">${STATUS[st]}</span>`;
     return placeTip(e);
   }
   const st = statusOf(fl, a.pos);
@@ -793,6 +782,7 @@ function showTip(fl, a, e) {
     <div class="row"><span>შიდა ფართი</span>${a.live} მ²</div>
     <div class="row"><span>${a.terrace ? 'ტერასა' : a.pos === 14 ? 'აივნები' : 'აივანი'}</span>${a.balc} მ²</div>
     <div class="row"><span>სულ</span><b>${a.total} მ²</b></div>
+    ${priceRow(Sales.id.apt(a.no), st)}
     <span class="st ${st}">${STATUS[st]}</span>`;
   placeTip(e);
 }
@@ -853,8 +843,8 @@ function drawApt() {
   $('#avStrip').innerHTML = `<span>${a.rooms} საძინებელი</span><span>${a.wet} სველი წერტილი</span><span>${balName} · ${a.balc} მ²</span>`;
   $('#avFloor').value = fl;
   const subj = encodeURIComponent(`ბინა №${no}, სართული ${fl} — დაინტერესება`);
-  $('#avSt').innerHTML = `<span class="badge ${st}">${STATUS[st]}</span>` +
-    (st === 'sold' ? '' : `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`);
+  $('#avSt').innerHTML = priceTag(Sales.id.apt(no), st) + `<span class="badge ${st}">${STATUS[st]}</span>` +
+    (st !== 'free' ? '' : `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`);
   // პატარა გეგმა: ეს ბინა მწვანით, გაყიდული — წითლით
   miniLayer.innerHTML = '';
   FloorPlan.draw(avMini, fl); avMini.appendChild(miniLayer);
@@ -880,14 +870,14 @@ function drawSpot() {
   $('#avTot').innerHTML = `${(w * h * M_PER_PT * M_PER_PT).toFixed(1)} მ<sup>2</sup>`;
   $('#avStrip').innerHTML = `<span>პარკინგის ადგილი №${no}</span><span>ნიშნული ${F.elev}</span><span>ზომა ${spotSize(sp)}</span>`;
   const subj = encodeURIComponent(`პარკინგი №${no}, სართული ${fl} — დაინტერესება`);
-  $('#avSt').innerHTML = `<span class="badge ${st}">${STATUS[st]}</span>` +
-    (st === 'sold' ? '' : `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`);
+  $('#avSt').innerHTML = priceTag(Sales.id.park(no), st) + `<span class="badge ${st}">${STATUS[st]}</span>` +
+    (st !== 'free' ? '' : `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`);
   miniLayer.innerHTML = '';
   FloorPlan.draw(avMini, fl); avMini.appendChild(miniLayer);
   F.spots.forEach(([m, sx, sy, sw, sh]) => el('rect', { x: sx, y: sy, width: sw, height: sh, class: `apt ${m === no ? 'me' : pStatus(m)}` }, miniLayer));
 }
 function drawSpace() {
-  const { fl, n } = avApt, F = COM[fl], b = F.units[n]; setHash(); $('#av').classList.add('base');
+  const { fl, n } = avApt, F = COM[fl], b = F.units[n], st = cStatus(fl, n); setHash(); $('#av').classList.add('base');
   FloorPlan.draw(avSvg, fl).setAttribute('mask', 'url(#avMask)'); avSvg.appendChild(avEdge); avSvg.appendChild(avBal);
   avBal.innerHTML = ''; avMask.innerHTML = ''; terrLabels(b, avBal, 'lbl d b', 7);
   el('path', { d: spaceD(b), 'fill-rule': 'evenodd', fill: '#fff', stroke: '#fff', 'stroke-width': 1.6 }, avMask);
@@ -903,10 +893,11 @@ function drawSpace() {
   $('#avTot').innerHTML = `${b.area} მ<sup>2</sup>`;
   $('#avStrip').innerHTML = `<span>${b.name} · ${b.area} მ²</span><span>ნიშნული ${F.elev}</span><span>${b.terr.map(([t, v]) => `${t} · ${v.toFixed(1)} მ²`).join(', ') || '2 კიბე · 2 ლიფტი'}</span>`;
   const subj = encodeURIComponent(`${b.name}, სართული ${fl} — დაინტერესება`);
-  $('#avSt').innerHTML = `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`;
+  $('#avSt').innerHTML = priceTag(Sales.id.com(fl, n), st) + `<span class="badge ${st}">${STATUS[st]}</span>` +
+    (st !== 'free' ? '' : `<a href="tel:${CONTACT.phone}">${CONTACT.phoneText}</a><a href="mailto:${CONTACT.email}?subject=${subj}">მოგვწერე</a>`);
   miniLayer.innerHTML = '';
   FloorPlan.draw(avMini, fl); avMini.appendChild(miniLayer);
-  F.units.forEach((u, k) => el('path', { d: spaceD(u), 'fill-rule': 'evenodd', class: 'apt' + (k === n ? ' me' : '') }, miniLayer));
+  F.units.forEach((u, k) => el('path', { d: spaceD(u), 'fill-rule': 'evenodd', class: `apt ${k === n ? 'me' : cStatus(fl, k)}` }, miniLayer));
 }
 $('#avBack').onclick = closeApt;
 $('#avMini').onclick = closeApt;
@@ -991,6 +982,12 @@ render(true);
   if (isPark(fl)) { openFloor(fl); const i = PARK[fl].spots.findIndex(sp => sp[0] === no); if (i >= 0) openApt(fl, i); }
   if (isCom(fl)) { openFloor(fl); if (m[2] && COM[fl].units[no]) openApt(fl, no); }
   if (RES_FLOORS.includes(fl)) { openFloor(fl); const a = APTS(fl).find(x => x.no === no); if (a) openApt(fl, a.pos); } }
+
+// გაყიდვების მონაცემები მოვიდა — თავიდან ვითვლით და ღია ხედს ვხატავთ
+Sales.ready.then(() => {
+  countUnits(); render(true);
+  if (avOpen) drawApt(); else if (fvOpen) drawFloorView();
+});
 
 if (location.search.includes('debug')) {   // ?debug — ზონებისა და კონტურების შემოწმება
   floors.forEach(f => f.el && (f.el.style.stroke = 'red'));

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ARI — ადმინი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root { --navy: #1d4a31; --green: #4f9a63; --coral: #e5604f; --amber: #e0a43a; --cream: #f6f1e6; --line: #e3dccb; --muted: #7a7a6e; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); color: var(--navy); font: 400 15px/1.5 "Noto Sans Georgian", system-ui, sans-serif; min-height: 100vh; }
+  button, input, select { font: inherit; color: inherit; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; border-bottom: 1px solid var(--line); background: #fff; }
+  header b { font-size: 17px; }
+  header span { color: var(--muted); margin-left: 8px; }
+  .ghost { background: none; border: 1px solid var(--line); padding: 7px 14px; cursor: pointer; }
+  .ghost:hover { border-color: var(--navy); }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .note { background: #fff; border: 1px solid var(--line); padding: 18px 20px; }
+
+  /* შესვლა */
+  #login { max-width: 360px; margin: 60px auto; background: #fff; border: 1px solid var(--line); padding: 28px; display: grid; gap: 14px; }
+  #login h1 { font-size: 20px; }
+  #login input { padding: 11px 12px; border: 1px solid var(--line); background: #fff; }
+  #login button { padding: 12px; background: var(--navy); color: #fff; border: 0; cursor: pointer; }
+  #login .err { color: var(--coral); font-size: 14px; min-height: 1em; }
+
+  /* ფილტრები */
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .bar select, .bar input { padding: 9px 12px; border: 1px solid var(--line); background: #fff; }
+  .bar input { width: 140px; }
+  .bar .sum { margin-left: auto; color: var(--muted); }
+  .bar .sum b { color: var(--navy); }
+
+  /* სია */
+  .list { background: #fff; border: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 1.4fr 1fr .6fr .7fr 1.1fr 2fr; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
+  .row:first-child { border-top: 0; }
+  .row.head { color: var(--muted); font-size: 13px; }
+  .row a { color: inherit; text-decoration: none; font-weight: 600; }
+  .row a:hover { color: var(--green); }
+  .row .m { color: var(--muted); }
+  .price { display: flex; align-items: center; border: 1px solid var(--line); }
+  .price span { padding: 0 8px; color: var(--muted); }
+  .price input { width: 100%; min-width: 0; border: 0; padding: 7px 8px 7px 0; background: none; }
+  .price input:focus { outline: none; }
+  .price:focus-within { border-color: var(--navy); }
+  .seg { display: flex; border: 1px solid var(--line); }
+  .seg button { flex: 1; border: 0; background: none; padding: 7px 6px; cursor: pointer; font-size: 13px; }
+  .seg button.on.free { background: var(--green); color: #fff; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button.on.reserved { background: var(--amber); color: #fff; }
+  .seg button.on.sold { background: var(--coral); color: #fff; }
+  .row.changed { background: #fbf6e8; box-shadow: inset 3px 0 var(--amber); }
+  .price.bad { border-color: var(--coral); }
+  .savebar { position: sticky; bottom: 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line);
+             box-shadow: 0 8px 28px rgba(0,0,0,.12); padding: 12px 16px; }
+  .savebar span:first-child { margin-right: auto; }
+  .savebar .ok { color: var(--green); font-weight: 600; } .savebar .bad { color: var(--coral); }
+  .primary { background: var(--navy); color: #fff; border: 0; padding: 9px 22px; cursor: pointer; font-weight: 600; }
+  .primary:disabled { opacity: .6; cursor: default; }
+  .empty { padding: 30px; text-align: center; color: var(--muted); }
+
+  @media (max-width: 720px) {
+    .row.head { display: none; }
+    .row { grid-template-columns: 1fr 1fr; row-gap: 8px; }
+    .row .m { font-size: 13px; }
+    .row .seg { grid-column: 1 / -1; }
+    .bar .sum { margin-left: 0; width: 100%; }
+  }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div><b>ARI</b><span>გაყიდვების მართვა</span></div>
+  <button class="ghost" id="logout" hidden>გასვლა</button>
+</header>
+
+<main>
+  <div class="note" id="noConfig" hidden>
+    Supabase ჯერ არ არის დაკავშირებული. ჩაწერე Project URL და anon key ფაილში <code>2/sales.js</code> (ინსტრუქცია — README).
+  </div>
+
+  <form id="login" hidden>
+    <h1>შესვლა</h1>
+    <input type="email" id="email" placeholder="ელფოსტა" autocomplete="username" required>
+    <input type="password" id="pass" placeholder="პაროლი" autocomplete="current-password" required>
+    <button>შესვლა</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+
+  <section id="app" hidden>
+    <div class="bar">
+      <select id="fFloor" aria-label="სართული"></select>
+      <select id="fStatus" aria-label="სტატუსი">
+        <option value="">ყველა სტატუსი</option>
+        <option value="free">იყიდება</option>
+        <option value="reserved">დაჯავშნილია</option>
+        <option value="sold">გაყიდულია</option>
+      </select>
+      <input type="search" id="fSearch" placeholder="№ ძებნა" aria-label="ნომრით ძებნა">
+      <div class="sum" id="sum"></div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="savebar" id="saveBar" hidden>
+      <span id="saveTxt"></span>
+      <button class="ghost" id="undoBtn">გაუქმება</button>
+      <button class="primary" id="saveBtn">შენახვა</button>
+    </div>
+  </section>
+</main>
+
+<script src="../2/floorplan.js"></script>
+<script src="../2/units.js"></script>
+<script src="../2/sales.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const STATUS = { free: 'იყიდება', reserved: 'დაჯავშნილია', sold: 'გაყიდულია' };
+
+/* ყველა ერთეული /2-ის მონაცემებიდან, ზედა სართულიდან ქვემოთ */
+const UNITS = [];
+for (let fl = 12; fl >= 3; fl--) FloorPlan.apts(fl).forEach(a => UNITS.push(
+  { id: Sales.id.apt(a.no), fl, no: a.no, name: `ბინა №${a.no}`, type: `${a.rooms}-საძინებლიანი`, area: a.total, link: `${fl}-${a.no}` }));
+['2', '1', '-1'].forEach(fl => COM[fl].units.forEach((u, n) => UNITS.push(
+  { id: Sales.id.com(fl, n), fl: +fl, no: null, name: u.name, type: 'კომერციული', area: u.area, link: `${fl}-s${n}` })));
+['-2', '-3'].forEach(fl => PARK[fl].spots.forEach(([no]) => UNITS.push(
+  { id: Sales.id.park(no), fl: +fl, no, name: `პარკინგი №${no}`, type: 'პარკინგი', area: null, link: `${fl}-${no}` })));
+
+const FLOORS = [...new Set(UNITS.map(u => u.fl))];
+$('#fFloor').innerHTML = '<option value="">ყველა სართული</option>' + FLOORS.map(f => `<option value="${f}">სართული ${f}</option>`).join('');
+
+if (!Sales.configured) {
+  $('#noConfig').hidden = false;
+} else {
+  const db = supabase.createClient(Sales.URL, Sales.KEY);
+  const state = {};   // id → { status, price }
+
+  async function load() {
+    const { data, error } = await db.from('units').select('id,status,price');
+    if (error) return alert('მონაცემები ვერ ჩაიტვირთა: ' + error.message);
+    data.forEach(r => state[r.id] = r);
+    draw();
+  }
+  const get = id => state[id] || { id, status: 'free', price: null };
+
+  function draw() {
+    const fl = $('#fFloor').value, st = $('#fStatus').value, q = $('#fSearch').value.trim();
+    const rows = UNITS.filter(u => (fl === '' || u.fl === +fl) && (!st || cur(u.id).status === st) && (!q || String(u.no ?? u.name).includes(q)));
+    const count = k => UNITS.filter(u => cur(u.id).status === k).length;
+    $('#sum').innerHTML = Object.keys(STATUS).map(k => `${STATUS[k]} <b>${count(k)}</b>`).join(' · ');
+    $('#list').innerHTML = rows.length ? `<div class="row head"><span>ერთეული</span><span>ტიპი</span><span>სართული</span><span>ფართი</span><span>ფასი</span><span>სტატუსი</span></div>` +
+      rows.map(u => {
+        const s = cur(u.id);
+        return `<div class="row${u.id in edits ? ' changed' : ''}" data-id="${u.id}">
+          <a href="../2/#${u.link}" target="_blank">${u.name}</a>
+          <span class="m">${u.type}</span>
+          <span class="m">${u.fl}</span>
+          <span class="m">${u.area ? u.area + ' მ²' : '—'}</span>
+          <label class="price"><span>$</span><input inputmode="numeric" value="${s.price ?? ''}" placeholder="—" aria-label="ფასი"></label>
+          <div class="seg">${Object.keys(STATUS).map(k => `<button class="${k}${s.status === k ? ' on' : ''}" data-st="${k}">${STATUS[k]}</button>`).join('')}</div>
+        </div>`;
+      }).join('') : '<div class="empty">ვერაფერი მოიძებნა</div>';
+  }
+
+  /* ცვლილებები გროვდება და „შენახვა"-ზე ერთად იგზავნება */
+  const edits = {};   // id → { status?, price? }
+  const cur = id => ({ ...get(id), ...edits[id] });
+  function edit(id, patch) {
+    const next = { ...edits[id], ...patch }, saved = get(id);
+    for (const k in next) if (next[k] === saved[k]) delete next[k];   // ძველ მნიშვნელობაზე დაბრუნება = ცვლილება არ არის
+    if (Object.keys(next).length) edits[id] = next; else delete edits[id];
+    $(`.row[data-id="${id}"]`)?.classList.toggle('changed', id in edits);
+    bar();
+  }
+  function bar(msg = '') {
+    const n = Object.keys(edits).length;
+    $('#saveBar').hidden = !n && !msg;
+    $('#saveTxt').innerHTML = msg || `შეუნახავი ცვლილება: <b>${n}</b>`;
+    $('#saveBtn').hidden = $('#undoBtn').hidden = !n;
+  }
+
+  async function saveAll() {
+    const ids = Object.keys(edits); if (!ids.length) return;
+    const rows = ids.map(id => ({ id, status: cur(id).status, price: cur(id).price }));
+    $('#saveBtn').disabled = true; $('#saveBtn').textContent = 'ინახება…';
+    const { error } = await db.from('units').upsert(rows);
+    $('#saveBtn').disabled = false; $('#saveBtn').textContent = 'შენახვა';
+    if (error) return bar(`<span class="bad">ვერ შეინახა: ${error.code === '42501' ? 'ამ ანგარიშს ცვლილების უფლება არ აქვს' : error.message}</span>`);
+    rows.forEach(r => { state[r.id] = r; delete edits[r.id]; });
+    draw(); bar(`<span class="ok">შენახულია ✓ საიტზე უკვე ჩანს</span>`);
+    setTimeout(() => { if (!Object.keys(edits).length) bar(); }, 3000);
+  }
+
+  $('#list').addEventListener('click', e => {
+    const b = e.target.closest('.seg button'); if (!b) return;
+    const id = b.closest('.row').dataset.id;
+    edit(id, { status: b.dataset.st });
+    b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  });
+  $('#list').addEventListener('input', e => {
+    if (!e.target.matches('.price input')) return;
+    const id = e.target.closest('.row').dataset.id, raw = e.target.value.replace(/[\s,$]/g, '');
+    const ok = raw === '' || +raw >= 0;
+    e.target.closest('.price').classList.toggle('bad', !ok);
+    if (ok) edit(id, { price: raw === '' ? null : +raw });
+  });
+  $('#list').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.price input')) saveAll(); });
+  $('#saveBtn').onclick = saveAll;
+  $('#undoBtn').onclick = () => { Object.keys(edits).forEach(id => delete edits[id]); draw(); bar(); };
+  addEventListener('beforeunload', e => { if (Object.keys(edits).length) e.preventDefault(); });
+  ['#fFloor', '#fStatus'].forEach(s => $(s).onchange = draw);
+  $('#fSearch').oninput = draw;
+
+  $('#login').onsubmit = async e => {
+    e.preventDefault(); $('#loginErr').textContent = '';
+    const { error } = await db.auth.signInWithPassword({ email: $('#email').value, password: $('#pass').value });
+    if (error) $('#loginErr').textContent = 'ელფოსტა ან პაროლი არასწორია';
+  };
+  $('#logout').onclick = () => db.auth.signOut();
+
+  db.auth.onAuthStateChange((_, session) => {
+    $('#login').hidden = !!session; $('#app').hidden = !session; $('#logout').hidden = !session;
+    if (session) load();
+  });
+}
+</script>
+</body>
+</html>
