@@ -56,6 +56,15 @@
   .seg button.on.sold { background: var(--coral); color: #fff; }
   .row.changed { background: #fbf6e8; box-shadow: inset 3px 0 var(--amber); }
   .price.bad { border-color: var(--coral); }
+  .res { grid-column: 1 / -1; display: none; flex-wrap: wrap; align-items: center; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+  .row.is-res .res { display: flex; }
+  .res label { display: flex; align-items: center; gap: 8px; }
+  .res input { padding: 6px 9px; border: 1px solid var(--line); background: #fff; color: var(--navy); }
+  .res input[data-f="client"] { width: 240px; max-width: 60vw; }
+  .res .late-tag { display: none; color: var(--coral); font-weight: 600; }
+  .res.late .late-tag { display: inline; }
+  .res.late input[data-f="until"] { border-color: var(--coral); color: var(--coral); }
+  .bar .late { color: var(--coral); } .bar .late b { color: var(--coral); }
   .savebar { position: sticky; bottom: 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line);
              box-shadow: 0 8px 28px rgba(0,0,0,.12); padding: 12px 16px; }
   .savebar span:first-child { margin-right: auto; }
@@ -137,31 +146,43 @@ if (!Sales.configured) {
   $('#noConfig').hidden = false;
 } else {
   const db = supabase.createClient(Sales.URL, Sales.KEY);
-  const state = {};   // id → { status, price }
+  const state = {};   // id → { status, price }        — units (საჯარო)
+  const res = {};     // id → { client, until }        — reservations (მხოლოდ ადმინი)
 
   async function load() {
-    const { data, error } = await db.from('units').select('id,status,price');
-    if (error) return alert('მონაცემები ვერ ჩაიტვირთა: ' + error.message);
-    data.forEach(r => state[r.id] = r);
+    const [u, r] = await Promise.all([db.from('units').select('id,status,price'), db.from('reservations').select('id,client,until')]);
+    if (u.error || r.error) return alert('მონაცემები ვერ ჩაიტვირთა: ' + (u.error || r.error).message);
+    u.data.forEach(x => state[x.id] = x);
+    r.data.forEach(x => res[x.id] = { client: x.client, until: x.until });
     draw();
   }
-  const get = id => state[id] || { id, status: 'free', price: null };
+  const get = id => ({ status: 'free', price: null, client: null, until: null, ...state[id], ...res[id], id });
+  const esc = t => String(t ?? '').replace(/[&<>"]/g, c => `&#${c.charCodeAt(0)};`);
+  const today = () => new Date().toLocaleDateString('sv');   // YYYY-MM-DD, ადგილობრივი დროით
+  const expired = s => s.status === 'reserved' && s.until && s.until < today();
 
   function draw() {
     const fl = $('#fFloor').value, st = $('#fStatus').value, q = $('#fSearch').value.trim();
     const rows = UNITS.filter(u => (fl === '' || u.fl === +fl) && (!st || cur(u.id).status === st) && (!q || String(u.no ?? u.name).includes(q)));
     const count = k => UNITS.filter(u => cur(u.id).status === k).length;
-    $('#sum').innerHTML = Object.keys(STATUS).map(k => `${STATUS[k]} <b>${count(k)}</b>`).join(' · ');
+    const late = UNITS.filter(u => expired(cur(u.id))).length;
+    $('#sum').innerHTML = Object.keys(STATUS).map(k => `${STATUS[k]} <b>${count(k)}</b>`).join(' · ') +
+      (late ? ` · <span class="late">ვადაგასული ჯავშანი <b>${late}</b></span>` : '');
     $('#list').innerHTML = rows.length ? `<div class="row head"><span>ერთეული</span><span>ტიპი</span><span>სართული</span><span>ფართი</span><span>ფასი</span><span>სტატუსი</span></div>` +
       rows.map(u => {
         const s = cur(u.id);
-        return `<div class="row${u.id in edits ? ' changed' : ''}" data-id="${u.id}">
+        return `<div class="row${u.id in edits ? ' changed' : ''}${s.status === 'reserved' ? ' is-res' : ''}" data-id="${u.id}">
           <a href="../2/#${u.link}" target="_blank">${u.name}</a>
           <span class="m">${u.type}</span>
           <span class="m">${u.fl}</span>
           <span class="m">${u.area ? u.area + ' მ²' : '—'}</span>
           <label class="price"><span>$</span><input inputmode="numeric" value="${s.price ?? ''}" placeholder="—" aria-label="ფასი"></label>
           <div class="seg">${Object.keys(STATUS).map(k => `<button class="${k}${s.status === k ? ' on' : ''}" data-st="${k}">${STATUS[k]}</button>`).join('')}</div>
+          <div class="res${expired(s) ? ' late' : ''}">
+            <label>ვისზეა <input data-f="client" value="${esc(s.client)}" placeholder="სახელი, ტელეფონი"></label>
+            <label>ვადა <input type="date" data-f="until" value="${s.until ?? ''}"></label>
+            <span class="late-tag">ვადა გავიდა</span>
+          </div>
         </div>`;
       }).join('') : '<div class="empty">ვერაფერი მოიძებნა</div>';
   }
@@ -186,11 +207,18 @@ if (!Sales.configured) {
   async function saveAll() {
     const ids = Object.keys(edits); if (!ids.length) return;
     const rows = ids.map(id => ({ id, status: cur(id).status, price: cur(id).price }));
+    // ჯავშნის დეტალები: დაჯავშნილზე ვინახავთ, სხვა სტატუსზე გადასვლისას ვშლით (პირადი მონაცემი ზედმეტად არ დარჩეს)
+    const keep = ids.filter(id => cur(id).status === 'reserved').map(id => ({ id, client: cur(id).client || null, until: cur(id).until || null }));
+    const drop = ids.filter(id => cur(id).status !== 'reserved' && id in res);
     $('#saveBtn').disabled = true; $('#saveBtn').textContent = 'ინახება…';
-    const { error } = await db.from('units').upsert(rows);
+    const results = await Promise.all([db.from('units').upsert(rows),
+      keep.length && db.from('reservations').upsert(keep), drop.length && db.from('reservations').delete().in('id', drop)]);
     $('#saveBtn').disabled = false; $('#saveBtn').textContent = 'შენახვა';
+    const error = results.find(r => r && r.error)?.error;
     if (error) return bar(`<span class="bad">ვერ შეინახა: ${error.code === '42501' ? 'ამ ანგარიშს ცვლილების უფლება არ აქვს' : error.message}</span>`);
     rows.forEach(r => { state[r.id] = r; delete edits[r.id]; });
+    keep.forEach(r => res[r.id] = { client: r.client, until: r.until });
+    drop.forEach(id => delete res[id]);
     draw(); bar(`<span class="ok">შენახულია ✓ საიტზე უკვე ჩანს</span>`);
     setTimeout(() => { if (!Object.keys(edits).length) bar(); }, 3000);
   }
@@ -200,8 +228,16 @@ if (!Sales.configured) {
     const id = b.closest('.row').dataset.id;
     edit(id, { status: b.dataset.st });
     b.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    b.closest('.row').classList.toggle('is-res', b.dataset.st === 'reserved');
   });
   $('#list').addEventListener('input', e => {
+    const f = e.target.dataset.f;
+    if (f) {
+      const id = e.target.closest('.row').dataset.id;
+      edit(id, { [f]: e.target.value.trim() || null });
+      if (f === 'until') e.target.closest('.res').classList.toggle('late', expired(cur(id)));
+      return;
+    }
     if (!e.target.matches('.price input')) return;
     const id = e.target.closest('.row').dataset.id, raw = e.target.value.replace(/[\s,$]/g, '');
     const ok = raw === '' || +raw >= 0;

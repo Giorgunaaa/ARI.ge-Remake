@@ -33,8 +33,21 @@ create policy "units read"   on public.units for select using (true);
 create policy "units insert" on public.units for insert to authenticated with check (public.is_admin());
 create policy "units update" on public.units for update to authenticated using (public.is_admin()) with check (public.is_admin());
 
+-- ჯავშნის დეტალები (კლიენტი, ვადა). ცალკე ცხრილია, რადგან units ყველასთვის იკითხება, ეს კი — მხოლოდ ადმინისთვის.
+create table if not exists public.reservations (
+  id         text primary key,          -- იგივე id, რაც units-ში
+  client     text,
+  until      date,
+  updated_at timestamptz not null default now()
+);
+alter table public.reservations enable row level security;
+drop policy if exists "reservations admin" on public.reservations;
+create policy "reservations admin" on public.reservations for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
 create or replace function public.touch_updated_at() returns trigger language plpgsql as $$
 begin new.updated_at = now(); return new; end;
 $$;
 drop trigger if exists units_touch on public.units;
 create trigger units_touch before update on public.units for each row execute function public.touch_updated_at();
+drop trigger if exists reservations_touch on public.reservations;
+create trigger reservations_touch before update on public.reservations for each row execute function public.touch_updated_at();
