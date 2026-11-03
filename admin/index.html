@@ -7,7 +7,9 @@
 <title>ARI — ადმინი</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<!-- integrity: CDN-ზე შეცვლილ ფაილს ბრაუზერი არ გაუშვებს. ჰეში npm-ის პაკეტიდანაა; ვერსიის შეცვლისას ჰეშიც შეცვალე. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
+        integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous"></script>
 <style>
   :root { --navy: #1d4a31; --green: #4f9a63; --coral: #e5604f; --amber: #e0a43a; --cream: #f6f1e6; --line: #e3dccb; --muted: #7a7a6e; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -135,6 +137,8 @@
 <script src="../2/units.js?v=20261021b"></script>
 <script src="../2/sales.js?v=20261021b"></script>
 <script>
+// სხვა საიტის iframe-ში ადმინი არ ჩაირთვება (clickjacking): შესვლის ფორმა და სია მხოლოდ ამ სკრიპტით ჩნდება
+if (window.top !== window.self) throw new Error('admin is framed');
 const $ = s => document.querySelector(s);
 const STATUS = { free: 'იყიდება', reserved: 'დაჯავშნილია', sold: 'გაყიდულია' };
 
