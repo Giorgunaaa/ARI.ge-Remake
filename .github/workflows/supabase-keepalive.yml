@@ -8,11 +8,17 @@ on:
     - cron: "17 6 * * *"   # ყოველდღე 06:17 UTC
   workflow_dispatch:
 
+# მხოლოდ რეპოს წაკითხვა; GitHub-ის ტოკენი დისკზე არ რჩება
+permissions:
+  contents: read
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Read one row
         run: |
           URL=$(grep -oP "const URL = '\K[^']+" 2/sales.js)

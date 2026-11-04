@@ -234,7 +234,7 @@ if (!Sales.configured) {
       keep.length && db.from('reservations').upsert(keep), drop.length && db.from('reservations').delete().in('id', drop)]);
     $('#saveBtn').disabled = false; $('#saveBtn').textContent = 'შენახვა';
     const error = results.find(r => r && r.error)?.error;
-    if (error) return bar(`<span class="bad">ვერ შეინახა: ${error.code === '42501' ? 'ამ ანგარიშს ცვლილების უფლება არ აქვს' : error.message}</span>`);
+    if (error) return bar(`<span class="bad">ვერ შეინახა: ${error.code === '42501' ? 'ამ ანგარიშს ცვლილების უფლება არ აქვს' : esc(error.message)}</span>`);
     rows.forEach(r => { state[r.id] = r; delete edits[r.id]; });
     keep.forEach(r => res[r.id] = { client: r.client, until: r.until });
     drop.forEach(id => delete res[id]);
