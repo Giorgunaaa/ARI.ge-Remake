@@ -1,0 +1,2467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARI Investment Platform</title>
+<meta name="description" content="ARI members-only platform connecting real-estate developers with investors in Georgia.">
+<meta name="theme-color" content="#1A3732">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' rx='9' fill='%23F1E2BF'/%3E%3Cpath d='M9 25V12l6-3v16M15 15l10 3v7M7 25h20' fill='none' stroke='%231A3732' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ARI Investment Platform">
+<meta property="og:description" content="ARI connects developers and investors: verified apartments and land plots before completion, below market price.">
+<meta property="og:url" content="https://designhub.ge/5/">
+<meta property="og:image" content="https://designhub.ge/5/img/house.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Georgian glyphs: Noto Sans Georgian drawn ~12% smaller so it matches the Latin faces optically */
+@font-face{font-family:"KA Sans";font-style:normal;font-weight:400 700;font-display:swap;size-adjust:88%;src:url(https://fonts.gstatic.com/s/notosansgeorgian/v49/PlIVFke5O6RzLfvNNVSitxkr76PRHBC4Ytyq-Gof7PUs4S7zcGyUkdjo.woff2) format("woff2");unicode-range:U+0589,U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+205A,U+2D00-2D2F,U+2E31}
+/* Layout: a one-screen Home with two entry doors; Developers and Investors are public info pages whose tools (listing form, search and listings) appear only after sign-in; a Platform page holds the flow diagram. Navy heroes over photos, white content bands in a 1180px track. */
+:root{
+  --bg:#FFFFFF; --band:#F7F4EC; --card:#FFFFFF; --field:#FAF8F3;
+  --line:#E7E1D3; --line-2:#D6CDB9;
+  --ink:#16231F; --ink-2:#47554F; --ink-3:#717B76;
+  --navy:#1A3732; --navy-2:#24463F; --on-navy:#FFF8E8; --on-navy-2:#CFC8B4; --navy-line:rgba(241,226,191,.16);
+  --accent:#1A3732; --accent-hover:#24463F; --on-accent:#F1E2BF; --accent-ink:#2B5A4F; --accent-soft:#F3ECDA;
+  --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
+  --mint:#E9D6A6;
+  --gold:#8A6D2F; --gold-soft:#F6EEDB; --gold-line:#E4D2A8;
+  --lane-dev:#2B5A4F; --lane-plat:#9A7B3B; --lane-inv:#5A6B8C;
+  --shadow-sm:0 1px 2px rgba(22,35,31,.06);
+  --shadow:0 1px 2px rgba(22,35,31,.05), 0 14px 36px -12px rgba(22,35,31,.18);
+  --f-display:"Bricolage Grotesque","KA Sans","Segoe UI",system-ui,sans-serif;
+  --f-body:"Hanken Grotesk","KA Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --f-ka:"KA Sans","Sylfaen",sans-serif;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --head-h:65px;
+  --gutter:max(clamp(16px,4vw,32px), env(safe-area-inset-left,0px));
+  --gutter-r:max(clamp(16px,4vw,32px), env(safe-area-inset-right,0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1916; --band:#12221F; --card:#162A26; --field:#11201D;
+    --line:#22382F; --line-2:#2F4A42;
+    --ink:#F1EDE2; --ink-2:#C9C3B2; --ink-3:#9D988B;
+    --navy:#0E201C; --navy-2:#163029; --on-navy:#FFF8E8; --on-navy-2:#C7C0AC; --navy-line:rgba(241,226,191,.14);
+    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
+    --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
+    --gold:#E3C27A; --gold-soft:rgba(227,194,122,.13); --gold-line:rgba(227,194,122,.35);
+    --lane-dev:#8FC1B2; --lane-plat:#E3C27A; --lane-inv:#A9B6D6;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 36px -12px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1916; --band:#12221F; --card:#162A26; --field:#11201D;
+    --line:#22382F; --line-2:#2F4A42;
+    --ink:#F1EDE2; --ink-2:#C9C3B2; --ink-3:#9D988B;
+    --navy:#0E201C; --navy-2:#163029; --on-navy:#FFF8E8; --on-navy-2:#C7C0AC; --navy-line:rgba(241,226,191,.14);
+    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
+    --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
+    --gold:#E3C27A; --gold-soft:rgba(227,194,122,.13); --gold-line:rgba(227,194,122,.35);
+    --lane-dev:#8FC1B2; --lane-plat:#E3C27A; --lane-inv:#A9B6D6;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 36px -12px rgba(0,0,0,.6);
+    color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--navy)}
+body.modal-open{overflow:hidden}
+h1,h2,h3,h4{font-family:var(--f-display);margin:0;letter-spacing:-.02em;line-height:1.08;text-wrap:balance;font-weight:600}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter-r)}
+.mono{font-family:var(--f-mono);font-size:.86em;letter-spacing:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;min-height:48px;padding:0 1.35em;border-radius:12px;border:1px solid transparent;font-weight:600;font-size:15.5px;text-decoration:none;cursor:pointer;transition:background .15s, border-color .15s, transform .15s;white-space:nowrap;background:none}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-hover)}
+.site-head .btn-primary,.page-hero .btn-primary,.final .btn-primary,.home2 .btn-primary,.dash-head .btn-primary{background:var(--champ);color:var(--on-champ)}
+.site-head .btn-primary:hover,.page-hero .btn-primary:hover,.final .btn-primary:hover,.home2 .btn-primary:hover,.dash-head .btn-primary:hover{background:var(--champ-hover)}
+.btn-light{background:transparent;color:var(--on-navy);border-color:rgba(255,255,255,.34)}
+.btn-light:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.6)}
+.btn-outline{background:var(--card);color:var(--ink);border-color:var(--line-2)}
+.btn-outline:hover{border-color:var(--ink-3)}
+.btn-sm{min-height:38px;padding:0 1em;font-size:14px;border-radius:10px}
+.btn-block{width:100%}
+.btn:disabled{opacity:.75;cursor:default}
+@media (prefers-reduced-motion:no-preference){.btn:active{transform:translateY(1px)}}
+
+/* Section scaffolding */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.eyebrow::before{content:"";width:18px;height:2px;background:currentColor;border-radius:2px}
+.sec{padding-block:clamp(56px,8vw,100px)}
+.sec-band{background:var(--band);border-block:1px solid var(--line)}
+.sec-head{display:grid;gap:14px;max-width:680px;margin-bottom:clamp(28px,4.5vw,48px)}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.9rem)}
+.lead{font-size:clamp(1.02rem,1.4vw,1.14rem);color:var(--ink-2);max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill-gold{background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line)}
+.pill-muted{background:var(--band);color:var(--ink-2);border:1px solid var(--line)}
+
+/* Header */
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--navy);color:var(--on-navy);border-bottom:1px solid var(--navy-line)}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;min-height:64px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo-mark{width:34px;height:34px;flex:none}
+.logo-text{display:grid;line-height:1.05}
+.logo-text b{font-family:var(--f-display);font-size:18px;font-weight:700;letter-spacing:-.01em}
+.logo-text span{font-family:var(--f-body);font-size:11px;letter-spacing:.02em;opacity:.7}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{font-size:14.5px;font-weight:500;color:var(--on-navy-2);text-decoration:none;padding:8px 12px;border-radius:9px}
+.nav a:hover{color:var(--on-navy);background:rgba(255,255,255,.06)}
+.nav a[aria-current="page"]{color:var(--on-navy);background:rgba(255,255,255,.1)}
+.head-right{display:flex;align-items:center;gap:10px}
+.auth{display:flex;align-items:center;gap:8px}
+.role-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line);font-size:13.5px;font-weight:600}
+.role-chip i{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+.lang{display:flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line)}
+.lang button{border:0;background:none;color:var(--on-navy-2);font-size:12.5px;font-weight:700;letter-spacing:.04em;min-height:30px;padding:0 9px;border-radius:7px;cursor:pointer}
+.lang button:hover{color:var(--on-navy)}
+.lang button[aria-pressed="true"]{background:var(--champ);color:var(--on-champ)}
+@media (max-width:880px){
+  .head-row{padding-top:8px}
+  .nav{order:3;width:100%;overflow-x:auto;margin:0 -8px;padding-bottom:8px}
+  .nav a{white-space:nowrap}
+}
+@media (max-width:540px){#authGuest [data-auth="signin"]{display:none}.head-right{gap:8px}}
+@media (max-width:420px){.logo-text{display:none}.auth .btn-sm{padding:0 .8em}}
+
+/* Home: one screen */
+.home{position:relative;isolation:isolate;overflow:hidden;background:var(--navy);color:var(--on-navy);min-height:calc(100svh - var(--head-h) - env(safe-area-inset-top,0px));display:grid;grid-template-rows:1fr auto}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;z-index:-2;display:block;object-fit:cover;object-position:62% 55%}
+.home::after,.page-hero::after,.final::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg,rgba(12,30,26,.95) 0%,rgba(12,30,26,.84) 40%,rgba(12,30,26,.45) 75%,rgba(12,30,26,.3) 100%),linear-gradient(0deg,rgba(12,30,26,.75),rgba(12,30,26,0) 40%)}
+.home-main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,64px);align-items:center;padding-block:clamp(20px,4.5vh,64px);width:100%}
+.home-copy{display:grid;gap:20px;min-width:0}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--on-navy-2)}
+.home h1{font-size:clamp(2.3rem,5.2vw,4.3rem);letter-spacing:-.035em;max-width:15ch;line-height:1.02}
+.home h1 em,.page-hero h1 em{font-style:normal;color:var(--mint)}
+.hero-sub{font-size:clamp(1.05rem,1.5vw,1.25rem);color:var(--on-navy-2);max-width:46ch}
+.trust{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--on-navy-2)}
+.trust span{display:inline-flex;align-items:center;gap:7px}
+.trust svg{width:16px;height:16px;color:var(--mint)}
+.doors{display:grid;gap:14px}
+.door{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;padding:20px 22px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:var(--on-navy);text-decoration:none;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s, border-color .2s, transform .2s}
+.door:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.34)}
+.door.solid{background:var(--accent);border-color:transparent;color:var(--on-accent)}
+.door.solid:hover{background:var(--accent-hover)}
+.door-ico{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.12)}
+.door.solid .door-ico{background:rgba(255,255,255,.18)}
+.door-ico svg{width:26px;height:26px}
+.door-txt{display:grid;gap:3px;min-width:0}
+.door-txt b{font-family:var(--f-display);font-size:1.3rem;font-weight:600;letter-spacing:-.01em;line-height:1.15}
+.door-txt span{font-size:14.5px;opacity:.82}
+.door-go{width:22px;height:22px}
+@media (prefers-reduced-motion:no-preference){.door:hover{transform:translateX(4px)}}
+.home-strip{border-top:1px solid var(--navy-line);background:rgba(12,30,26,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.strip-wrap{display:grid;gap:10px;padding-block:14px}
+.mini-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:12.5px;color:var(--on-navy-2)}
+.mini-title{font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--on-navy)}
+.mini-legend{display:flex;flex-wrap:wrap;gap:6px 14px}
+.mini-legend span{display:inline-flex;align-items:center;gap:6px}
+.mini-legend i{width:9px;height:9px;border-radius:3px}
+.mini-legend svg{width:12px;height:12px;color:#E3B860}
+.d0,.k0 b{background:#7EA2DA} .d1,.k1 b{background:#5BD6A7} .d2,.k2 b{background:#E3B860}
+.mini-full{margin-left:auto;display:inline-flex;align-items:center;gap:6px;color:var(--mint);font-weight:600;text-decoration:none}
+.mini-full svg{width:14px;height:14px}
+.mini-full:hover{text-decoration:underline}
+.mini-scroll{overflow-x:auto;scrollbar-width:thin}
+.mini-flow{list-style:none;margin:0;padding:2px 0 4px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px}
+.mini-flow li{position:relative;display:inline-flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);font-size:12.5px;font-weight:500;color:var(--on-navy);white-space:nowrap}
+.mini-flow li+li::before{content:"›";position:absolute;left:-15px;top:50%;transform:translateY(-54%);font-size:17px;line-height:1;color:rgba(255,255,255,.4)}
+.mini-flow b{flex:none;width:21px;height:21px;border-radius:7px;display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;font-weight:500;color:#0D1B33}
+.mini-flow svg{width:13px;height:13px;color:#E3B860}
+.strip-links{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--on-navy-2)}
+.mini-cap{color:var(--on-navy);font-size:13px;font-weight:500;min-height:1.2em}
+.mini-cap b{color:var(--mint);font-family:var(--f-mono);font-weight:500;margin-right:6px}
+.mini-svg{display:block;width:100%;height:auto;max-height:96px;overflow:visible}
+.mini-lane{fill:#B3BFD3;font-size:13px;font-weight:500;font-family:var(--f-body)}
+.mini-row{stroke:rgba(255,255,255,.1);stroke-width:1}
+.mini-path{fill:none;stroke:rgba(255,255,255,.38);stroke-width:1.5}
+.mini-dot{cursor:pointer;outline:none}
+.mini-dot circle{stroke:transparent;stroke-width:3;transition:stroke .15s}
+.mini-dot:hover circle,.mini-dot:focus-visible circle,.mini-dot.on circle{stroke:#FFFFFF}
+.mini-num{font-family:var(--f-mono);font-size:12px;font-weight:500;fill:#0D1B33;pointer-events:none}
+.mini-lock{color:#E3B860;pointer-events:none}
+.strip-links a{text-decoration:none}
+.strip-links a:hover{color:var(--on-navy);text-decoration:underline}
+@media (max-width:900px){.home-main{grid-template-columns:1fr}}
+@media (max-width:720px){
+  .home::after,.page-hero::after,.final::after{background:linear-gradient(180deg,rgba(12,30,26,.9) 0%,rgba(12,30,26,.82) 55%,rgba(12,30,26,.7) 100%)}
+  .home .trust,.mini-head,.mini-scroll{display:none}
+  .home-main{padding-block:20px}
+  .home-copy{gap:14px}
+  .mini-flow{flex-wrap:nowrap;min-width:max-content}
+  .mini-full{margin-left:0}
+  .door{padding:16px}
+  .door-txt b{font-size:1.15rem}
+}
+@media (max-height:780px) and (min-width:721px){.home-main{padding-block:18px}.home-copy{gap:14px}.home h1{font-size:clamp(2rem,4vw,3.3rem)}.door{padding:15px 18px}}
+
+/* Home: two photo doors (one screen) */
+.home2{position:relative;display:grid;grid-template-columns:1fr 1fr;height:calc(100svh - var(--head-h) - env(safe-area-inset-top,0px));min-height:540px;overflow:hidden;background:var(--navy)}
+.door2{position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:clamp(24px,4vw,48px) clamp(20px,4vw,48px) 72px;color:#fff;text-decoration:none}
+.door2 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.door2::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,30,26,.55) 0%,rgba(12,30,26,.1) 38%,rgba(12,30,26,.86) 100%)}
+.door2+.door2{border-left:1px solid rgba(255,255,255,.18)}
+.door2 .in{position:relative;z-index:2;display:grid;gap:12px;max-width:460px}
+.who2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.door2 .h2{font-family:var(--f-display);font-weight:600;font-size:clamp(1.7rem,2.9vw,2.6rem);line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+.door2 .p{color:rgba(255,255,255,.88);font-size:1.02rem;max-width:42ch}
+.door2 .btn{justify-self:start;margin-top:6px}
+.btn-white{background:#fff;color:#0E1A2E}
+.btn-white:hover{background:#EEF2F7}
+.door2:focus-visible{outline-offset:-6px}
+@media (prefers-reduced-motion:no-preference){.door2:hover img{transform:scale(1.04)}}
+.home2-center{position:absolute;left:50%;top:clamp(18px,5vh,48px);transform:translateX(-50%);z-index:6;text-align:center;color:#fff;background:rgba(12,30,26,.58);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:18px 28px;width:min(620px,calc(100% - 32px))}
+.kicker2{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}
+.home2-center h1{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:6px}
+.home2-sub{color:rgba(255,255,255,.85);font-size:15px}
+.mid2{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:6;width:84px;height:84px;border-radius:50%;background:var(--champ);color:var(--on-champ);display:grid;place-items:center;font:700 22px var(--f-display);box-shadow:0 0 0 8px rgba(255,255,255,.16)}
+.home2-foot{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;padding:12px 16px;font-size:12.5px;color:rgba(255,255,255,.75);background:rgba(12,30,26,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.home2-foot a{color:inherit;text-decoration:none}
+.home2-foot a:hover{color:#fff;text-decoration:underline}
+html[lang="ka"] .home2-center h1{font-size:clamp(1.25rem,2.1vw,1.75rem)}
+html[lang="ka"] .door2 .h2{font-size:clamp(1.45rem,2.4vw,2.1rem)}
+@media (max-width:820px){
+  .home2{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr auto;min-height:0}
+  .home2-center{position:relative;left:auto;top:auto;transform:none;width:auto;margin:12px 12px 0;padding:14px 16px;grid-row:1}
+  .door2{padding:16px 18px 18px}
+  .door2+.door2{border-left:0;border-top:1px solid rgba(255,255,255,.18)}
+  .door2 .in{gap:8px}
+  .door2 .p{display:none}
+  .door2 .h2{font-size:1.35rem}
+  .door2 .btn{min-height:42px}
+  .mid2{display:none}
+  .home2-foot{position:relative;grid-row:4}
+}
+
+/* Page heroes */
+.page-hero,.final{position:relative;isolation:isolate;overflow:hidden;background:var(--navy);color:var(--on-navy)}
+.page-hero-inner{display:grid;gap:18px;justify-items:start;padding-block:clamp(56px,8vw,100px);max-width:720px}
+.page-hero h1{font-size:clamp(2.2rem,5vw,3.9rem);letter-spacing:-.03em;max-width:16ch}
+.crumb{display:flex;gap:8px;font-size:13.5px;color:var(--on-navy-2)}
+.crumb a{text-decoration:none}
+.crumb a:hover{color:var(--on-navy);text-decoration:underline}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.hero-ctas .btn{min-height:52px;font-size:16px}
+.hero-note{display:flex;gap:10px;align-items:flex-start;max-width:52ch;padding:12px 14px;border-radius:12px;background:rgba(227,184,96,.12);border:1px solid rgba(227,184,96,.4);color:var(--on-navy);font-size:14.5px}
+.hero-note svg{width:18px;height:18px;flex:none;color:#F1E2BF;margin-top:2px}
+.hero-ok{background:rgba(241,226,191,.12);border-color:rgba(241,226,191,.4)}
+.hero-ok svg{color:var(--mint)}
+@media (max-width:720px){.hero-ctas{flex-direction:column;width:100%}.hero-ctas .btn{width:100%;white-space:normal;text-align:center;padding-block:10px}}
+
+/* Info blocks */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px}
+.tile{display:grid;gap:12px;align-content:start;padding:22px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.tile-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--navy);color:var(--on-navy)}
+.tile-ico svg{width:23px;height:23px}
+.tile h3{font-size:1.2rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tile p{color:var(--ink-2);font-size:15px}
+.types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.type-card{display:grid;gap:16px;align-content:start;padding:24px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.type-top{display:flex;gap:14px;align-items:center}
+.type-top .tile-ico{background:var(--accent-soft);color:var(--accent-ink)}
+.type-top h3{font-size:1.3rem}
+.type-top p{font-size:14px;color:var(--ink-3)}
+.need-label{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.need{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.need li{font-size:13.5px;padding:5px 10px;border-radius:8px;background:var(--band);border:1px solid var(--line);color:var(--ink)}
+.need li.o{background:transparent;border-style:dashed;color:var(--ink-3)}
+.creds{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:22px}
+.creds span{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:600}
+.creds svg{width:15px;height:15px}
+.ari-help .tile-ico{background:var(--accent);color:var(--on-accent)}
+@media (max-width:820px){.types{grid-template-columns:1fr}}
+.values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.value{display:grid;gap:12px;align-content:start;padding:8px 28px}
+.value:first-child{padding-left:0}
+.value+.value{border-left:1px solid var(--line)}
+.value-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink)}
+.value-ico svg{width:24px;height:24px}
+.value h3{font-size:clamp(1.25rem,1.9vw,1.5rem);line-height:1.18}
+.value p{color:var(--ink-2);font-size:15px;max-width:34ch}
+@media (max-width:820px){.values{grid-template-columns:1fr;gap:28px}.value{padding:0}.value+.value{border-left:0;border-top:1px solid var(--line);padding-top:28px}}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;list-style:none;margin:0;padding:0}
+.step{position:relative;display:grid;gap:12px;align-content:start;padding-top:4px}
+.step-icon{position:relative;z-index:1;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:var(--navy);color:var(--on-navy)}
+.step-icon svg{width:26px;height:26px}
+.step:not(:last-child)::after{content:"";position:absolute;top:32px;left:72px;right:-12px;border-top:2px dashed var(--line-2)}
+.step-n{font-family:var(--f-mono);font-size:12.5px;color:var(--accent-ink)}
+.step h3{font-size:1.28rem}
+.step p{color:var(--ink-2);max-width:34ch}
+@media (max-width:760px){
+  .steps{grid-template-columns:1fr;gap:28px}
+  .step{grid-template-columns:56px minmax(0,1fr);column-gap:18px;row-gap:4px}
+  .step-icon{grid-row:span 3}
+  .step:not(:last-child)::after{top:64px;bottom:-24px;left:27px;right:auto;border-top:0;border-left:2px dashed var(--line-2)}
+}
+.after{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,5vw,64px);align-items:center}
+.after .steps{grid-template-columns:1fr;gap:26px}
+.after .step{grid-template-columns:56px minmax(0,1fr);column-gap:18px;row-gap:4px}
+.after .step-icon{grid-row:span 3}
+.after .step:not(:last-child)::after{top:64px;bottom:-22px;left:27px;right:auto;border-top:0;border-left:2px dashed var(--line-2)}
+.lead-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:20px;display:grid;gap:14px;max-width:420px;width:100%;justify-self:center}
+.lead-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lead-top b{font-family:var(--f-display);font-size:17px;font-weight:600}
+.lead-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px}
+.lead-row span{color:var(--ink-3)}
+.lead-row b{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.lead-msg{padding:12px 14px;border-radius:12px;background:var(--band);font-size:14px;color:var(--ink-2)}
+@media (max-width:900px){.after{grid-template-columns:1fr}}
+
+/* Compact Developers page */
+div.view[data-view="developers"] .sec,div.view[data-view="investors"] .sec{padding-block:clamp(44px,5.5vw,76px)}
+div.view[data-view="developers"] .page-hero-inner,div.view[data-view="investors"] .page-hero-inner{padding-block:clamp(40px,5.5vw,72px);gap:14px}
+div.view[data-view="developers"] .final-inner,div.view[data-view="investors"] .final-inner{padding-block:clamp(44px,6vw,72px)}
+div.view[data-view="developers"] .sec-head,div.view[data-view="investors"] .sec-head{margin-bottom:clamp(20px,3vw,32px)}
+div.view[data-view="developers"] .creds,div.view[data-view="investors"] .creds{margin-top:16px}
+.can-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.can-list li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start}
+.can-list li>svg{width:40px;height:40px;padding:9px;border-radius:11px;background:var(--navy);color:var(--on-navy)}
+.can-list b{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:600;font-size:15px;color:var(--ink)}
+.can-list li>span{display:grid;gap:2px;font-size:14px;color:var(--ink-2)}
+.how-need{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,2.5vw,28px);align-items:stretch}
+.how-need .need-card{align-content:start}
+.steps-card .steps{gap:18px}
+.how-need .step p{max-width:none;font-size:14.5px}
+.how-need .step h3{font-size:1.08rem}
+.how-need .steps{grid-template-columns:1fr;gap:22px}
+.how-need .step{grid-template-columns:44px minmax(0,1fr);column-gap:14px;row-gap:2px}
+.how-need .step-icon{grid-row:span 3;width:44px;height:44px;border-radius:12px}
+.how-need .step-icon svg{width:22px;height:22px}
+.how-need .step:not(:last-child)::after{top:52px;bottom:-14px;left:21px;right:auto;border-top:0;border-left:2px dashed var(--line-2)}
+.need-card{background:var(--band);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;display:grid;gap:16px}
+.need-card h3{font-size:1.2rem}
+.need-group{display:grid;gap:8px}
+.need-group .need-label{display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)}
+.need-group .need-label svg{width:18px;height:18px;color:var(--accent-ink)}
+.need-card .need li{background:var(--card)}
+.values-line{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;font-weight:600;color:var(--champ)}
+.values-line span{display:inline-flex;align-items:center;gap:8px}
+.values-line span+span::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.6;margin-right:12px}
+@media (max-width:900px){.how-need{grid-template-columns:1fr}}
+
+/* Platform page */
+div.view[data-view="platform"] .sec{padding-block:clamp(48px,6vw,84px)}
+div.view[data-view="platform"] .sec-head{margin-bottom:clamp(20px,3vw,34px)}
+.short3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.tile-ari{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tile-ari .tile-ico{background:var(--accent);color:var(--on-accent)}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.phase{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;display:grid;gap:18px;align-content:start;box-shadow:var(--shadow-sm)}
+.phase-top{display:grid;gap:6px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.phase-tag{font-family:var(--f-mono);font-size:12.5px;color:var(--accent-ink)}
+.phase-top h3{font-size:1.25rem}
+.ph-steps{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.ph-steps li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+.ph-n{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-family:var(--f-mono);font-size:13px;font-weight:500;border:1.5px solid currentColor}
+.ph-who{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ph-steps h4{font-family:var(--f-display);font-weight:600;font-size:1.02rem;margin:2px 0 3px}
+.ph-steps p{font-size:14px;color:var(--ink-2)}
+.w0{color:var(--lane-dev)} .w1{color:var(--lane-plat)} .w2{color:var(--lane-inv)}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.check-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;display:grid;gap:14px;align-content:start}
+.check-card h3{display:flex;align-items:center;gap:10px;font-size:1.15rem}
+.check-card h3 svg{width:22px;height:22px;color:var(--accent-ink)}
+.check-card ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.check-card li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.yes{width:18px;height:18px;flex:none;color:var(--accent-ink);margin-top:2px}
+.vis-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
+.vis{width:100%;min-width:560px;border-collapse:collapse;font-size:15px}
+.vis th,.vis td{padding:14px 18px;text-align:center;border-bottom:1px solid var(--line)}
+.vis tbody tr:last-child th,.vis tbody tr:last-child td{border-bottom:0}
+.vis thead th{font-family:var(--f-display);font-weight:600;font-size:15px;background:var(--band)}
+.vis tbody th{text-align:left;font-weight:500}
+.vis td .yes{margin:0 auto;display:block}
+.no{color:var(--ink-3)}
+.own{font-size:13px;font-weight:600;color:var(--gold);background:var(--gold-soft);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:start}
+.faq{display:grid;gap:10px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;font-weight:600;font-size:15.5px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;line-height:1;color:var(--accent-ink);flex:none}
+.faq details[open] summary::after{content:"−"}
+.faq details p{padding:0 0 16px;color:var(--ink-2);font-size:15px;max-width:62ch}
+@media (max-width:960px){.short3,.phases{grid-template-columns:1fr}.faq-grid{grid-template-columns:1fr}}
+@media (max-width:700px){.checks{grid-template-columns:1fr}}
+
+/* Same hero size on every inner page, so switching pages does not jump */
+.page-hero{height:clamp(460px,60vh,540px)}
+.page-hero>.wrap{height:100%}
+div.view .page-hero .page-hero-inner{height:100%;padding-block:clamp(40px,7vh,72px) 32px;align-content:start;gap:14px}
+@media (max-width:720px){.page-hero{height:auto;min-height:440px}}
+
+/* My offers (developer dashboard) */
+.dash-head{background:var(--navy);color:var(--on-navy)}
+.dash-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);align-items:center;gap:clamp(20px,4vw,56px);padding-block:clamp(32px,5vw,56px)}
+.dash-main{display:grid;gap:10px;justify-items:start}
+.dash-main .btn{margin-top:8px}
+.dash-note{background:rgba(255,255,255,.06);border:1px solid var(--navy-line);border-radius:var(--r-lg);padding:20px 22px;display:grid;gap:12px}
+.dash-note h3{font-size:1.1rem;color:var(--on-navy)}
+.dash-note .ticks{color:var(--on-navy-2);font-size:14px;gap:10px}
+.dash-note .ticks svg{color:var(--champ)}
+@media (max-width:900px){.dash-row{grid-template-columns:1fr}}
+.dash-head h1{font-size:clamp(2rem,4vw,3rem);margin:10px 0 6px}
+.dash-head p{color:var(--on-navy-2)}
+div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:32px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:4px}
+.stat span{font-size:13px;color:var(--ink-3)}
+.stat b{font-family:var(--f-display);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
+.dash-block{margin-bottom:34px}
+.dash-block-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.dash-block-head h2{font-size:1.4rem}
+.my-list{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);overflow:hidden}
+.my-row{display:grid;grid-template-columns:72px minmax(0,1.6fr) minmax(0,1.1fr) auto 70px 70px auto;gap:16px;align-items:center;padding:14px 18px}
+.my-row+.my-row{border-top:1px solid var(--line)}
+.my-thumb{width:72px;height:54px;border-radius:10px;object-fit:cover}
+.my-info{display:grid;gap:2px;min-width:0}
+.my-info b{font-weight:600}
+.my-info span{font-size:13px;color:var(--ink-3)}
+.my-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-variant-numeric:tabular-nums}
+.my-price s{font-size:13px;color:var(--ink-3)}
+.my-price b{font-family:var(--f-display);font-weight:600;font-size:17px}
+.my-disc{font-size:12px;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);padding:1px 7px;border-radius:6px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st-pub{color:var(--accent-ink);background:var(--accent-soft)}
+.st-rev{color:var(--gold);background:var(--gold-soft)}
+.st-new{color:#B4462F;background:rgba(180,70,47,.1)}
+.my-num{display:grid;text-align:center;font-variant-numeric:tabular-nums}
+.my-num b{font-weight:600;font-size:16px}
+.my-num span{font-size:12px;color:var(--ink-3)}
+.lead-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.lead-grid .lead-item{display:flex;flex-direction:column;gap:14px;padding:20px}
+.li-head{display:flex;align-items:center;gap:12px}
+.li-ico{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--navy);color:var(--on-navy)}
+.li-ico svg{width:20px;height:20px}
+.li-who{display:grid;gap:2px;min-width:0}
+.li-who b{font-weight:600;font-size:15px}
+.li-who span{font-size:13.5px;color:var(--ink-3)}
+.li-budget{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 12px;border-radius:10px;background:var(--band);font-size:13.5px}
+.li-budget span{color:var(--ink-3)}
+.li-budget b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lead-grid .lead-msg{flex:1;margin:0;padding:0 0 0 12px;background:none;border-left:2px solid var(--line-2);border-radius:0;font-size:14px;color:var(--ink-2);line-height:1.55}
+.li-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line)}
+.li-foot .status{white-space:normal;text-align:right;line-height:1.3}
+.lead-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;display:grid;gap:10px;align-content:start}
+.lead-item .lead-top b{font-family:var(--f-display);font-size:16px;font-weight:600}
+.lead-when{font-size:12.5px;color:var(--ink-3)}
+@media (max-width:1000px){.lead-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){
+  .my-row{grid-template-columns:64px minmax(0,1fr) auto;row-gap:8px}
+  .my-thumb{width:64px;height:48px}
+  .my-price{grid-column:2}.my-row .status{grid-column:3;grid-row:1}
+  .my-num{display:none}.my-act{grid-column:3;grid-row:2}
+  .lead-grid{grid-template-columns:1fr}
+}
+
+.preview-wrap{display:block}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;align-items:start}
+.my-card .listing-media{aspect-ratio:16/10}
+.my-card .save,.my-card .photo-note{display:none}
+.my-card .tag-type{font-size:11px;padding:4px 8px;left:10px;top:10px}
+.my-card .tag-verified{right:10px;top:10px;font-size:11px;padding:4px 8px}
+.my-card .badge-disc{left:10px;bottom:10px;font-size:12px;padding:5px 9px;border-radius:8px}
+.my-card .badge-disc b{font-size:13px}
+.my-card .listing-body{padding:14px;gap:10px}
+.my-card .listing-loc{font-size:13px}
+.my-card .listing-loc .chip{display:none}
+.my-card .listing-price strong{font-size:21px}
+.my-card .listing-price .was{font-size:14px}
+.my-card .price-meta{font-size:12.5px;margin-top:-4px}
+.my-card .specs div{padding:7px 9px}
+.my-card .specs dt{font-size:10.5px}
+.my-card .specs dd{font-size:13px}
+.my-card .card-owner{padding-top:10px}
+.my-card .card-owner .btn{min-height:34px;padding:0 .8em;font-size:13px}
+.my-card .status{font-size:11.5px;padding:3px 8px}
+.my-card:hover{transform:none}
+.preview-note{background:var(--band);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:grid;gap:12px;align-content:start}
+.preview-note h3{font-size:1.15rem}
+.ticks{list-style:none;margin:0;padding:0;display:grid;gap:12px;color:var(--ink-2);font-size:14.5px}
+.ticks li{display:flex;gap:10px;align-items:flex-start}
+.ticks svg{width:18px;height:18px;flex:none;color:var(--accent-ink);margin-top:2px}
+.ws-note{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-radius:var(--r-md);background:var(--band);border:1px solid var(--line);font-size:14px;color:var(--ink-2)}
+.ws-note svg{width:18px;height:18px;flex:none;color:var(--accent-ink);margin-top:2px}
+.ws-note a{color:var(--accent-ink);font-weight:600}
+@media (max-width:1000px){.preview-wrap{grid-template-columns:1fr}}
+
+.card-owner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+.card-owner .btn svg{width:16px;height:16px}
+.my-card.is-edited{box-shadow:0 0 0 3px var(--gold-soft);border-color:var(--gold-line)}
+.edit-photo{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.edit-photo img{width:120px;height:80px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+.edit-photo .btn svg{width:16px;height:16px}
+.edit-calc{min-height:44px;display:flex;align-items:center;gap:10px;padding:0 12px;border-radius:10px;background:var(--band);border:1px dashed var(--line-2);font-variant-numeric:tabular-nums;font-size:14.5px}
+.edit-calc s{color:var(--ink-3)}
+.edit-calc b{font-weight:600}
+.edit-btns{display:flex;justify-content:flex-end;gap:10px}
+
+/* Final CTA */
+.final-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:-2}
+.final-inner{padding-block:clamp(56px,8vw,96px);display:grid;gap:20px;justify-items:start}
+.final h2{font-size:clamp(1.9rem,4.4vw,3.2rem);max-width:17ch;letter-spacing:-.03em}
+.final p{color:var(--on-navy-2);font-size:1.08rem;max-width:50ch}
+
+/* Workspace (signed-in tools) */
+.ws-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px;margin-bottom:28px}
+.ws-head .sec-head{margin-bottom:0}
+.dev-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,56px);align-items:start}
+.dev-side{display:grid;gap:22px;min-width:0}
+.choice{display:grid;gap:10px}
+.choice-label{font-size:13px;font-weight:600;color:var(--ink-3)}
+.choice-opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:border-color .15s, box-shadow .15s}
+.choice-opt:hover{border-color:var(--line-2)}
+.choice-opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.choice-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--band);color:var(--ink);flex:none}
+.choice-opt[aria-pressed="true"] .choice-ico{background:var(--accent-soft);color:var(--accent-ink)}
+.choice-ico svg{width:24px;height:24px}
+.choice-txt{display:grid;gap:2px;min-width:0}
+.choice-txt b{font-weight:600;font-size:15.5px}
+.choice-txt span{font-size:13.5px;color:var(--ink-3)}
+.choice-radio{margin-left:auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
+.choice-opt[aria-pressed="true"] .choice-radio{border-color:var(--accent)}
+.choice-opt[aria-pressed="true"] .choice-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.preview{display:grid;gap:10px}
+.preview-head{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;font-weight:600;color:var(--ink-3)}
+.mock{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.mock-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}
+.mock-title{display:grid;gap:2px}
+.mock-title b{font-family:var(--f-display);font-size:18px;font-weight:600}
+.mock-title span{font-size:13px;color:var(--ink-3)}
+.progress{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--ink-3)}
+.progress i{display:block;width:28px;height:4px;border-radius:4px;background:var(--line)}
+.progress i.on{background:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 22px;background:var(--band);border-bottom:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 18px;padding:22px}
+.field{display:grid;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+.field-label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
+.req,.opt{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap}
+.req{background:var(--navy);color:var(--on-navy)}
+.opt{background:transparent;color:var(--ink-3);border:1px solid var(--line-2)}
+.input{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 13px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--field);font-size:15px;color:var(--ink);min-width:0}
+.input .unit{margin-left:auto;color:var(--ink-3);font-size:13.5px}
+.input svg{width:16px;height:16px;color:var(--ink-3);flex:none}
+.input.select::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg) translateY(-3px);flex:none}
+.input.area{align-items:flex-start;min-height:76px;padding-block:11px;line-height:1.45;color:var(--ink-2);font-size:14px}
+.hint{font-size:12.5px;color:var(--ink-3)}
+.hint-accent{color:var(--accent-ink);font-weight:600}
+.drop{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;padding:14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);background:var(--field)}
+.drop svg.fp{width:150px;height:auto;display:block}
+.drop-meta{display:grid;gap:4px;min-width:0}
+.drop-meta b{font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.drop-meta span{font-size:13px;color:var(--ink-3)}
+.file-ok{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--accent-ink)}
+.file-ok svg{width:14px;height:14px}
+.thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.thumb{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.thumb img,.thumb svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.thumb-add{cursor:pointer;transition:border-color .15s,background .15s}
+.thumb-add:hover{border-color:var(--accent);color:var(--accent-ink)}
+.thumb-add:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.thumb-user .thumb-x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(12,30,26,.75);color:#fff;font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.thumb-user .thumb-x:hover{background:rgba(12,30,26,.95)}
+.thumb-add{display:grid;place-items:center;border-style:dashed;border-width:1.5px;border-color:var(--line-2);color:var(--ink-3);font-size:13px;font-weight:600;background:var(--field)}
+.mock-foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:16px 22px;border-top:1px solid var(--line);background:var(--band)}
+.mock-foot p{font-size:13px;color:var(--ink-3)}
+.mock-foot .btns{display:flex;gap:10px}
+.fp-wall{stroke:var(--ink);fill:none}
+.fp-thin{stroke:var(--ink-3);fill:none}
+.fp-text{fill:var(--ink-3);font-family:var(--f-mono);font-size:9px}
+.fp-big{fill:var(--ink);font-family:var(--f-mono);font-size:11px;font-weight:500}
+@media (max-width:960px){.dev-grid{grid-template-columns:1fr}}
+@media (max-width:600px){
+  .fields{grid-template-columns:1fr;padding:18px}
+  .mock-head,.legend,.mock-foot{padding-left:18px;padding-right:18px}
+  .drop{grid-template-columns:1fr}
+  .drop svg.fp{width:100%;max-width:240px}
+  .mock-foot .btns{width:100%}
+  .mock-foot .btns .btn{flex:1}
+}
+
+/* Listing cards */
+.listing{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .2s, transform .2s, border-color .2s;min-width:0}
+.listing:hover{box-shadow:var(--shadow);border-color:var(--line-2)}
+.listing-media{position:relative;aspect-ratio:16/10;max-width:100%;overflow:hidden;background:var(--band)}
+.photo{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.2,1), filter .4s}
+.listing-media::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,24,21,.35) 0%,rgba(10,24,21,0) 30%,rgba(10,24,21,0) 55%,rgba(10,24,21,.55) 100%)}
+.badge-disc{position:absolute;left:12px;bottom:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-hover));color:var(--on-accent);font-weight:700;font-size:13.5px;box-shadow:0 8px 20px -6px rgba(0,0,0,.45)}
+.badge-disc svg{width:14px;height:14px}
+.badge-disc b{font-size:15px;font-variant-numeric:tabular-nums}
+.tag-type{position:absolute;left:12px;top:12px;z-index:2;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.92);color:#0E1A2E;font-size:12px;font-weight:700;letter-spacing:.03em;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.tag-verified{position:absolute;right:56px;top:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:8px;background:rgba(12,30,26,.66);color:#fff;font-size:12px;font-weight:600;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.tag-verified svg{width:13px;height:13px;color:var(--mint)}
+.save{position:absolute;top:9px;right:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.92);color:#0E1A2E;cursor:pointer;transition:transform .15s}
+.save svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9}
+.save[aria-pressed="true"]{color:#E5484D}
+.save[aria-pressed="true"] svg{fill:currentColor}
+.photo-note{position:absolute;right:12px;bottom:14px;z-index:2;font-size:11px;font-weight:500;color:rgba(255,255,255,.85);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.listing-body{display:flex;flex-direction:column;gap:14px;padding:18px;flex:1}
+.listing-loc{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:14px;color:var(--ink-2);font-weight:500}
+.listing-loc svg{width:15px;height:15px;color:var(--ink-3)}
+.loc{display:inline-flex;align-items:center;gap:5px}
+.chip{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--band);border:1px solid var(--line);color:var(--ink-2)}
+.listing-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.listing-price strong{font-family:var(--f-display);font-size:27px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.listing-price span{font-size:13.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.listing-price .was{font-family:var(--f-display);font-size:18px;font-weight:500;color:var(--ink-3);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ink-3)}
+.price-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:-6px;font-size:13.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.price-meta .saving{color:var(--accent-ink);background:var(--accent-soft);font-weight:600;padding:2px 9px;border-radius:7px}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;border:1px solid var(--line);border-radius:12px}
+.specs div{padding:9px 11px;min-width:0}
+.specs div+div{border-left:1px solid var(--line)}
+.specs dt{font-size:11.5px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.specs dd{margin:2px 0 0;font-weight:600;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listing-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;flex-wrap:wrap}
+.fit{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.fit::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.fit-yes{color:var(--accent-ink)}
+.fit-no{color:var(--ink-3)}
+.listing.is-over .photo{opacity:.65;filter:saturate(.6)}
+@media (prefers-reduced-motion:no-preference){.listing:hover{transform:translateY(-4px)}.listing:hover .photo{transform:scale(1.06)}.save:hover{transform:scale(1.08)}}
+
+/* Investor search */
+.filters{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);overflow:hidden}
+.filters-main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 20px;padding:22px}
+.filters-title{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.filters-title b{font-family:var(--f-display);font-size:18px;font-weight:600}
+.f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.f{display:grid;gap:8px;align-content:start;min-width:0}
+.seg{display:flex;padding:3px;border-radius:11px;background:var(--band);border:1px solid var(--line)}
+.seg button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow-sm)}
+.rng{display:grid;gap:10px}
+.rng-vals{display:flex;justify-content:space-between;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.track{position:relative;height:4px;border-radius:4px;background:var(--line);margin:6px 8px}
+.track i{position:absolute;top:0;bottom:0;background:var(--ink-2);border-radius:4px}
+.track b{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--card);border:2px solid var(--ink-2);box-shadow:var(--shadow-sm)}
+.dual{position:relative;height:30px;margin:2px 0}
+.dual-track{position:absolute;left:10px;right:10px;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:var(--line)}
+.dual-fill{position:absolute;top:0;bottom:0;background:var(--accent);border-radius:4px}
+.dual input[type=range]{position:absolute;left:0;top:0;width:100%;height:30px;margin:0;background:none;pointer-events:none;-webkit-appearance:none;appearance:none}
+.dual input[type=range]::-webkit-slider-runnable-track{background:none;height:30px}
+.dual input[type=range]::-moz-range-track{background:none}
+.dual input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:20px;height:20px;margin-top:5px;border-radius:50%;background:var(--card);border:2px solid var(--accent);box-shadow:var(--shadow-sm);cursor:grab}
+.dual input[type=range]::-moz-range-thumb{pointer-events:auto;width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--accent);box-shadow:var(--shadow-sm);cursor:grab}
+.dual input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--accent-soft)}
+.dual-inputs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center}
+.dual-inputs>span{color:var(--ink-3)}
+.dual-inputs label{display:flex;align-items:center;gap:4px;min-height:40px;padding:0 10px;border:1px solid var(--line-2);border-radius:10px;background:var(--field);min-width:0}
+.dual-inputs label:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dual-inputs b{font-size:13px;font-weight:600;color:var(--ink-3)}
+.dual-inputs input{flex:1;min-width:0;width:100%;border:0;background:transparent;padding:0;font:600 14.5px var(--f-body);color:var(--ink);font-variant-numeric:tabular-nums;outline:none}
+.dual-hint{font-size:12px;color:var(--ink-3)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{min-height:36px;padding:0 13px;border-radius:9px;border:1px solid var(--line-2);background:var(--card);font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.budget{background:var(--navy);color:var(--on-navy);padding:22px;display:grid;gap:14px;align-content:start}
+.budget-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.budget-top label{font-size:13px;font-weight:600;color:var(--on-navy-2)}
+.budget .pill-gold{background:rgba(241,226,191,.14);color:#F1E2BF;border-color:rgba(241,226,191,.4)}
+.budget-amt{font-family:var(--f-display);font-size:40px;font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.budget-amt small{font-family:var(--f-body);font-size:14px;font-weight:500;color:var(--on-navy-2);letter-spacing:0;margin-left:6px}
+.budget input[type=range]{width:100%;accent-color:#E9D6A6;margin:2px 0}
+.budget-scale{display:flex;justify-content:space-between;font-size:12px;color:var(--on-navy-2);font-variant-numeric:tabular-nums}
+.budget p{font-size:13.5px;color:var(--on-navy-2);line-height:1.5}
+.budget p b{color:var(--on-navy);font-weight:600}
+.results-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:28px 0 16px}
+.results-bar p{font-size:14.5px;color:var(--ink-2)}
+.results-bar p b{color:var(--ink)}
+.sort{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-3)}
+.sort span{color:var(--ink);font-weight:600}
+.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.empty{padding:28px;border:1.5px dashed var(--line-2);border-radius:var(--r-lg);text-align:center;color:var(--ink-2)}
+.fine{font-size:13.5px;color:var(--ink-3);margin-top:20px;max-width:70ch}
+@media (max-width:1060px){.filters{grid-template-columns:1fr}.filters-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:1000px){.results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.filters-main{grid-template-columns:1fr;padding:18px}.budget{padding:18px}.results{grid-template-columns:1fr}}
+
+/* Platform page */
+.flow-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.flow-svg{display:block;width:100%;height:auto}
+.flow-legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
+.flow-legend span{display:inline-flex;align-items:center;gap:8px}
+.flow-legend i{width:12px;height:12px;border-radius:4px;display:block}
+.lane-bg{fill:var(--band)}
+.lane-name{font-family:var(--f-display);font-size:15px;font-weight:600}
+.lane-sub{font-size:11.5px;fill:var(--ink-3);font-family:var(--f-body)}
+.node{fill:var(--card);stroke-width:1.5}
+.node-n{font-family:var(--f-mono);font-size:11px;font-weight:500}
+.node-t{font-family:var(--f-body);font-size:12px;fill:var(--ink);font-weight:600}
+.node-s{font-family:var(--f-body);font-size:12px;fill:var(--ink-2);font-weight:500}
+.edge{fill:none;stroke:var(--ink-3);stroke-width:1.5}
+.arrowhead{fill:var(--ink-3)}
+.c-0{stroke:var(--lane-dev)} .c-1{stroke:var(--lane-plat)} .c-2{stroke:var(--lane-inv)}
+.t-0{color:var(--lane-dev)} .t-1{color:var(--lane-plat)} .t-2{color:var(--lane-inv)}
+.gate-mark{fill:var(--card);stroke:var(--lane-inv);stroke-width:1.5}
+.flow-list{display:none;list-style:none;margin:0;padding:0}
+.flow-list li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 14px;padding:12px 0;position:relative}
+.flow-list li:not(:last-child)::after{content:"";position:absolute;left:17px;top:48px;bottom:-4px;border-left:1.5px solid var(--line-2)}
+.flow-num{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-family:var(--f-mono);font-size:13px;font-weight:500;border:1.5px solid currentColor;background:var(--card)}
+.flow-list .who{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.flow-list .what{font-weight:600;font-size:15px;grid-column:2}
+@media (max-width:760px){.flow-svg{display:none}.flow-list{display:grid}.flow-legend{display:none}.flow-card{padding:8px 18px}}
+
+/* Footer (hidden on Home, which has its own strip) */
+body[data-view="home"] .foot{display:none}
+.foot{background:var(--bg);border-top:1px solid var(--line);padding-block:44px 28px;color:var(--ink-2);font-size:14.5px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+.foot .logo{color:var(--ink)}
+.foot-tag{margin-top:14px;max-width:36ch}
+.foot h4{font-family:var(--f-body);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--ink);text-decoration:underline}
+.email{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.email code{font-family:var(--f-mono);font-size:13.5px;color:var(--ink);user-select:all}
+.copy{border:1px solid var(--line-2);background:var(--card);border-radius:8px;font-size:12.5px;font-weight:600;padding:4px 10px;cursor:pointer;color:var(--ink-2)}
+.socials{display:flex;gap:10px;margin-top:16px}
+.socials a{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--ink-2)}
+.socials a:hover{color:var(--ink);border-color:var(--line-2)}
+.socials svg{width:18px;height:18px}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:36px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
+@media (max-width:820px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
+
+/* Auth modal */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal-backdrop{position:absolute;inset:0;background:rgba(12,30,26,.62);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.modal-card{position:relative;width:min(100%,520px);max-height:100%;overflow:auto;background:var(--card);color:var(--ink);border-radius:var(--r-lg);box-shadow:0 30px 80px -20px rgba(0,0,0,.6);padding:26px}
+.modal-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:20px;line-height:1;cursor:pointer;color:var(--ink-2)}
+.modal-card h3{font-size:1.6rem;margin:18px 0 6px}
+.modal-sub{color:var(--ink-2);font-size:14.5px;margin-bottom:18px}
+.auth-tabs{max-width:280px}
+.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.role-pick button{display:grid;gap:2px;text-align:left;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);cursor:pointer}
+.role-pick button b{font-size:15px}
+.role-pick button span{font-size:12.5px;color:var(--ink-3)}
+.role-pick button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.form-grid .full{grid-column:1/-1}
+.fg{display:grid;gap:6px;min-width:0}
+.fg label{font-size:13px;font-weight:600}
+.fg label small{font-weight:500;color:var(--ink-3)}
+.fg input,.fg select{width:100%;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--field);font-size:15px;min-width:0}
+.fg input:focus,.fg select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.phone{display:flex;align-items:center;border:1px solid var(--line-2);border-radius:10px;background:var(--field);overflow:hidden}
+.phone span{padding:0 10px;color:var(--ink-3);font-size:14.5px;border-right:1px solid var(--line)}
+.phone input{border:0;border-radius:0}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);margin:14px 0 16px}
+.check input{margin-top:3px;accent-color:#1A3732;width:16px;height:16px;flex:none}
+.modal-note{font-size:12.5px;color:var(--ink-3);margin-top:12px;text-align:center}
+.demo-acc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-2)}
+.demo-acc span{width:100%;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink-3)}
+.switch-link{border:0;background:none;color:var(--accent-ink);font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:480px){.form-grid{grid-template-columns:1fr}.modal-card{padding:22px 18px}}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:120;max-width:min(92vw,520px);background:var(--navy);color:var(--on-navy);padding:12px 18px;border-radius:12px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5);font-size:14.5px;display:flex;gap:10px;align-items:center}
+.toast svg{width:18px;height:18px;color:var(--mint);flex:none}
+
+/* Georgian typography: no uppercase transforms (Mtavruli), calmer tracking, slightly smaller display sizes */
+html[lang="ka"] *{text-transform:none!important}
+html[lang="ka"] .eyebrow,html[lang="ka"] .kicker,html[lang="ka"] .need-label,html[lang="ka"] .specs dt,html[lang="ka"] .foot h4,html[lang="ka"] .flow-list .who,html[lang="ka"] .req,html[lang="ka"] .opt{letter-spacing:.01em}
+html[lang="ka"] h1,html[lang="ka"] h2,html[lang="ka"] h3{letter-spacing:0;line-height:1.2}
+html[lang="ka"] .home h1{font-size:clamp(1.9rem,3.5vw,3rem);max-width:21ch}
+html[lang="ka"] .page-hero h1{font-size:clamp(1.75rem,3.2vw,2.7rem);max-width:24ch}
+html[lang="ka"] .sec-head h2{font-size:clamp(1.5rem,2.7vw,2.15rem)}
+html[lang="ka"] .final h2{font-size:clamp(1.55rem,2.9vw,2.35rem);max-width:24ch}
+html[lang="ka"] .value h3,html[lang="ka"] .tile h3,html[lang="ka"] .type-top h3,html[lang="ka"] .step h3{font-size:1.08rem}
+html[lang="ka"] .door-txt b{font-size:1.05rem}
+html[lang="ka"] .nav a{font-size:13.5px;padding:8px 10px}
+html[lang="ka"] .btn{font-size:14.5px}
+html[lang="ka"] .hero-sub,html[lang="ka"] .lead{font-size:1rem}
+html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
+</style>
+</head>
+<body>
+<!-- Shared icon symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.4-3 8.2-7 9.5-4-1.3-7-5.1-7-9.5V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 12.2l2.2 2.2 4.3-4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0113 0c0 5.4-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/><path d="M12 14.5v2"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6"/></g></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></g></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M4 21V5.5L13 3v18M13 9l7 2.2V21M2.5 21h19"/><path d="M7.5 8h2M7.5 11.5h2M7.5 15h2M16 14h1.5M16 17.5h1.5"/></g></symbol>
+    <symbol id="i-land" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 18l5-11 9 2 4 10-11 2-7-3z" stroke-dasharray="3 2.4"/><circle cx="12" cy="13" r="1.6"/></g></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5h11a2 2 0 012 2v6a2 2 0 01-2 2H9l-4 3.5V15H4a2 2 0 01-2-2V7a2 2 0 012-2z"/><path d="M19 9h1a2 2 0 012 2v5a2 2 0 01-2 2h-1v2.5L16 18h-4"/></g></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.3C1.7 7.5 3.8 4.5 7 4.5c2 0 3.3 1.1 5 3 1.7-1.9 3-3 5-3 3.2 0 5.3 3 4.2 6.2C19.5 15.4 12 20 12 20z" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 016.5 5H18v3"/><rect x="3.5" y="8" width="17" height="11" rx="2.5"/><circle cx="16.5" cy="13.5" r="1.2" fill="currentColor"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="8" cy="8" r="1.6"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
+    <symbol id="i-handshake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M2.5 11.5l4-4 3 1 2.5-1.5 3 .5 6.5 4"/><path d="M6.5 7.5l-4 4 6 6 1.5-1.5"/><path d="M21.5 11.5l-6 6-2-2"/><path d="M10 16l2 2 1.5-1.5M12 13.5l2.5 2.5M9.5 9.5l3.5 3.5"/></g></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></g></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="site-head" id="siteHead">
+  <div class="wrap head-row">
+    <a class="logo" href="#home" aria-label="ARI home">
+      <svg class="logo-mark" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#F1E2BF"/><path d="M9 25V12l6-3v16M15 15l10 3v7M7 25h20" fill="none" stroke="#1A3732" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <span class="logo-text"><b>ARI</b><span>Investment platform</span></span>
+    </a>
+    <nav class="nav" aria-label="Pages">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#developers" data-nav="developers" data-when="not-inv">For developers</a>
+      <a href="#investors" data-nav="investors" data-when="not-dev">For investors</a>
+      <a href="#offers" data-nav="offers" data-when="dev" hidden>My offers</a>
+    </nav>
+    <div class="head-right">
+      <div class="lang" role="group" aria-label="Language / ენა">
+        <button type="button" data-lang="ka" aria-pressed="false" lang="ka" title="ქართული">KA</button>
+        <button type="button" data-lang="en" aria-pressed="true" lang="en" title="English">EN</button>
+      </div>
+      <div class="auth" id="authGuest">
+        <button class="btn btn-light btn-sm" type="button" data-auth="signin">Sign in</button>
+        <button class="btn btn-primary btn-sm" type="button" data-auth="register">Register</button>
+      </div>
+      <div class="auth" id="authUser" hidden>
+        <span class="role-chip"><i></i><span id="roleName">Investor</span></span>
+        <button class="btn btn-light btn-sm" type="button" id="signOut">Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ HOME (one screen) ============ -->
+<div class="view" data-view="home">
+  <section class="home2" aria-labelledby="hero-h">
+    <div class="home2-center">
+      <p class="kicker2">Development and investment platform · Georgia</p>
+      <h1 id="hero-h">ARI connects developers and investors</h1>
+      <p class="home2-sub">Verified apartments and land plots before completion. Choose your side.</p>
+    </div>
+    <a class="door2" href="#developers">
+      <img src="img/building.jpg" alt="" style="object-position:60% 40%" fetchpriority="high">
+      <span class="in">
+        <span class="who2">For developers</span>
+        <span class="h2">Sell early, to the right investor.</span>
+        <span class="p">Investors with cash ready, your public price intact, legal support from ARI.</span>
+        <span class="btn btn-white">List a property<svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+      </span>
+    </a>
+    <a class="door2" href="#investors">
+      <img src="img/interior.jpg" alt="">
+      <span class="in">
+        <span class="who2">For investors</span>
+        <span class="h2">Buy early, below market price.</span>
+        <span class="p">Verified projects, matched to your budget, with ARI beside you until signing.</span>
+        <span class="btn btn-primary">Browse opportunities<svg aria-hidden="true"><use href="#i-arrow"/></svg></span>
+      </span>
+    </a>
+    <div class="mid2" aria-hidden="true">ARI</div>
+    <div class="home2-foot"><a href="#platform">How the platform works</a><a href="#home">Privacy policy</a><a href="#home">Terms of use</a><span>© 2026 ARI Development</span></div>
+  </section>
+</div>
+
+<!-- ============ DEVELOPERS ============ -->
+<div class="view" data-view="developers" hidden>
+  <section class="page-hero" aria-labelledby="dev-h">
+    <img class="hero-art" src="img/building.jpg" alt="" style="object-position:70% 40%">
+    <div class="wrap">
+      <div class="page-hero-inner">
+        <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>For developers</span></nav>
+        <h1 id="dev-h">List your property <em>in minutes.</em></h1>
+        <p class="hero-sub">Sell apartments and land plots before completion to investors with cash ready. Your listings stay private to registered investors.</p>
+        <div class="hero-ctas" data-when="guest">
+          <button class="btn btn-primary" type="button" data-auth="register" data-role="developer">Register as a developer<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-light" type="button" data-auth="signin" data-role="developer">Sign in</button>
+        </div>
+        <div class="hero-note hero-ok" data-when="dev"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Signed in as a developer. Your listing workspace is below.</span></div>
+        <div class="hero-note" data-when="inv"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>You’re signed in as an investor. Listing a property needs a developer account.</span></div>
+        <div class="trust">
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Company verification</span>
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Members-only visibility</span>
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Qualified investor leads</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signed-in developer workspace -->
+  <section class="sec" id="devWorkspace" data-when="dev" aria-labelledby="ws-h">
+    <div class="wrap">
+      <div class="ws-head">
+        <div class="sec-head">
+          <span class="eyebrow">Your workspace</span>
+          <h2 id="ws-h">Create a new listing.</h2>
+          <p class="lead">Required fields keep listings comparable. Optional ones help yours stand out.</p>
+        </div>
+      </div>
+      <div class="dev-grid">
+        <div class="dev-side">
+          <div class="choice" role="group" aria-label="Listing type">
+            <span class="choice-label">What are you listing?</span>
+            <button class="choice-opt" type="button" data-tab="apartment" aria-pressed="true">
+              <span class="choice-ico"><svg aria-hidden="true"><use href="#i-building"/></svg></span>
+              <span class="choice-txt"><b>Apartment in a residential building</b><span>Off-plan or under construction</span></span>
+              <span class="choice-radio" aria-hidden="true"></span>
+            </button>
+            <button class="choice-opt" type="button" data-tab="land" aria-pressed="false">
+              <span class="choice-ico"><svg aria-hidden="true"><use href="#i-land"/></svg></span>
+              <span class="choice-txt"><b>Land plot in a development</b><span>Serviced or planned plots</span></span>
+              <span class="choice-radio" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="ws-note"><svg aria-hidden="true"><use href="#i-eye"/></svg><span>After you submit, follow the review and see how investors see your listing in <a href="#offers">My offers</a>.</span></p>
+        </div>
+
+        <div class="mock" aria-label="Listing form">
+          <div class="mock-head">
+            <div class="mock-title"><b>New listing · <span id="formType">Apartment</span></b><span>Property details</span></div>
+            <div class="progress" aria-label="Step 2 of 3"><i class="on"></i><i class="on"></i><i></i><span>Step 2 of 3</span></div>
+          </div>
+          <div class="legend">
+            <span><span class="req">Required</span>needed to publish</span>
+            <span><span class="opt">Optional</span>improves the listing</span>
+          </div>
+          <div class="fields" data-panel="apartment">
+            <div class="field full">
+              <div class="field-label"><span>Floor plan / dimensional drawing</span><span class="req">Required</span></div>
+              <div class="drop">
+                <svg class="fp" viewBox="0 0 200 130" aria-hidden="true">
+                  <rect class="fp-wall" x="20" y="18" width="164" height="96" stroke-width="3"/>
+                  <path class="fp-wall" d="M96 18v40M96 78v36M20 66h44M140 18v50h44" stroke-width="2"/>
+                  <path class="fp-thin" d="M64 66a14 14 0 0 1 14 -14M96 58a14 14 0 0 1 14 14M140 68a12 12 0 0 0 -12 12" stroke-width="1"/>
+                  <path class="fp-thin" d="M20 8h164M20 4v8M184 4v8" stroke-width="1"/>
+                  <text class="fp-text" x="102" y="11" text-anchor="middle">8.20 m</text>
+                  <text class="fp-text" x="56" y="44" text-anchor="middle">Living</text>
+                  <text class="fp-text" x="160" y="44" text-anchor="middle">Bed</text>
+                  <text class="fp-text" x="56" y="94" text-anchor="middle">Bed</text>
+                  <text class="fp-big" x="138" y="98" text-anchor="middle">65.0 m²</text>
+                </svg>
+                <div class="drop-meta">
+                  <b>plan_block-B_floor-8_unit-12.pdf</b>
+                  <span>1.2 MB · PDF, DWG or JPG</span>
+                  <span class="file-ok"><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span>
+                </div>
+              </div>
+            </div>
+            <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input">65<span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input">8<span class="unit">of 14</span></div></div>
+            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</div></div>
+            <div class="field"><div class="field-label"><span>View</span><span class="opt">Optional</span></div><div class="input select">City view</div></div>
+            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 68,250<span class="unit">USD</span></div></div>
+            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">20<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
+            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q3 2027</div></div>
+            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.10.13.002.045</span></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Black frame handover. Developer installment plan available up to 24 months. Underground parking on request.</div></div>
+            <div class="field full">
+              <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
+              <div class="thumbs">
+                <div class="thumb"><img src="img/interior.jpg" alt="" loading="lazy"></div>
+                <div class="thumb"><img src="img/room.jpg" alt="" loading="lazy"></div>
+                <div class="thumb"><svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" aria-hidden="true" style="background:var(--field)"><rect class="fp-wall" x="20" y="18" width="164" height="96" stroke-width="3"/><path class="fp-wall" d="M96 18v40M96 78v36M20 66h44M140 18v50h44" stroke-width="2"/></svg></div>
+                <label class="thumb thumb-add"><input type="file" accept="image/*" multiple hidden data-photo-input><span>+ Add</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="fields" data-panel="land" hidden>
+            <div class="field"><div class="field-label"><span>Land size</span><span class="req">Required</span></div><div class="input">500<span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</div></div>
+            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 45,000<span class="unit">USD</span></div></div>
+            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">30<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
+            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q4 2027</div></div>
+            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.19.09.011.112</span></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.</div></div>
+            <div class="field full">
+              <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
+              <div class="thumbs">
+                <div class="thumb"><img src="img/land.jpg" alt="" loading="lazy"></div>
+                <label class="thumb thumb-add"><input type="file" accept="image/*" multiple hidden data-photo-input><span>+ Add</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="mock-foot">
+            <p id="mockFootNote">Listings are reviewed before they go live.</p>
+            <div class="btns"><button class="btn btn-outline btn-sm" type="button" data-dev-action="draft">Save draft</button><button class="btn btn-primary btn-sm" type="button" data-dev-action="submit">Submit for review</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How ARI helps developers -->
+  <section class="sec sec-band ari-help" data-when="not-dev" aria-labelledby="dev-ari-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How ARI helps</span>
+        <h2 id="dev-ari-h">ARI works for your project, from listing to signed deal.</h2>
+        <p class="lead">Off-plan sales fund construction. ARI puts your project in front of investors who want to buy early, and stays involved until the deal is signed.</p>
+      </div>
+      <div class="tiles">
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><h3>Finds the right investors</h3><p>ARI’s network of investors in Georgia and abroad, each with a stated cash budget.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-lock"/></svg></span><h3>Keeps your public price intact</h3><p>Discounts are visible only to registered investors, never on open listing sites.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span><h3>Checks and prepares your listing</h3><p>Architects, surveyors and lawyers review plans, cadastral data and documents.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-handshake"/></svg></span><h3>Brings qualified leads</h3><p>Sales managers confirm each investor’s budget, arrange viewings and follow the deal through.</p></div>
+      </div>
+      <div class="creds">
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Georgia and Cyprus</span>
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Architects, surveyors and lawyers in-house</span>
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Residential projects across Tbilisi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works + what you need (developers) -->
+  <section class="sec" data-when="not-dev" aria-labelledby="dev-how-h">
+    <div class="wrap">
+      <div class="sec-head">
+          <span class="eyebrow">How it works</span>
+          <h2 id="dev-how-h">Three steps to your first lead.</h2>
+        </div>
+      <div class="how-need">
+        <div class="need-card steps-card">
+          <h3>The process</h3>
+          <ol class="steps">
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></div>
+            <span class="step-n">Step 1</span>
+            <h3>Register your company</h3>
+            <p>We verify your company details before your first listing goes live.</p>
+          </li>
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-building"/></svg></div>
+            <span class="step-n">Step 2</span>
+            <h3>Add your listing</h3>
+            <p>Apartment or land plot, with floor plan, price, discount and cadastral code.</p>
+          </li>
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
+            <span class="step-n">Step 3</span>
+            <h3>ARI brings you leads</h3>
+            <p>ARI confirms each investor’s interest and budget, then passes the lead to you.</p>
+          </li>
+        </ol>
+      </div>
+      <div class="need-card">
+        <h3>What you’ll need</h3>
+        <div class="need-group">
+          <span class="need-label"><svg aria-hidden="true"><use href="#i-building"/></svg>Apartment in a residential building</span>
+          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">View</li><li class="o">Photos</li></ul>
+        </div>
+        <div class="need-group">
+          <span class="need-label"><svg aria-hidden="true"><use href="#i-land"/></svg>Land plot in a development</span>
+          <ul class="need"><li>Land size in m²</li><li>Location / district</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Photos</li></ul>
+        </div>
+        <p class="fine" style="margin-top:0">Dashed items are optional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" data-when="not-dev" aria-labelledby="dev-final-h">
+    <img class="final-art" src="img/home.jpg" alt="" loading="lazy">
+    <div class="wrap final-inner">
+      <h2 id="dev-final-h">Ready to reach serious investors?</h2>
+      <p>Register your company and add your first listing. Registration is free.</p>
+      <p class="values-line"><span>Quality</span><span>Reliability</span><span>Transparency</span></p>
+      <div class="hero-ctas"><button class="btn btn-primary" type="button" data-auth="register" data-role="developer">Register as a developer<svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ INVESTORS ============ -->
+<div class="view" data-view="investors" hidden>
+  <section class="page-hero" aria-labelledby="inv-h">
+    <img class="hero-art" src="img/interior.jpg" alt="" style="object-position:center 60%">
+    <div class="wrap">
+      <div class="page-hero-inner">
+        <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>For investors</span></nav>
+        <h1 id="inv-h">Find opportunities that match <em>your budget.</em></h1>
+        <p class="hero-sub">Buy apartments and land plots early, below market price, directly from developers. Every listing is reviewed before you see it.</p>
+        <div class="hero-ctas" data-when="guest">
+          <button class="btn btn-primary" type="button" data-auth="register" data-role="investor">Register as an investor<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-light" type="button" data-auth="signin" data-role="investor">Sign in</button>
+        </div>
+        <div class="hero-note hero-ok" data-when="inv"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Signed in as an investor. Listings that match your budget are below.</span></div>
+        <div class="hero-note" data-when="dev"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>You’re signed in as a developer. Developers see their own listings and leads, not other developers’ offers.</span></div>
+        <div class="trust">
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Members-only listings</span>
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Verified developers</span>
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>ARI support at every step</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signed-in investor search -->
+  <section class="sec" id="invSearch" data-when="inv" aria-labelledby="search-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Search</span>
+        <h2 id="search-h">Opportunities from verified developers.</h2>
+      </div>
+      <div class="filters" role="search" aria-label="Search and filter">
+        <div class="filters-main">
+          <div class="filters-title"><b>Search listings</b><span class="pill pill-muted">Try the filters</span></div>
+          <div class="f"><span class="f-label">District / neighborhood</span><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Vake, Tskneti</div></div>
+          <div class="f">
+            <span class="f-label" id="ptype-l">Property type</span>
+            <div class="seg" role="group" aria-labelledby="ptype-l">
+              <button type="button" data-ptype="all" aria-pressed="true">All</button>
+              <button type="button" data-ptype="apartment" aria-pressed="false">Apartment</button>
+              <button type="button" data-ptype="land" aria-pressed="false">Land</button>
+            </div>
+          </div>
+          <div class="f">
+            <span class="f-label" id="disc-l">Discount</span>
+            <div class="chips" role="group" aria-labelledby="disc-l">
+              <button type="button" data-disc="20-24" aria-pressed="false">20%</button>
+              <button type="button" data-disc="25-29" aria-pressed="false">25%</button>
+              <button type="button" data-disc="30-100" aria-pressed="false">30%+</button>
+            </div>
+          </div>
+          <div class="f"><span class="f-label" id="size-l">Size range</span>
+            <div class="dual" data-dual="size">
+              <div class="dual-track"><i class="dual-fill"></i></div>
+              <input type="range" class="lo" min="0" max="5000" step="5" value="0" aria-label="Minimum size">
+              <input type="range" class="hi" min="0" max="5000" step="5" value="5000" aria-label="Maximum size">
+            </div>
+            <div class="dual-inputs">
+              <label><input type="text" inputmode="numeric" class="in-lo" id="size-min" aria-label="Minimum size" value="0"><b>m²</b></label>
+              <span aria-hidden="true">–</span>
+              <label><input type="text" inputmode="numeric" class="in-hi" id="size-max" aria-label="Maximum size" value="5,000"><b>m²</b></label>
+            </div>
+            <span class="dual-hint" id="sizeHint">Apartments up to 250 m² · land up to 5,000 m²</span>
+          </div>
+          <div class="f"><span class="f-label" id="price-l">Price range</span>
+            <div class="dual" data-dual="price">
+              <div class="dual-track"><i class="dual-fill"></i></div>
+              <input type="range" class="lo" min="0" max="1000000" step="5000" value="0" aria-label="Minimum price">
+              <input type="range" class="hi" min="0" max="1000000" step="5000" value="1000000" aria-label="Maximum price">
+            </div>
+            <div class="dual-inputs">
+              <label><b>$</b><input type="text" inputmode="numeric" class="in-lo" id="price-min" aria-label="Minimum price" value="0"></label>
+              <span aria-hidden="true">–</span>
+              <label><b>$</b><input type="text" inputmode="numeric" class="in-hi" id="price-max" aria-label="Maximum price" value="1,000,000"></label>
+            </div>
+            <span class="dual-hint">Up to $1,000,000</span>
+          </div>
+          <div class="f"><span class="f-label">Construction completion</span><div class="input select">By end of 2027</div></div>
+        </div>
+        <div class="budget">
+          <div class="budget-top"><label for="budget">Available cash budget</label><span class="pill pill-gold">Concept</span></div>
+          <div class="budget-amt"><span id="budgetOut">$70,000</span><small>cash</small></div>
+          <input id="budget" type="range" min="20000" max="250000" step="1000" value="70000" aria-describedby="budgetNote">
+          <div class="budget-scale"><span>$20k</span><span>$250k</span></div>
+          <p id="budgetNote">Investors enter the cash they have on hand. The platform ranks listings that fit first and flags the rest. <b>Concept for further product design:</b> later versions could factor in developer installment plans.</p>
+        </div>
+      </div>
+
+      <div class="results-bar">
+        <p id="summary"><b>3 example listings</b> · 2 fit a $70,000 budget</p>
+        <span class="sort">Sorted by <span>Budget fit, then discount</span></span>
+      </div>
+      <div class="results" id="results">
+        <article class="listing" data-type="apartment" data-price="68250" data-size="65" data-discount="20">
+          <div class="listing-media">
+            <img class="photo" src="img/interior.jpg" alt="Illustrative apartment interior" loading="lazy">
+            <span class="tag-type">Apartment</span>
+            <span class="tag-verified"><svg aria-hidden="true"><use href="#i-shield"/></svg>Verified</span>
+            <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b>20%</b> below market price</span>
+            <span class="photo-note">Illustrative photo</span>
+            <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          </div>
+          <div class="listing-body">
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong></div>
+              <div class="price-meta"><span class="saving"><span>You save</span> $17,050</span><span>$1,050 / m²</span></div>
+            <dl class="specs"><div><dt>Size</dt><dd>65 m²</dd></div><div><dt>Floor</dt><dd>8th</dd></div><div><dt>Ready</dt><dd>Q3 2027</dd></div></dl>
+            <div class="listing-foot"><span class="fit fit-yes" data-fit>Fits your budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
+          </div>
+        </article>
+        <article class="listing" data-type="apartment" data-price="153000" data-size="90" data-discount="25">
+          <div class="listing-media">
+            <img class="photo" src="img/room.jpg" alt="Illustrative apartment interior" loading="lazy">
+            <span class="tag-type">Apartment</span>
+            <span class="tag-verified"><svg aria-hidden="true"><use href="#i-shield"/></svg>Verified</span>
+            <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b>25%</b> below market price</span>
+            <span class="photo-note">Illustrative photo</span>
+            <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          </div>
+          <div class="listing-body">
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Courtyard</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$204,000</s><strong>$153,000</strong></div>
+              <div class="price-meta"><span class="saving"><span>You save</span> $51,000</span><span>$1,700 / m²</span></div>
+            <dl class="specs"><div><dt>Size</dt><dd>90 m²</dd></div><div><dt>Floor</dt><dd>5th</dd></div><div><dt>Ready</dt><dd>Q2 2027</dd></div></dl>
+            <div class="listing-foot"><span class="fit fit-no" data-fit>$83,000 over budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
+          </div>
+        </article>
+        <article class="listing" data-type="land" data-price="45000" data-size="500" data-discount="30">
+          <div class="listing-media">
+            <img class="photo" src="img/land.jpg" alt="Illustrative land plot" loading="lazy">
+            <span class="tag-type">Land plot</span>
+            <span class="tag-verified"><svg aria-hidden="true"><use href="#i-shield"/></svg>Verified</span>
+            <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b>30%</b> below market price</span>
+            <span class="photo-note">Illustrative photo</span>
+            <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+          </div>
+          <div class="listing-body">
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</span><span class="chip">In development</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong></div>
+              <div class="price-meta"><span class="saving"><span>You save</span> $19,300</span><span>$90 / m²</span></div>
+            <dl class="specs"><div><dt>Size</dt><dd>500 m²</dd></div><div><dt>Plot</dt><dd>Residential</dd></div><div><dt>Ready</dt><dd>Q4 2027</dd></div></dl>
+            <div class="listing-foot"><span class="fit fit-yes" data-fit>Fits your budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
+          </div>
+        </article>
+      </div>
+      <div class="empty" id="empty" hidden>No listings match these filters. Lower the discount or switch the property type.</div>
+      <p class="fine">Example listings with illustrative prices and photos.</p>
+    </div>
+  </section>
+
+  <!-- How ARI helps investors -->
+  <section class="sec sec-band ari-help" data-when="not-inv" aria-labelledby="inv-ari-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How ARI helps</span>
+        <h2 id="inv-ari-h">ARI checks every opportunity before you see it.</h2>
+        <p class="lead">Developers offer pre-sale prices to investors who commit early. ARI selects the projects, checks them and stays with you until the deal is signed.</p>
+      </div>
+      <div class="tiles">
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-tag"/></svg></span><h3>Below-market prices</h3><p>Pre-sale discounts from developers, visible only to registered investors.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-shield"/></svg></span><h3>Checks every project</h3><p>Architects, surveyors and lawyers review the plans, cadastral data and the developer behind the project.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span><h3>Matches your budget</h3><p>Sales managers suggest units that fit your available cash and your goals.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-handshake"/></svg></span><h3>Supports the deal</h3><p>From the first viewing to the signed agreement, ARI stays involved.</p></div>
+      </div>
+      <div class="creds">
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Georgia and Cyprus</span>
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Architects, surveyors and lawyers in-house</span>
+        <span><svg aria-hidden="true"><use href="#i-check"/></svg>Residential projects across Tbilisi</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works + what you can do (investors) -->
+  <section class="sec" data-when="not-inv" aria-labelledby="inv-how-h">
+    <div class="wrap">
+      <div class="sec-head">
+          <span class="eyebrow">How it works</span>
+          <h2 id="inv-how-h">Three steps to your next investment.</h2>
+        </div>
+      <div class="how-need">
+        <div class="need-card steps-card">
+          <h3>The process</h3>
+          <ol class="steps">
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-user"/></svg></div>
+            <span class="step-n">Step 1</span>
+            <h3>Register and set your budget</h3>
+            <p>Tell us how much cash you have available and what interests you.</p>
+          </li>
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-filter"/></svg></div>
+            <span class="step-n">Step 2</span>
+            <h3>Search and filter</h3>
+            <p>Listings that fit your budget appear first, with price, discount and floor plan.</p>
+          </li>
+          <li class="step">
+            <div class="step-icon"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
+            <span class="step-n">Step 3</span>
+            <h3>ARI connects you</h3>
+            <p>Send your interest. ARI arranges the conversation and the viewing with the developer.</p>
+          </li>
+        </ol>
+      </div>
+      <div class="need-card">
+        <h3>What you can do</h3>
+        <ul class="can-list">
+          <li><svg aria-hidden="true"><use href="#i-building"/></svg><span><b>Browse apartments and land</b>Off-plan apartments and plots in developments.</span></li>
+          <li><svg aria-hidden="true"><use href="#i-filter"/></svg><span><b>Filter precisely</b>District, size, price, discount and completion date.</span></li>
+          <li><svg aria-hidden="true"><use href="#i-wallet"/></svg><span><b>Set your cash budget <span class="pill pill-gold">Concept</span></b>See the listings that fit your available cash first.</span></li>
+          <li><svg aria-hidden="true"><use href="#i-clock"/></svg><span><b>Early access</b>Off-plan opportunities before they reach the open market.</span></li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" data-when="not-inv" aria-labelledby="inv-final-h">
+    <img class="final-art" src="img/land.jpg" alt="" loading="lazy">
+    <div class="wrap final-inner">
+      <h2 id="inv-final-h">See what fits your budget.</h2>
+      <p>Register in about a minute to unlock prices, discounts, locations and developer details.</p>
+      <p class="values-line"><span>Quality</span><span>Reliability</span><span>Transparency</span></p>
+      <div class="hero-ctas"><button class="btn btn-primary" type="button" data-auth="register" data-role="investor">Register as an investor<svg aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PLATFORM ============ -->
+<div class="view" data-view="offers" hidden>
+  <section class="dash-head" aria-labelledby="offers-h">
+    <div class="wrap dash-row">
+      <div class="dash-main">
+        <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>My offers</span></nav>
+        <h1 id="offers-h">My offers</h1>
+        <p>Your listings, their status and the leads ARI brings you.</p>
+        <a class="btn btn-primary" href="#developers">Add a listing<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+      <aside class="dash-note" aria-label="What investors see">
+        <h3>What investors see</h3>
+        <ul class="ticks">
+              <li><svg aria-hidden="true"><use href="#i-check"/></svg>Market price crossed out next to your price</li>
+              <li><svg aria-hidden="true"><use href="#i-check"/></svg>Discount badge, size, floor and completion date</li>
+              <li><svg aria-hidden="true"><use href="#i-check"/></svg>Verified badge after ARI’s review</li>
+              <li><svg aria-hidden="true"><use href="#i-check"/></svg>Your contact details stay private. Investors reach you through ARI</li>
+            </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="sec" aria-label="Overview">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><span>Published</span><b id="statPub">2</b></div>
+        <div class="stat"><span>In review</span><b id="statRev">0</b></div>
+        <div class="stat"><span>Leads this month</span><b>3</b></div>
+        <div class="stat"><span>Listing views</span><b>137</b></div>
+      </div>
+
+      </div>
+
+      <div class="dash-block">
+        <div class="dash-block-head"><h2>How investors see your listings</h2><span class="pill pill-muted">Preview</span></div>
+        <div class="preview-wrap">
+        <div class="preview-grid">
+          <article class="listing my-card" data-price="68250" data-discount="20" data-size="65">
+              <div class="listing-media">
+                <img class="photo" src="img/interior.jpg" alt="Illustrative apartment interior" loading="lazy">
+                <span class="tag-type">Apartment</span>
+                <span class="tag-verified"><svg aria-hidden="true"><use href="#i-shield"/></svg>Verified</span>
+                <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b>20%</b> below market price</span>
+                <span class="photo-note">Illustrative photo</span>
+                <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+              </div>
+              <div class="listing-body">
+                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span></div>
+                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong></div>
+              <div class="price-meta"><span class="saving"><span>You save</span> $17,050</span><span>$1,050 / m²</span></div>
+                <dl class="specs"><div><dt>Size</dt><dd>65 m²</dd></div><div><dt>Floor</dt><dd>8 of 14</dd></div><div><dt>Ready</dt><dd>Q3 2027</dd></div></dl>
+              <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
+              </div>
+            </article>
+          <article class="listing my-card" data-price="45000" data-discount="30" data-size="500">
+              <div class="listing-media">
+                <img class="photo" src="img/land.jpg" alt="Illustrative land plot" loading="lazy">
+                <span class="tag-type">Land plot</span>
+                <span class="tag-verified"><svg aria-hidden="true"><use href="#i-shield"/></svg>Verified</span>
+                <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b>30%</b> below market price</span>
+                <span class="photo-note">Illustrative photo</span>
+                <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
+              </div>
+              <div class="listing-body">
+                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</span><span class="chip">In development</span></div>
+                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong></div>
+              <div class="price-meta"><span class="saving"><span>You save</span> $19,300</span><span>$90 / m²</span></div>
+                <dl class="specs"><div><dt>Size</dt><dd>500 m²</dd></div><div><dt>Plot</dt><dd>Residential</dd></div><div><dt>Ready</dt><dd>Q4 2027</dd></div></dl>
+              <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
+              </div>
+            </article>
+        </div>
+        </div>
+      </div>
+
+      <div class="dash-block">
+        <div class="dash-block-head"><h2>Leads from investors</h2><span class="pill pill-muted">Checked by ARI</span></div>
+        <div class="lead-grid">
+          <div class="lead-item">
+            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Saburtalo · 65 m²</span></div></div>
+            <div class="li-budget"><span>Available cash</span><b>$60,000 – $80,000</b></div>
+            <p class="lead-msg">“Is the 24-month installment plan available for this unit? I’d like to arrange a site visit.”</p>
+            <div class="li-foot"><span class="lead-when">Today</span><span class="status st-new">New</span></div>
+          </div>
+          <div class="lead-item">
+            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Saburtalo · 65 m²</span></div></div>
+            <div class="li-budget"><span>Available cash</span><b>$70,000 – $90,000</b></div>
+            <p class="lead-msg">“Can I see the floor plans for other units on the 8th floor?”</p>
+            <div class="li-foot"><span class="lead-when">Yesterday</span><span class="status st-rev">ARI contacted the investor</span></div>
+          </div>
+          <div class="lead-item">
+            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Tskneti · 500 m²</span></div></div>
+            <div class="li-budget"><span>Available cash</span><b>$40,000 – $60,000</b></div>
+            <p class="lead-msg">“Is the road to the plot already built?”</p>
+            <div class="li-foot"><span class="lead-when">6 Nov</span><span class="status st-pub">Viewing on 12 Nov</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="view" data-view="platform" hidden>
+  <section class="page-hero" aria-labelledby="plat-h">
+    <img class="hero-art" src="img/house.jpg" alt="" loading="lazy">
+    <div class="wrap">
+      <div class="page-hero-inner">
+        <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>How the platform works</span></nav>
+        <h1 id="plat-h">How the ARI platform <em>works.</em></h1>
+        <p class="hero-sub">One members-only place where developers sell apartments and land plots before completion, and investors buy them early. ARI checks every project and every investor in between.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="short-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">In short</span>
+        <h2 id="short-h">Three parties, one clear process.</h2>
+      </div>
+      <div class="short3">
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-building"/></svg></span><h3>Developers list</h3><p>Verified developers add apartments and land plots with a pre-sale discount.</p></div>
+        <div class="tile tile-ari"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-shield"/></svg></span><h3>ARI checks and matches</h3><p>Experts review every listing. Investors see what fits their budget first.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-handshake"/></svg></span><h3>Investors buy</h3><p>Investors send interest. ARI arranges the viewing and supports the deal.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-band" aria-labelledby="flow-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">The full process</span>
+        <h2 id="flow-h">Nine steps across three roles.</h2>
+        <p class="lead">Both sides register before they see listings or tools. The lock marks each registration step.</p>
+      </div>
+      <div class="flow-card">
+        <svg class="flow-svg" id="flowSvg" viewBox="0 0 1360 384" role="img" aria-labelledby="flowTitle"><title id="flowTitle">Swimlane diagram of the nine-step flow from developer listing to investor lead</title></svg>
+        <ol class="flow-list" id="flowList"></ol>
+        <div class="flow-legend">
+          <span><i style="background:var(--lane-dev)"></i>Developer</span>
+          <span><i style="background:var(--lane-plat)"></i>Platform</span>
+          <span><i style="background:var(--lane-inv)"></i>Investor</span>
+          <span><svg width="14" height="14" aria-hidden="true" style="color:var(--lane-inv)"><use href="#i-lock"/></svg>Registration gate</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="steps-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Step by step</span>
+        <h2 id="steps-h">What happens at each stage.</h2>
+      </div>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-top"><span class="phase-tag">Steps 1–3</span><h3>The developer lists</h3></div>
+          <ol class="ph-steps">
+            <li><span class="ph-n w0">1</span><div><span class="ph-who w0">Developer</span><h4>Creates an account</h4><p>The developer registers the company with its ID code. ARI verifies the company before the first listing goes live.</p></div></li>
+            <li><span class="ph-n w0">2</span><div><span class="ph-who w0">Developer</span><h4>Submits the listing</h4><p>Apartment or land plot: floor plan, size, price, discount, completion date and cadastral code. Photos are optional.</p></div></li>
+            <li><span class="ph-n w1">3</span><div><span class="ph-who w1">ARI</span><h4>Review and publishing</h4><p>ARI’s architects, surveyors and lawyers check the details. Approved listings become visible to registered investors only.</p></div></li>
+          </ol>
+        </div>
+        <div class="phase">
+          <div class="phase-top"><span class="phase-tag">Steps 4–6</span><h3>The investor searches</h3></div>
+          <ol class="ph-steps">
+            <li><span class="ph-n w2">4</span><div><span class="ph-who w2">Investor</span><h4>Registers</h4><p>The investor signs up and states their available cash and interests. Prices and locations unlock after sign-up.</p></div></li>
+            <li><span class="ph-n w2">5</span><div><span class="ph-who w2">Investor</span><h4>Searches and filters</h4><p>By district, size, price, discount and construction completion date.</p></div></li>
+            <li><span class="ph-n w2">6</span><div><span class="ph-who w2">Investor</span><h4>Sets a budget</h4><p>Listings within the investor’s cash budget appear first. Others are flagged as over budget.</p></div></li>
+          </ol>
+        </div>
+        <div class="phase">
+          <div class="phase-top"><span class="phase-tag">Steps 7–9</span><h3>Match and deal</h3></div>
+          <ol class="ph-steps">
+            <li><span class="ph-n w1">7</span><div><span class="ph-who w1">ARI</span><h4>Matching</h4><p>The platform ranks listings by budget fit and discount. ARI’s sales managers suggest the best options.</p></div></li>
+            <li><span class="ph-n w2">8</span><div><span class="ph-who w2">Investor</span><h4>Sends interest</h4><p>The investor requests contact or a site visit straight from the listing.</p></div></li>
+            <li><span class="ph-n w0">9</span><div><span class="ph-who w0">Developer</span><h4>Receives the lead</h4><p>ARI confirms the investor’s budget, passes the lead to the developer and supports both sides until signing.</p></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-band" aria-labelledby="checks-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">What ARI checks</span>
+        <h2 id="checks-h">Nothing reaches the other side unchecked.</h2>
+      </div>
+      <div class="checks">
+        <div class="check-card">
+          <h3><svg aria-hidden="true"><use href="#i-building"/></svg>Before a listing goes live</h3>
+          <ul>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Company identity and ID code</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Cadastral code against the public registry</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Floor plan and declared size</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Price, discount and how it was calculated</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Construction completion date</li>
+          </ul>
+        </div>
+        <div class="check-card">
+          <h3><svg aria-hidden="true"><use href="#i-user"/></svg>Before a lead reaches the developer</h3>
+          <ul>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Investor identity and contact details</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Stated cash budget</li>
+            <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Fit between the budget and the listing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="vis-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Who sees what</span>
+        <h2 id="vis-h">Access depends on your account.</h2>
+      </div>
+      <div class="vis-wrap">
+        <table class="vis">
+          <thead><tr><th scope="col"></th><th scope="col">Guest</th><th scope="col">Investor</th><th scope="col">Developer</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Information pages</th><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td></tr>
+            <tr><th scope="row">Listings, prices and discounts</th><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><span class="own">Own listings</span></td></tr>
+            <tr><th scope="row">Search, filters and budget matching</th><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><span class="no" aria-label="No">—</span></td></tr>
+            <tr><th scope="row">Listing form</th><td><span class="no" aria-label="No">—</span></td><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td></tr>
+            <tr><th scope="row">Leads from investors</th><td><span class="no" aria-label="No">—</span></td><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-band" aria-labelledby="faq-h">
+    <div class="wrap faq-grid">
+      <div class="sec-head">
+        <span class="eyebrow">Questions</span>
+        <h2 id="faq-h">Frequently asked questions.</h2>
+      </div>
+      <div class="faq">
+        <details open><summary>Who can register?</summary><p>Real-estate developers with a registered company in Georgia, and investors from Georgia or abroad.</p></details>
+        <details><summary>Why are prices hidden until I register?</summary><p>Developers offer pre-sale discounts they don’t publish on open listing sites. Showing them only to registered investors protects their public price and keeps offers relevant.</p></details>
+        <details><summary>How is the discount calculated?</summary><p>The developer states the discount against their market price. ARI checks how it was calculated before the listing goes live.</p></details>
+        <details><summary>Does ARI guarantee the investment?</summary><p>No. ARI checks documents and supports the deal, but every purchase decision is the investor’s own. Each listing shows the facts you need to decide.</p></details>
+        <details><summary>What happens after I send interest?</summary><p>An ARI sales manager confirms your budget and contacts you to arrange a conversation or a site visit with the developer.</p></details>
+        <details><summary>Can investors from abroad use the platform?</summary><p>Yes. ARI works in Georgia and Cyprus and supports international investors throughout the process.</p></details>
+        <details><summary>Is registration free?</summary><p>Yes. Registration is free for developers and investors.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="plat-final-h">
+    <img class="final-art" src="img/building.jpg" alt="" loading="lazy">
+    <div class="wrap final-inner">
+      <h2 id="plat-final-h">Ready to start?</h2>
+      <p>Choose your side and register in about a minute.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-light" href="#developers">I’m a developer</a>
+        <a class="btn btn-primary" href="#investors">I’m an investor<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#home" aria-label="ARI home">
+          <svg class="logo-mark" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="9" fill="#F1E2BF"/><path d="M9 25V12l6-3v16M15 15l10 3v7M7 25h20" fill="none" stroke="#1A3732" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <span class="logo-text"><b>ARI</b><span>Investment platform</span></span>
+        </a>
+        <p class="foot-tag">ARI’s members-only development and investment platform for apartments and land in Georgia.</p>
+        <div class="socials">
+          <a href="#home" aria-label="Facebook (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h2.5V4.5H14A3.5 3.5 0 0010.5 8v2.5H8V14h2.5v6.5H14V14h2.5l.5-3.5h-3V8.6c0-.3.3-.6.5-.6z" fill="currentColor"/></svg></a>
+          <a href="#home" aria-label="LinkedIn (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h3v10H5zM6.5 4.5a1.75 1.75 0 110 3.5 1.75 1.75 0 010-3.5zM10 9h2.9v1.4c.4-.8 1.5-1.6 3-1.6 3 0 3.6 2 3.6 4.5V19h-3v-5c0-1.2 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V19H10z" fill="currentColor"/></svg></a>
+          <a href="#home" aria-label="Instagram (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/></g><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul><li><a href="#home">Home</a></li><li><a href="#developers">For developers</a></li><li><a href="#investors">For investors</a></li><li><a href="#platform">How the platform works</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div class="email"><code id="email">hello@yourdomain.ge</code><button class="copy" type="button" id="copyBtn">Copy</button></div>
+        <p style="margin-top:8px;font-size:13px;color:var(--ink-3)">Tbilisi, Georgia</p>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="#home">Privacy policy</a></li><li><a href="#home">Terms of use</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 ARI Development · Photos: Unsplash</span>
+      <span>Product concept for stakeholder review · Not a live service</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth modal (demo) -->
+<div class="modal" id="authModal" hidden role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <button class="modal-x" type="button" data-close aria-label="Close">×</button>
+    <div class="seg auth-tabs" role="group" aria-label="Account">
+      <button type="button" data-mode="register" aria-pressed="true">Register</button>
+      <button type="button" data-mode="signin" aria-pressed="false">Sign in</button>
+    </div>
+
+    <form id="regForm" novalidate>
+      <h3 id="authTitle">Create your account</h3>
+      <p class="modal-sub">Listings are visible only to members. Choose how you’ll use the platform.</p>
+      <div class="role-pick" role="group" aria-label="Account type">
+        <button type="button" data-pick="investor" aria-pressed="true"><b>Investor</b><span>Browse and contact</span></button>
+        <button type="button" data-pick="developer" aria-pressed="false"><b>Developer</b><span>List properties</span></button>
+      </div>
+      <div class="form-grid">
+        <div class="fg full"><label for="r-name">Full name</label><input id="r-name" required autocomplete="name"></div>
+        <div class="fg"><label for="r-email">Email</label><input id="r-email" type="email" required autocomplete="email"></div>
+        <div class="fg"><label for="r-phone">Phone</label><div class="phone"><span>+995</span><input id="r-phone" type="tel" inputmode="tel" required placeholder="5XX XX XX XX"></div></div>
+        <div class="fg" data-for-role="investor"><label for="r-budget">Available cash</label>
+          <select id="r-budget"><option value="50000">Up to $50,000</option><option value="100000" selected>$50,000 – $100,000</option><option value="250000">$100,000 – $250,000</option><option value="250000+">$250,000+</option></select></div>
+        <div class="fg" data-for-role="investor"><label for="r-interest">Interested in</label>
+          <select id="r-interest"><option>Apartments and land</option><option>Apartments</option><option>Land plots</option></select></div>
+        <div class="fg full" data-for-role="developer" hidden><label for="r-company">Company name</label><input id="r-company" autocomplete="organization"></div>
+        <div class="fg" data-for-role="developer" hidden><label for="r-code">Company ID code <small>(9 digits)</small></label><input id="r-code" inputmode="numeric" pattern="\d{9}" maxlength="9"></div>
+        <div class="fg" data-for-role="developer" hidden><label for="r-site">Website <small>(optional)</small></label><input id="r-site" type="url" placeholder="https://"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="r-terms" required><span>I agree to the Terms of use and Privacy policy.</span></label>
+      <button class="btn btn-primary btn-block" type="submit" id="regSubmit">Create investor account</button>
+      <p class="modal-note">Concept demo. Nothing is sent or stored outside this browser tab.</p>
+    </form>
+
+    <form id="signForm" novalidate hidden>
+      <h3>Welcome back</h3>
+      <p class="modal-sub">Sign in to see listings and leads.</p>
+      <div class="form-grid">
+        <div class="fg full"><label for="s-email">Email</label><input id="s-email" type="email" required autocomplete="email"></div>
+        <div class="fg full"><label for="s-role">Account type <small>(demo)</small></label><select id="s-role"><option value="investor">Investor</option><option value="developer">Developer</option></select></div>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" style="margin-top:18px">Sign in</button>
+      <p class="modal-note">Demo sign-in: no password needed. New here? <button class="switch-link" type="button" data-mode="register">Create an account</button></p>
+      <div class="demo-acc">
+        <span>Demo accounts</span>
+        <button class="btn btn-outline btn-sm" type="button" data-demo="developer">Sign in as developer</button>
+        <button class="btn btn-outline btn-sm" type="button" data-demo="investor">Sign in as investor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="editModal" hidden role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <div class="modal-backdrop" data-close-edit></div>
+  <div class="modal-card">
+    <button class="modal-x" type="button" data-close-edit aria-label="Close">×</button>
+    <form id="editForm" novalidate>
+      <h3 id="editTitle">Edit listing</h3>
+      <p class="modal-sub" id="editWhat"></p>
+      <div class="edit-photo">
+        <img id="editImg" src="" alt="">
+        <label class="btn btn-outline btn-sm" for="editFile"><svg aria-hidden="true"><use href="#i-edit"/></svg>Replace photo</label>
+        <input type="file" id="editFile" accept="image/*" hidden>
+      </div>
+      <div class="form-grid">
+        <div class="fg"><label for="editPrice">Price <small>(USD)</small></label><input id="editPrice" inputmode="numeric" required></div>
+        <div class="fg"><label for="editDisc">Discount vs market price <small>(%)</small></label><input id="editDisc" type="number" min="1" max="60" required></div>
+        <div class="fg full"><label>Market price</label><div class="edit-calc" id="editCalc"></div></div>
+      </div>
+      <p class="hint" style="margin:14px 0 16px">Changes go to ARI for a quick review before investors see them.</p>
+      <div class="edit-btns"><button class="btn btn-outline" type="button" data-close-edit>Cancel</button><button class="btn btn-primary" type="submit">Save changes</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden role="status"><svg aria-hidden="true"><use href="#i-check"/></svg><span id="toastText"></span></div>
+
+<script>
+(function(){
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- Session (demo) ---------- */
+  var state = { role:null, type:'all', disc:null, budget:70000 };
+  try { state.role = sessionStorage.getItem('bm-role'); } catch(e){}
+  function saveRole(){ try { state.role ? sessionStorage.setItem('bm-role', state.role) : sessionStorage.removeItem('bm-role'); } catch(e){} }
+
+  var toastTimer;
+  function toast(msg){ $('#toastText').textContent = msg; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ $('#toast').hidden = true; }, 4200); }
+
+  /* Header height feeds the one-screen Home */
+  function measure(){ document.documentElement.style.setProperty('--head-h', $('#siteHead').offsetHeight + 'px'); }
+  window.addEventListener('resize', measure);
+
+  /* ---------- Routing ---------- */
+  var views = ['home','developers','investors','platform','offers'];
+  function route(){
+    var v = (location.hash || '#home').slice(1);
+    if (views.indexOf(v) < 0) v = 'home';
+    if (v === 'offers' && state.role !== 'developer') v = 'developers';
+    document.body.setAttribute('data-view', v);
+    $$('.view').forEach(function(el){ el.hidden = el.dataset.view !== v; });
+    $$('[data-nav]').forEach(function(a){ a.dataset.nav === v ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'); });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+
+  /* ---------- Auth-dependent visibility ---------- */
+  function applyAuth(){
+    var r = state.role;
+    $('#authGuest').hidden = !!r;
+    $('#authUser').hidden = !r;
+    $('#roleName').textContent = r === 'developer' ? 'Developer' : 'Investor';
+    var rules = {
+      'guest': !r,
+      'dev': r === 'developer',
+      'inv': r === 'investor',
+      'not-dev': r !== 'developer',
+      'not-inv': r !== 'investor'
+    };
+    $$('[data-when]').forEach(function(el){ el.hidden = !rules[el.dataset.when]; });
+  }
+
+  /* ---------- Modal ---------- */
+  var modal = $('#authModal'), lastFocus = null, pick = 'investor', submitted = false;
+  function setMode(m){
+    $$('.auth-tabs [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
+    $('#regForm').hidden = m !== 'register';
+    $('#signForm').hidden = m !== 'signin';
+  }
+  function setPick(p){
+    pick = p;
+    $$('[data-pick]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.pick === p)); });
+    $$('[data-for-role]').forEach(function(el){ el.hidden = el.dataset.forRole !== p; });
+    $('#r-company').required = p === 'developer';
+    $('#r-code').required = p === 'developer';
+    $('#regSubmit').textContent = p === 'developer' ? 'Create developer account' : 'Create investor account';
+    $('#s-role').value = p;
+  }
+  function openModal(mode, role){
+    lastFocus = document.activeElement;
+    setMode(mode || 'register');
+    setPick(role || pick);
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    setTimeout(function(){ var f = $(mode === 'signin' ? '#s-email' : '#r-name'); if (f) f.focus(); }, 30);
+  }
+  function closeModal(){
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('[data-auth]');
+    if (a){ openModal(a.dataset.auth, a.dataset.role); return; }
+    if (e.target.closest('[data-close]')) { closeModal(); return; }
+    var m = e.target.closest('[data-mode]');
+    if (m) { setMode(m.dataset.mode); return; }
+    var p = e.target.closest('[data-pick]');
+    if (p) { setPick(p.dataset.pick); return; }
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  function goTo(hash, target){
+    if (location.hash !== hash) location.hash = hash;
+    setTimeout(function(){ var el = $(target); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
+  }
+  function signIn(role, msg){
+    state.role = role; saveRole(); applyAuth(); update(); closeModal(); toast(msg);
+    if (role === 'investor') goTo('#investors', '#invSearch'); else goTo('#developers', '#devWorkspace');
+  }
+  $('#regForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!this.checkValidity()){ this.reportValidity(); return; }
+    if (pick === 'investor'){
+      var b = $('#r-budget').value;
+      state.budget = b === '250000+' ? 250000 : +b;
+      $('#budget').value = state.budget;
+      signIn('investor', 'Investor account created (demo). Listings are now unlocked.');
+    } else {
+      signIn('developer', 'Developer account created (demo). Your listing workspace is open.');
+    }
+    this.reset(); setPick(pick);
+  });
+  $('#signForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!this.checkValidity()){ this.reportValidity(); return; }
+    var r = $('#s-role').value;
+    signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
+    this.reset();
+  });
+  $$('[data-demo]').forEach(function(b){ b.addEventListener('click', function(){
+    var r = b.dataset.demo;
+    signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
+  }); });
+  $('#signOut').addEventListener('click', function(){
+    state.role = null; saveRole(); submitted = false;
+    var b = $('[data-dev-action="submit"]'); b.disabled = false; b.textContent = 'Submit for review';
+    $('#mockFootNote').textContent = 'Listings are reviewed before they go live.';
+    applyAuth(); toast('Signed out. Listings and tools are hidden again.');
+    if (location.hash === '#offers') location.hash = '#developers';
+  });
+
+  /* ---------- Developer workspace ---------- */
+  function setTab(t){
+    $$('[data-tab]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.tab === t)); });
+    $$('[data-panel]').forEach(function(p){ p.hidden = p.dataset.panel !== t; });
+    $('#formType').textContent = t === 'land' ? 'Land plot' : 'Apartment';
+  }
+  $$('[data-tab]').forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
+  $$('[data-dev-action]').forEach(function(b){ b.addEventListener('click', function(){
+    if (b.dataset.devAction === 'draft'){ toast('Draft saved (demo).'); return; }
+    if (submitted) return;
+    submitted = true;
+    b.innerHTML = '<svg aria-hidden="true"><use href="#i-check"/></svg>Submitted';
+    b.disabled = true;
+    $('#mockFootNote').textContent = 'In review. You’ll be notified when it goes live.';
+    toast('Submitted for review (demo). It now appears in My offers.');
+    var land = $('#formType').textContent === 'Land plot' || $('#formType').textContent === 'მიწის ნაკვეთი';
+    var src = $$('.preview-grid .my-card')[land ? 1 : 0];
+    if (src){
+      var copy = src.cloneNode(true);
+      copy.classList.add('is-edited');
+      var st = copy.querySelector('[data-status]'); st.textContent = 'In review'; st.className = 'status st-rev';
+      $('.preview-grid').insertBefore(copy, $('.preview-grid').firstChild);
+    }
+    $('#statRev').textContent = String(+$('#statRev').textContent + 1);
+  }); });
+  /* listing form: add and remove photos */
+  var MAX_PHOTOS = 10;
+  $$('[data-photo-input]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var addTile = inp.closest('.thumb-add'), box = addTile.parentNode;
+      var have = box.querySelectorAll('.thumb:not(.thumb-add)').length;
+      var files = Array.prototype.slice.call(inp.files || []).filter(function(file){ return file.type.indexOf("image/") === 0; });
+      if (have + files.length > MAX_PHOTOS){ toast('You can add up to 10 photos.'); files = files.slice(0, Math.max(0, MAX_PHOTOS - have)); }
+      files.forEach(function(file){
+        var url = URL.createObjectURL(file);
+        var t = document.createElement('div');
+        t.className = 'thumb thumb-user';
+        t.innerHTML = '<img alt=""><button class="thumb-x" type="button" aria-label="Remove photo">×</button>';
+        t.querySelector('img').src = url;
+        t.dataset.url = url;
+        box.insertBefore(t, addTile);
+      });
+      if (files.length) toast(files.length === 1 ? 'Photo added.' : (lang === 'ka' ? 'დაემატა ' + files.length + ' ფოტო.' : files.length + ' photos added.'));
+      inp.value = '';
+    });
+  });
+  document.addEventListener('click', function(e){
+    var x = e.target.closest('.thumb-x'); if (!x) return;
+    var t = x.closest('.thumb-user'); if (t.dataset.url) URL.revokeObjectURL(t.dataset.url);
+    t.remove();
+  });
+
+  /* edit a listing card */
+  var editCard = null, editURL = null, money = function(n){ return '$' + Math.round(n).toLocaleString('en-US'); };
+  function calcEdit(){
+    var p = parseInt($('#editPrice').value.replace(/[^0-9]/g, ''), 10) || 0, d = +$('#editDisc').value || 0;
+    var m = d > 0 && d < 100 ? Math.round(p / (1 - d / 100) / 100) * 100 : p;
+    $('#editCalc').innerHTML = '<s>' + money(m) + '</s><b>' + money(p) + '</b><span class="my-disc">−' + d + '%</span>';
+    return { p:p, d:d, m:m };
+  }
+  function closeEdit(){ $('#editModal').hidden = true; document.body.classList.remove('modal-open'); }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-edit]');
+    if (b){
+      editCard = b.closest('.my-card');
+      $('#editImg').src = editCard.querySelector('.photo').src;
+      $('#editWhat').textContent = editCard.querySelector('.loc').textContent.trim() + ' · ' + editCard.querySelector('.specs dd').textContent.trim();
+      $('#editPrice').value = (+editCard.dataset.price).toLocaleString('en-US');
+      $('#editDisc').value = editCard.dataset.discount;
+      calcEdit();
+      $('#editModal').hidden = false; document.body.classList.add('modal-open');
+      setTimeout(function(){ $('#editPrice').focus(); }, 30);
+      return;
+    }
+    if (e.target.closest('[data-close-edit]')) closeEdit();
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#editModal').hidden) closeEdit(); });
+  $('#editPrice').addEventListener('input', function(){ var d = this.value.replace(/[^0-9]/g, ''); this.value = d ? (+d).toLocaleString('en-US') : ''; calcEdit(); });
+  $('#editDisc').addEventListener('input', calcEdit);
+  $('#editFile').addEventListener('change', function(){
+    var file = this.files && this.files[0]; if (!file) return;
+    if (editURL) URL.revokeObjectURL(editURL);
+    editURL = URL.createObjectURL(file); $('#editImg').src = editURL;
+  });
+  $('#editForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = calcEdit();
+    if (!v.p || v.d < 1 || v.d > 60){ toast('Enter a price and a discount between 1% and 60%.'); return; }
+    var c = editCard, size = +c.dataset.size || 1;
+    c.dataset.price = v.p; c.dataset.discount = v.d;
+    c.querySelector('.listing-price strong').textContent = money(v.p);
+    c.querySelector('.listing-price .was').textContent = money(v.m);
+    c.querySelector('.badge-disc b').textContent = v.d + '%';
+    c.querySelector('.saving').lastChild.nodeValue = ' ' + money(v.m - v.p);
+    c.querySelector('.price-meta > span:last-child').textContent = money(v.p / size) + ' / m²';
+    c.querySelector('.photo').src = $('#editImg').src;
+    var st = c.querySelector('[data-status]');
+    if (st.classList.contains('st-pub')){
+      $('#statPub').textContent = String(Math.max(0, +$('#statPub').textContent - 1));
+      $('#statRev').textContent = String(+$('#statRev').textContent + 1);
+    }
+    st.textContent = 'In review'; st.className = 'status st-rev';
+    c.classList.add('is-edited');
+    closeEdit();
+    toast('Changes sent to ARI for review (demo).');
+  });
+
+  /* ---------- Investor search ---------- */
+  var cards = $$('#results .listing');
+  var ranges = { size:{lo:0, hi:5000, max:5000, step:5}, price:{lo:0, hi:1000000, max:1000000, step:5000} };
+  var num = function(n){ return n.toLocaleString('en-US'); };
+  function sizeMax(){ return state.type === 'apartment' ? 250 : 5000; }
+  function paintDual(name){
+    var r = ranges[name], box = $('[data-dual="' + name + '"]'), f = box.parentNode;
+    var lo = box.querySelector('.lo'), hi = box.querySelector('.hi');
+    lo.max = hi.max = r.max; lo.value = r.lo; hi.value = r.hi;
+    var a = r.lo / r.max * 100, b = r.hi / r.max * 100;
+    box.querySelector('.dual-fill').style.cssText = 'left:' + a + '%;right:' + (100 - b) + '%';
+    if (document.activeElement !== f.querySelector('.in-lo')) f.querySelector('.in-lo').value = num(r.lo);
+    if (document.activeElement !== f.querySelector('.in-hi')) f.querySelector('.in-hi').value = num(r.hi);
+  }
+  function setRange(name, lo, hi){
+    var r = ranges[name];
+    lo = Math.max(0, Math.min(isNaN(lo) ? r.lo : lo, r.max));
+    hi = Math.max(0, Math.min(isNaN(hi) ? r.hi : hi, r.max));
+    if (lo > hi){ var t = lo; lo = hi; hi = t; }
+    r.lo = lo; r.hi = hi; paintDual(name); update();
+  }
+  ['size','price'].forEach(function(name){
+    var box = $('[data-dual="' + name + '"]'), f = box.parentNode;
+    var lo = box.querySelector('.lo'), hi = box.querySelector('.hi');
+    lo.addEventListener('input', function(){ var v = Math.min(+lo.value, ranges[name].hi); ranges[name].lo = v; paintDual(name); update(); });
+    hi.addEventListener('input', function(){ var v = Math.max(+hi.value, ranges[name].lo); ranges[name].hi = v; paintDual(name); update(); });
+    ['in-lo','in-hi'].forEach(function(cls){
+      var inp = f.querySelector('.' + cls);
+      var commit = function(){ var v = parseInt(inp.value.replace(/[^0-9]/g, ''), 10); if (cls === 'in-lo') setRange(name, v, ranges[name].hi); else setRange(name, ranges[name].lo, v); };
+      inp.addEventListener('change', commit);
+      inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ commit(); inp.blur(); } });
+      inp.addEventListener('input', function(){ var d = inp.value.replace(/[^0-9]/g, ''); inp.value = d ? num(+d) : ''; });
+    });
+  });
+  function syncSizeMax(){
+    var m = sizeMax(), r = ranges.size;
+    if (m === r.max) return;
+    var wasFull = r.hi === r.max;
+    r.max = m; r.hi = wasFull ? m : Math.min(r.hi, m); r.lo = Math.min(r.lo, r.hi);
+    paintDual('size');
+  }
+  var fmt = function(n){ return '$' + n.toLocaleString('en-US'); };
+  function update(){
+    $('#budgetOut').textContent = fmt(state.budget);
+    syncSizeMax();
+    var items = cards.map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type }; });
+    var shown = 0, fits = 0, ka = lang === 'ka';
+    items.forEach(function(o){
+      var vis = (state.type === 'all' || o.t === state.type) && (!state.disc || (o.d >= state.disc[0] && o.d <= state.disc[1]))
+        && o.s >= ranges.size.lo && o.s <= ranges.size.hi && o.p >= ranges.price.lo && o.p <= ranges.price.hi;
+      var ok = o.p <= state.budget;
+      o.c.hidden = !vis;
+      o.c.classList.toggle('is-over', !ok);
+      var f = o.c.querySelector('[data-fit]');
+      f.textContent = ok ? 'Fits your budget' : (ka ? 'ბიუჯეტს აჭარბებს ' + fmt(o.p - state.budget) + '-ით' : fmt(o.p - state.budget) + ' over budget');
+      f.className = 'fit ' + (ok ? 'fit-yes' : 'fit-no');
+      if (vis){ shown++; if (ok) fits++; }
+    });
+    items.sort(function(a,b){ return ((b.p <= state.budget) - (a.p <= state.budget)) || (b.d - a.d); })
+         .forEach(function(o,i){ o.c.style.order = i; });
+    $('#summary').innerHTML = ka
+      ? '<b>' + shown + ' სანიმუშო განცხადება</b> · ' + fits + ' ჯდება ' + fmt(state.budget) + '-იან ბიუჯეტში'
+      : '<b>' + shown + ' example listing' + (shown === 1 ? '' : 's') + '</b> · ' + fits + ' fit' + (fits === 1 ? 's' : '') + ' a ' + fmt(state.budget) + ' budget';
+    $('#empty').hidden = shown > 0;
+  }
+  $('#budget').addEventListener('input', function(){ state.budget = +this.value; update(); });
+  function group(sel, key, parse){
+    var btns = $$(sel);
+    btns.forEach(function(b){ b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+      state[key] = parse(b); update();
+    }); });
+  }
+  group('[data-ptype]', 'type', function(b){ return b.dataset.ptype; });
+  /* discount chips toggle: click again to clear */
+  $$('[data-disc]').forEach(function(b){ b.addEventListener('click', function(){
+    var on = b.getAttribute('aria-pressed') !== 'true';
+    $$('[data-disc]').forEach(function(x){ x.setAttribute('aria-pressed', String(on && x === b)); });
+    state.disc = on ? b.dataset.disc.split('-').map(Number) : null;
+    update();
+  }); });
+  paintDual('size'); paintDual('price');
+  $$('[data-details]').forEach(function(b){ b.addEventListener('click', function(){ toast('Details page with floor plan, cadastral code and developer contact (concept).'); }); });
+  $$('.save').forEach(function(b){ b.addEventListener('click', function(){
+    var on = b.getAttribute('aria-pressed') !== 'true';
+    b.setAttribute('aria-pressed', String(on));
+    b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
+  }); });
+
+  /* ---------- Platform swimlane ---------- */
+  var lanes = [['Developer','Supply side'],['Platform','Review & matching'],['Investor','Demand side']];
+  var steps = [
+    [0,'Creates account,','selects listing type',1],
+    [0,'Submits details','+ optional media'],
+    [1,'Reviews and','publishes listing'],
+    [2,'Registers to','unlock listings',1],
+    [2,'Searches and','filters listings'],
+    [2,'Enters available','cash budget'],
+    [1,'Matches and ranks','relevant listings'],
+    [2,'Requests contact','or shows interest'],
+    [0,'Receives','the lead']
+  ];
+  var cy = [72,192,312], W = 124, H = 78, X0 = 150, DX = 134;
+  var s = '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>';
+  lanes.forEach(function(l,i){
+    s += '<rect class="lane-bg" x="0" y="' + (cy[i]-54) + '" width="1360" height="108" rx="14"/>';
+    s += '<text class="lane-name t-' + i + '" x="20" y="' + (cy[i]-2) + '" fill="currentColor">' + l[0] + '</text>';
+    s += '<text class="lane-sub" x="20" y="' + (cy[i]+16) + '">' + l[1] + '</text>';
+  });
+  steps.forEach(function(st,i){
+    if (i < steps.length - 1){
+      var nx = steps[i+1], x1 = X0 + i*DX + W, y1 = cy[st[0]], x2 = X0 + (i+1)*DX, y2 = cy[nx[0]];
+      var d = y1 === y2 ? 'M' + x1 + ' ' + y1 + 'H' + (x2 - 2) : 'M' + x1 + ' ' + y1 + 'H' + (x1 + 6) + 'V' + y2 + 'H' + (x2 - 2);
+      s += '<path class="edge" d="' + d + '" marker-end="url(#ah)"/>';
+    }
+  });
+  steps.forEach(function(st,i){
+    var x = X0 + i*DX, y = cy[st[0]] - H/2, k = st[0];
+    s += '<rect class="node c-' + k + '" x="' + x + '" y="' + y + '" width="' + W + '" height="' + H + '" rx="12"/>';
+    s += '<text class="node-n t-' + k + '" x="' + (x+12) + '" y="' + (y+20) + '" fill="currentColor">0' + (i+1) + '</text>';
+    s += '<text class="node-t" x="' + (x+12) + '" y="' + (y+44) + '">' + st[1] + '</text>';
+    s += '<text class="node-s" x="' + (x+12) + '" y="' + (y+61) + '">' + st[2] + '</text>';
+    if (st[3]){
+      s += '<circle class="gate-mark" cx="' + (x+W-14) + '" cy="' + (y+16) + '" r="10"/>';
+      s += '<use href="#i-lock" x="' + (x+W-21) + '" y="' + (y+9) + '" width="14" height="14" style="color:var(--lane-inv)"/>';
+    }
+  });
+  $('#flowSvg').insertAdjacentHTML('beforeend', s);
+  $('#flowList').innerHTML = steps.map(function(st,i){
+    return '<li><span class="flow-num t-' + st[0] + '">0' + (i+1) + '</span><span class="who t-' + st[0] + '"><span>' + lanes[st[0]][0] + '</span>' + (st[3] ? '<span> · registration</span>' : '') + '</span><span class="what"><span>' + st[1] + '</span> <span>' + st[2] + '</span></span></li>';
+  }).join('');
+
+  /* ---------- Copy email ---------- */
+  $('#copyBtn').addEventListener('click', function(){
+    var btn = this, el = $('#email');
+    function sel(){ var r = document.createRange(); r.selectNodeContents(el); var w = getSelection(); w.removeAllRanges(); w.addRange(r); btn.textContent = 'Selected'; }
+    try { navigator.clipboard.writeText(el.textContent).then(function(){ btn.textContent = 'Copied'; }, sel); } catch(e){ sel(); }
+  });
+
+  /* ---------- Language (KA / EN) ---------- */
+  var KA = {
+    // header + nav
+    'Home':'მთავარი','For developers':'დეველოპერებისთვის','For investors':'ინვესტორებისთვის',
+    'Sign in':'შესვლა','Register':'რეგისტრაცია','Sign out':'გასვლა','Investor':'ინვესტორი','Developer':'დეველოპერი',
+    // home
+    'Members-only marketplace · Georgia':'პლატფორმა მხოლოდ წევრებისთვის · საქართველო',
+    'Invest in Georgia’s next':'ინვესტიცია საქართველოს','development':'სადეველოპერო','opportunity.':'პროექტებში.',
+    'Discover discounted apartments and land plots directly from developers.':'აღმოაჩინე ფასდაკლებული ბინები და მიწის ნაკვეთები პირდაპირ დეველოპერებისგან.',
+    'Verified listings':'გადამოწმებული განცხადებები','Direct developer access':'პირდაპირი კავშირი დეველოპერთან','Investment-ready opportunities':'საინვესტიციოდ მზა შეთავაზებები',
+    'I’m a Developer — List a Property':'დეველოპერი ვარ — განცხადების დამატება','Reach verified investors with cash ready':'მიაღწიე გადამოწმებულ ინვესტორებს მზა თანხით',
+    'I’m an Investor — Browse Opportunities':'ინვესტორი ვარ — შეთავაზებების ნახვა','Discounted apartments and land that fit your budget':'ფასდაკლებული ბინები და მიწა შენს ბიუჯეტზე',
+    'Developer lists a property':'დეველოპერი ამატებს ქონებას','Investor filters by budget':'ინვესტორი ფილტრავს ბიუჯეტით','They connect directly':'ისინი პირდაპირ უკავშირდებიან',
+    'How the platform works':'როგორ მუშაობს პლატფორმა','© 2026 ARI Development':'© 2026 ARI Development','Investment platform':'საინვესტიციო პლატფორმა','ARI home':'ARI მთავარი',
+    'Full diagram':'სრული სქემა',
+    'Remove photo':'ფოტოს წაშლა','You can add up to 10 photos.':'შეგიძლია დაამატო მაქსიმუმ 10 ფოტო.','Photo added.':'ფოტო დაემატა.',
+    "Edit listing":"განცხადების რედაქტირება",
+    "Replace photo":"ფოტოს შეცვლა",
+    "Price":"ფასი",
+    "(USD)":"(USD)",
+    "(%)":"(%)",
+    "Market price":"საბაზრო ფასი",
+    "Changes go to ARI for a quick review before investors see them.":"ცვლილებები ჯერ ARI-სთან მოკლე შემოწმებაზე მიდის, შემდეგ კი ინვესტორებს გამოუჩნდებათ.",
+    "Cancel":"გაუქმება",
+    "Save changes":"ცვლილებების შენახვა",
+    "Changes sent to ARI for review (demo).":"ცვლილებები ARI-ს შესამოწმებლად გაეგზავნა (დემო).",
+    "Enter a price and a discount between 1% and 60%.":"მიუთითე ფასი და ფასდაკლება 1%-დან 60%-მდე.",
+    "After you submit, follow the review and see how investors see your listing in":"გაგზავნის შემდეგ განხილვის სტატუსს და იმას, თუ როგორ ხედავენ ინვესტორები შენს განცხადებას, ნახავ გვერდზე",
+    "How investors see your listings":"ასე ხედავენ ინვესტორები შენს განცხადებებს",
+    "What investors see":"რას ხედავს ინვესტორი",
+    "Market price crossed out next to your price":"გადახაზულ საბაზრო ფასს შენი ფასის გვერდით",
+    "Discount badge, size, floor and completion date":"ფასდაკლების ნიშანს, ფართს, სართულს და დასრულების თარიღს",
+    "Verified badge after ARI’s review":"„გადამოწმებულის“ ნიშანს ARI-ის შემოწმების შემდეგ",
+    "Your contact details stay private. Investors reach you through ARI":"შენი საკონტაქტო მონაცემები დამალულია. ინვესტორი შენთან ARI-ის მეშვეობით მოდის",
+    "My offers":"ჩემი შეთავაზებები",
+    "Your listings, their status and the leads ARI brings you.":"შენი განცხადებები, მათი სტატუსი და მოთხოვნები, რომლებსაც ARI მოგიტანს.",
+    "Add a listing":"განცხადების დამატება",
+    "Overview":"მიმოხილვა",
+    "Published":"გამოქვეყნებული",
+    "In review":"განხილვაში",
+    "Leads this month":"მოთხოვნები ამ თვეში",
+    "Listing views":"ნახვები",
+    "Your listings":"შენი განცხადებები",
+    "Example data":"სანიმუშო მონაცემები",
+    "Views":"ნახვა",
+    "Leads":"მოთხოვნა",
+    "Edit":"რედაქტირება",
+    "Saburtalo · 65 m² · Floor 8":"საბურთალო · 65 m² · მე-8 სართული",
+    "Tskneti · 500 m²":"წყნეთი · 500 m²",
+    "Didi Digomi · 78 m² · Floor 4":"დიდი დიღომი · 78 m² · მე-4 სართული",
+    "Saburtalo · 65 m²":"საბურთალო · 65 m²",
+    "Leads from investors":"მოთხოვნები ინვესტორებისგან",
+    "Checked by ARI":"შემოწმებულია ARI-ის მიერ",
+    "New":"ახალი",
+    "ARI contacted the investor":"ARI დაუკავშირდა ინვესტორს",
+    "Viewing on 12 Nov":"დათვალიერება 12 ნოემბერს",
+    "Today":"დღეს",
+    "Yesterday":"გუშინ",
+    "6 Nov":"6 ნოემბერი",
+    "“Can I see the floor plans for other units on the 8th floor?”":"„შეიძლება მე-8 სართულის სხვა ბინების გეგმებიც ვნახო?“",
+    "“Is the road to the plot already built?”":"„ნაკვეთამდე გზა უკვე გაყვანილია?“",
+    "Submitted for review (demo). It now appears in My offers.":"განსახილველად გაიგზავნა (დემო). ის ახლა „ჩემი შეთავაზებები“-შია.",
+    "Editing opens the listing form (concept).":"რედაქტირება განცხადების ფორმას გახსნის (კონცეფცია).",
+    'Apartments up to 250 m² · land up to 5,000 m²':'ბინა 250 m²-მდე · მიწა 5,000 m²-მდე','Up to $1,000,000':'$1,000,000-მდე','Minimum size':'მინიმალური ფართი','Maximum size':'მაქსიმალური ფართი','Minimum price':'მინიმალური ფასი','Maximum price':'მაქსიმალური ფასი',
+    'You save':'დაზოგავ','Market price':'საბაზრო ფასი',
+    'Demo accounts':'სადემონსტრაციო ანგარიშები','Sign in as developer':'შესვლა დეველოპერად','Sign in as investor':'შესვლა ინვესტორად',
+    "How the ARI platform":"როგორ მუშაობს ARI-ის",
+    "works.":"პლატფორმა.",
+    "One members-only place where developers sell apartments and land plots before completion, and investors buy them early. ARI checks every project and every investor in between.":"ერთი დახურული სივრცე, სადაც დეველოპერები ბინებსა და მიწის ნაკვეთებს მშენებლობის დასრულებამდე ყიდიან, ინვესტორები კი მათ ადრე ყიდულობენ. ARI შუაში ამოწმებს ყველა პროექტს და ყველა ინვესტორს.",
+    "In short":"მოკლედ",
+    "Three parties, one clear process.":"სამი მხარე, ერთი მკაფიო პროცესი.",
+    "Developers list":"დეველოპერები ამატებენ",
+    "Verified developers add apartments and land plots with a pre-sale discount.":"გადამოწმებული დეველოპერები ამატებენ ბინებსა და მიწის ნაკვეთებს წინასწარი გაყიდვის ფასდაკლებით.",
+    "ARI checks and matches":"ARI ამოწმებს და არჩევს",
+    "Experts review every listing. Investors see what fits their budget first.":"ექსპერტები ამოწმებენ ყველა განცხადებას. ინვესტორები პირველ რიგში ბიუჯეტზე მორგებულს ხედავენ.",
+    "Investors buy":"ინვესტორები ყიდულობენ",
+    "Investors send interest. ARI arranges the viewing and supports the deal.":"ინვესტორები აგზავნიან მოთხოვნას. ARI აწყობს დათვალიერებას და გარიგებას თან ახლავს.",
+    "The full process":"სრული პროცესი",
+    "Nine steps across three roles.":"ცხრა ნაბიჯი სამ როლს შორის.",
+    "Both sides register before they see listings or tools. The lock marks each registration step.":"ორივე მხარე რეგისტრირდება, სანამ განცხადებებს ან ხელსაწყოებს ნახავს. ბოქლომი რეგისტრაციის ეტაპს აღნიშნავს.",
+    "Step by step":"ნაბიჯ-ნაბიჯ",
+    "What happens at each stage.":"რა ხდება თითოეულ ეტაპზე.",
+    "Steps 1–3":"ნაბიჯები 1–3",
+    "Steps 4–6":"ნაბიჯები 4–6",
+    "Steps 7–9":"ნაბიჯები 7–9",
+    "The developer lists":"დეველოპერი ამატებს",
+    "The investor searches":"ინვესტორი ეძებს",
+    "Match and deal":"შერჩევა და გარიგება",
+    "Creates an account":"ქმნის ანგარიშს",
+    "The developer registers the company with its ID code. ARI verifies the company before the first listing goes live.":"დეველოპერი არეგისტრირებს კომპანიას საიდენტიფიკაციო კოდით. ARI კომპანიას ამოწმებს პირველი განცხადების გამოქვეყნებამდე.",
+    "Submits the listing":"აგზავნის განცხადებას",
+    "Apartment or land plot: floor plan, size, price, discount, completion date and cadastral code. Photos are optional.":"ბინა ან მიწის ნაკვეთი: გეგმა, ფართი, ფასი, ფასდაკლება, დასრულების თარიღი და საკადასტრო კოდი. ფოტოები არასავალდებულოა.",
+    "Review and publishing":"შემოწმება და გამოქვეყნება",
+    "ARI’s architects, surveyors and lawyers check the details. Approved listings become visible to registered investors only.":"ARI-ის არქიტექტორები, ამზომველები და იურისტები ამოწმებენ დეტალებს. დამტკიცებული განცხადება მხოლოდ დარეგისტრირებულ ინვესტორებს უჩანთ.",
+    "Registers":"რეგისტრირდება",
+    "The investor signs up and states their available cash and interests. Prices and locations unlock after sign-up.":"ინვესტორი რეგისტრირდება და უთითებს ხელმისაწვდომ თანხას და ინტერესებს. ფასები და მისამართები რეგისტრაციის შემდეგ იხსნება.",
+    "Searches and filters":"ეძებს და ფილტრავს",
+    "By district, size, price, discount and construction completion date.":"რაიონით, ფართით, ფასით, ფასდაკლებით და მშენებლობის დასრულების თარიღით.",
+    "Sets a budget":"უთითებს ბიუჯეტს",
+    "Listings within the investor’s cash budget appear first. Others are flagged as over budget.":"ინვესტორის ბიუჯეტში ჯდომადი განცხადებები პირველი ჩანს. დანარჩენი მოინიშნება, როგორც ბიუჯეტზე ძვირი.",
+    "The platform ranks listings by budget fit and discount. ARI’s sales managers suggest the best options.":"პლატფორმა განცხადებებს ბიუჯეტთან შესაბამისობით და ფასდაკლებით ალაგებს. ARI-ის გაყიდვების მენეჯერები საუკეთესო ვარიანტებს გთავაზობენ.",
+    "The investor requests contact or a site visit straight from the listing.":"ინვესტორი კონტაქტს ან დათვალიერებას პირდაპირ განცხადებიდან ითხოვს.",
+    "Receives the lead":"იღებს მოთხოვნას",
+    "ARI confirms the investor’s budget, passes the lead to the developer and supports both sides until signing.":"ARI ადასტურებს ინვესტორის ბიუჯეტს, მოთხოვნას დეველოპერს გადასცემს და ორივე მხარეს ხელმოწერამდე ეხმარება.",
+    "What ARI checks":"რას ამოწმებს ARI",
+    "Nothing reaches the other side unchecked.":"შემოწმების გარეშე მეორე მხარემდე არაფერი მიდის.",
+    "Before a listing goes live":"განცხადების გამოქვეყნებამდე",
+    "Company identity and ID code":"კომპანიის ვინაობა და საიდენტიფიკაციო კოდი",
+    "Cadastral code against the public registry":"საკადასტრო კოდი საჯარო რეესტრთან შედარებით",
+    "Floor plan and declared size":"გეგმა და მითითებული ფართი",
+    "Price, discount and how it was calculated":"ფასი, ფასდაკლება და მისი გამოთვლის წესი",
+    "Construction completion date":"მშენებლობის დასრულების თარიღი",
+    "Before a lead reaches the developer":"მოთხოვნის დეველოპერამდე მისვლამდე",
+    "Investor identity and contact details":"ინვესტორის ვინაობა და საკონტაქტო მონაცემები",
+    "Stated cash budget":"მითითებული ბიუჯეტი",
+    "Fit between the budget and the listing":"ბიუჯეტისა და განცხადების შესაბამისობა",
+    "Who sees what":"ვინ რას ხედავს",
+    "Access depends on your account.":"წვდომა ანგარიშის ტიპზეა დამოკიდებული.",
+    "Guest":"სტუმარი",
+    "Information pages":"საინფორმაციო გვერდები",
+    "Listings, prices and discounts":"განცხადებები, ფასები და ფასდაკლებები",
+    "Own listings":"საკუთარი",
+    "Search, filters and budget matching":"ძიება, ფილტრები და ბიუჯეტით შერჩევა",
+    "Listing form":"განცხადების ფორმა",
+    "Leads from investors":"მოთხოვნები ინვესტორებისგან",
+    "Questions":"კითხვები",
+    "Frequently asked questions.":"ხშირად დასმული კითხვები.",
+    "Who can register?":"ვის შეუძლია რეგისტრაცია?",
+    "Real-estate developers with a registered company in Georgia, and investors from Georgia or abroad.":"დეველოპერებს, რომლებსაც საქართველოში რეგისტრირებული კომპანია აქვთ, და ინვესტორებს საქართველოდან ან საზღვარგარეთიდან.",
+    "Why are prices hidden until I register?":"რატომ არის ფასები დამალული რეგისტრაციამდე?",
+    "Developers offer pre-sale discounts they don’t publish on open listing sites. Showing them only to registered investors protects their public price and keeps offers relevant.":"დეველოპერები წინასწარი გაყიდვის ფასდაკლებებს ღია საიტებზე არ აქვეყნებენ. მათი ჩვენება მხოლოდ დარეგისტრირებული ინვესტორებისთვის იცავს საჯარო ფასს და შეთავაზებებს შესაბამის ადამიანებამდე მიაქვს.",
+    "How is the discount calculated?":"როგორ ითვლება ფასდაკლება?",
+    "The developer states the discount against their market price. ARI checks how it was calculated before the listing goes live.":"დეველოპერი ფასდაკლებას საბაზრო ფასთან მიმართებით უთითებს. ARI ამოწმებს, როგორ არის ის გამოთვლილი, სანამ განცხადება გამოქვეყნდება.",
+    "Does ARI guarantee the investment?":"იძლევა თუ არა ARI ინვესტიციის გარანტიას?",
+    "No. ARI checks documents and supports the deal, but every purchase decision is the investor’s own. Each listing shows the facts you need to decide.":"არა. ARI ამოწმებს დოკუმენტებს და გარიგებას თან ახლავს, მაგრამ ყიდვის გადაწყვეტილებას ინვესტორი თავად იღებს. თითოეულ განცხადებაში ჩანს ის ფაქტები, რაც გადაწყვეტილებისთვის გჭირდება.",
+    "What happens after I send interest?":"რა ხდება მოთხოვნის გაგზავნის შემდეგ?",
+    "An ARI sales manager confirms your budget and contacts you to arrange a conversation or a site visit with the developer.":"ARI-ის გაყიდვების მენეჯერი ადასტურებს შენს ბიუჯეტს და გიკავშირდება, რომ დეველოპერთან საუბარი ან ობიექტის დათვალიერება მოაწყოს.",
+    "Can investors from abroad use the platform?":"შეუძლიათ თუ არა უცხოელ ინვესტორებს პლატფორმით სარგებლობა?",
+    "Yes. ARI works in Georgia and Cyprus and supports international investors throughout the process.":"კი. ARI საქართველოსა და კვიპროსში მუშაობს და საერთაშორისო ინვესტორებს მთელი პროცესის განმავლობაში ეხმარება.",
+    "Is registration free?":"რეგისტრაცია უფასოა?",
+    "Yes. Registration is free for developers and investors.":"კი. რეგისტრაცია უფასოა დეველოპერებისთვისაც და ინვესტორებისთვისაც.",
+    "Ready to start?":"მზად ხარ დასაწყებად?",
+    "Choose your side and register in about a minute.":"აირჩიე შენი მხარე და დარეგისტრირდი დაახლოებით ერთ წუთში.",
+    "I’m a developer":"დეველოპერი ვარ",
+    "I’m an investor":"ინვესტორი ვარ",
+    "Yes":"კი",
+    "No":"არა",
+    'The process':'პროცესი',
+    'District, size, price, discount and completion date.':'რაიონი, ფართი, ფასი, ფასდაკლება და დასრულების თარიღი.',
+    'Developers offer pre-sale prices to investors who commit early. ARI selects the projects, checks them and stays with you until the deal is signed.':'დეველოპერები წინასწარი გაყიდვის ფასებს სთავაზობენ მათ, ვინც ადრე იღებს გადაწყვეტილებას. ARI არჩევს პროექტებს, ამოწმებს მათ და შენთან რჩება გარიგების ხელმოწერამდე.',
+    'Pre-sale discounts from developers, visible only to registered investors.':'დეველოპერების წინასწარი გაყიდვის ფასდაკლებები, ხილული მხოლოდ დარეგისტრირებული ინვესტორებისთვის.',
+    'Off-plan apartments and plots in developments.':'მშენებარე ბინები და ნაკვეთები სადეველოპერო პროექტებში.',
+    'See the listings that fit your available cash first.':'პირველ რიგში ნახე განცხადებები, რომლებიც შენს თანხაში ჯდება.',
+    'Off-plan opportunities before they reach the open market.':'მშენებარე შეთავაზებები ღია ბაზარზე გამოსვლამდე.',
+    'Off-plan sales fund construction. ARI puts your project in front of investors who want to buy early, and stays involved until the deal is signed.':'მშენებარე ბინების გაყიდვა მშენებლობას აფინანსებს. ARI შენს პროექტს აჩვენებს ინვესტორებს, რომლებსაც ადრე ყიდვა სურთ, და პროცესში რჩება გარიგების ხელმოწერამდე.',
+    'ARI’s network of investors in Georgia and abroad, each with a stated cash budget.':'ARI-ის ინვესტორების ქსელი საქართველოში და საზღვარგარეთ, თითოეული მითითებული ბიუჯეტით.',
+    'Keeps your public price intact':'საჯარო ფასი უცვლელი რჩება',
+    'Checks and prepares your listing':'ამოწმებს და ამზადებს განცხადებას',
+    'Architects, surveyors and lawyers review plans, cadastral data and documents.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო მონაცემებს და დოკუმენტებს.',
+    'Three steps to your first lead.':'სამი ნაბიჯი პირველ მოთხოვნამდე.',
+    'ARI connects developers and investors':'ARI აკავშირებს დეველოპერებს და ინვესტორებს',
+    'Verified apartments and land plots before completion. Choose your side.':'შემოწმებული ბინები და მიწები მშენებლობამდე. აირჩიე შენი მხარე.',
+    'Sell early, to the right investor.':'გაყიდე ადრე, სწორ ინვესტორზე.',
+    'Investors with cash ready, your public price intact, legal support from ARI.':'ინვესტორები მზა თანხით, საჯარო ფასი უცვლელი, ARI-ის იურიდიული მხარდაჭერა.',
+    'List a property':'განცხადების დამატება',
+    'Buy early, below market price.':'იყიდე ადრე, საბაზროზე იაფად.',
+    'Verified projects, matched to your budget, with ARI beside you until signing.':'შემოწმებული პროექტები, შერჩევა ბიუჯეტით, ARI თან გახლავს ხელმოწერამდე.',
+    'Browse opportunities':'შეთავაზებების ნახვა',
+    'How ARI helps':'როგორ გეხმარება ARI',
+    'ARI works for your project, from listing to signed deal.':'ARI შენს პროექტზე მუშაობს, განცხადებიდან ხელმოწერილ გარიგებამდე.',
+    'ARI stands between developers and investors. We check every project, qualify every investor and stay involved until the deal is signed.':'ARI დეველოპერსა და ინვესტორს შორის შუამავალია. ვამოწმებთ ყველა პროექტს, ვარჩევთ ყველა ინვესტორს და ვრჩებით პროცესში გარიგების ხელმოწერამდე.',
+    'Finds the right investors':'პოულობს სწორ ინვესტორებს',
+    'Your project reaches ARI’s network of investors in Georgia and abroad, matched by budget and interest.':'შენი პროექტი ARI-ის ინვესტორების ქსელამდე აღწევს საქართველოში და საზღვარგარეთ, ბიუჯეტისა და ინტერესის მიხედვით.',
+    'Prepares your listing':'ამზადებს განცხადებას',
+    'Architects and surveyors check plans, areas and cadastral data. Our marketing team presents the project well.':'არქიტექტორები და ამზომველები ამოწმებენ გეგმებს, ფართებს და საკადასტრო მონაცემებს. მარკეტინგის გუნდი პროექტს სწორად წარადგენს.',
+    'Handles the legal side':'იურიდიულ მხარეს უძღვება',
+    'ARI’s lawyers review the documents and help prepare the agreement with the investor.':'ARI-ის იურისტები ამოწმებენ დოკუმენტებს და გეხმარებიან ინვესტორთან ხელშეკრულების მომზადებაში.',
+    'Brings qualified leads':'მოაქვს რეალური მოთხოვნები',
+    'Sales managers confirm each investor’s budget, arrange viewings and follow the deal through.':'გაყიდვების მენეჯერები ადასტურებენ ინვესტორის ბიუჯეტს, აწყობენ დათვალიერებას და გარიგებას ბოლომდე მიჰყვებიან.',
+    'Georgia and Cyprus':'საქართველო და კვიპროსი',
+    'Architects, surveyors and lawyers in-house':'საკუთარი არქიტექტორები, ამზომველები და იურისტები',
+    'Residential projects across Tbilisi':'საცხოვრებელი პროექტები თბილისის მასშტაბით',
+    'ARI checks every opportunity before you see it.':'ARI ამოწმებს ყველა შეთავაზებას, სანამ შენ ნახავ.',
+    'ARI stands between investors and developers. We select projects, check them technically and legally, and stay with you until the deal is signed.':'ARI ინვესტორსა და დეველოპერს შორის შუამავალია. ვარჩევთ პროექტებს, ვამოწმებთ მათ ტექნიკურად და იურიდიულად და შენთან ვრჩებით გარიგების ხელმოწერამდე.',
+    'Selects opportunities':'არჩევს შეთავაზებებს',
+    'ARI looks for projects with strong development potential across Tbilisi and key regions.':'ARI ეძებს განვითარების მაღალი პოტენციალის მქონე პროექტებს თბილისსა და მნიშვნელოვან რეგიონებში.',
+    'Checks every project':'ამოწმებს ყველა პროექტს',
+    'Architects, surveyors and lawyers review the plans, cadastral data and the developer behind the project.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო მონაცემებს და პროექტის დეველოპერს.',
+    'Matches your budget':'გირჩევს ბიუჯეტის მიხედვით',
+    'Sales managers suggest units that fit your available cash and your goals.':'გაყიდვების მენეჯერები გთავაზობენ ბინებს, რომლებიც შენს თანხასა და მიზნებს შეესაბამება.',
+    'Supports the deal':'გარიგებას თან ახლავს',
+    'From the first viewing to the signed agreement, ARI stays involved.':'პირველი დათვალიერებიდან ხელშეკრულების ხელმოწერამდე ARI პროცესში რჩება.',
+    'Qualified investor leads':'შემოწმებული მოთხოვნები ინვესტორებისგან',
+    'ARI support at every step':'ARI-ის მხარდაჭერა ყველა ეტაპზე',
+    'ARI brings you leads':'ARI მოთხოვნებს მოგიტანს',
+    'ARI confirms each investor’s interest and budget, then passes the lead to you.':'ARI ადასტურებს ინვესტორის ინტერესსა და ბიუჯეტს და შემდეგ მოთხოვნას შენ გადმოგცემს.',
+    'Talk to developers through ARI':'დაუკავშირდი დეველოპერს ARI-ის მეშვეობით',
+    'Ask questions or arrange a site visit. ARI sets up the conversation.':'დასვი კითხვები ან დანიშნე დათვალიერება. საუბარს ARI აწყობს.',
+    'ARI connects you':'ARI გაკავშირებს',
+    'Send your interest. ARI arranges the conversation and the viewing with the developer.':'გაგზავნე მოთხოვნა. ARI დეველოპერთან საუბარს და დათვალიერებას მოაწყობს.',
+    'Development and investment platform · Georgia':'სადეველოპერო და საინვესტიციო პლატფორმა · საქართველო',
+    'Sell apartments and land plots before completion to investors with cash ready. Your listings stay private to registered investors.':'გაყიდე ბინები და მიწის ნაკვეთები მშენებლობის დასრულებამდე ინვესტორებზე, რომლებსაც თანხა მზად აქვთ. განცხადებები ჩანს მხოლოდ დარეგისტრირებული ინვესტორებისთვის.',
+    'Why list here':'რატომ აქ',
+    'Off-plan sales fund construction. This platform puts your project in front of investors who want to buy early, so you sell faster without lowering your public price.':'მშენებარე ბინების გაყიდვა მშენებლობას აფინანსებს. პლატფორმა შენს პროექტს აჩვენებს ინვესტორებს, რომლებსაც ადრე ყიდვა სურთ, ასე რომ უფრო სწრაფად ყიდი საჯარო ფასის შემცირების გარეშე.',
+    'Every investor states their budget at sign-up. Reach buyers in Georgia and abroad.':'ყველა ინვესტორი რეგისტრაციისას უთითებს ბიუჯეტს. მიაღწიე მყიდველებს საქართველოში და მის ფარგლებს გარეთ.',
+    'Your public price stays intact':'საჯარო ფასი უცვლელი რჩება',
+    'Discounts are visible only to registered investors, never on open listing sites.':'ფასდაკლებას ხედავენ მხოლოდ დარეგისტრირებული ინვესტორები და ის ღია საიტებზე არ ჩანს.',
+    'Reviewed by professionals':'შემოწმებულია პროფესიონალების მიერ',
+    'Architects, surveyors and lawyers check plans and cadastral data, so investors trust what they see.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს და საკადასტრო მონაცემებს, ამიტომ ინვესტორი ენდობა იმას, რასაც ხედავს.',
+    'What we stand for':'ჩვენი ღირებულებები',
+    'Quality, reliability and transparency.':'ხარისხი, სანდოობა და გამჭვირვალობა.',
+    'Built by ARI Development, whose architects, surveyors, lawyers and sales specialists deliver residential projects across Tbilisi.':'პლატფორმა ARI Development-ისაა, რომლის არქიტექტორები, ამზომველები, იურისტები და გაყიდვების სპეციალისტები საცხოვრებელ პროექტებს თბილისის სხვადასხვა უბანში ახორციელებენ.',
+    'Quality':'ხარისხი','Reliability':'სანდოობა','Transparency':'გამჭვირვალობა',
+    'Every listing meets one standard: floor plan, cadastral code, price and completion date.':'ყველა განცხადება ერთ სტანდარტს აკმაყოფილებს: გეგმა, საკადასტრო კოდი, ფასი და დასრულების თარიღი.',
+    'Developers are verified before they can list. Listings are reviewed before investors see them.':'დეველოპერი მოწმდება, სანამ განცხადებას დაამატებს. განცხადება მოწმდება, სანამ ინვესტორი ნახავს.',
+    'Price, discount and conditions are stated upfront for every registered investor.':'ფასი, ფასდაკლება და პირობები ყველა დარეგისტრირებული ინვესტორისთვის წინასწარ ჩანს.',
+    'Buy apartments and land plots early, below market price, directly from developers. Every listing is reviewed before you see it.':'შეიძინე ბინები და მიწის ნაკვეთები ადრე, საბაზროზე დაბალ ფასად, პირდაპირ დეველოპერებისგან. ყველა განცხადება მოწმდება, სანამ შენამდე მოვა.',
+    'Developers offer pre-sale prices in exchange for early commitment. Every listing is checked before it reaches you.':'დეველოპერები წინასწარი გაყიდვის ფასებს სთავაზობენ მათ, ვინც ადრე იღებს გადაწყვეტილებას. ყველა განცხადება მოწმდება, სანამ შენამდე მოვა.',
+    'Pre-sale discounts for registered investors who commit early.':'წინასწარი გაყიდვის ფასდაკლებები დარეგისტრირებული ინვესტორებისთვის, რომლებიც ადრე იღებენ გადაწყვეტილებას.',
+    'Architects, surveyors and lawyers check plans, cadastral codes and developer details.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო კოდებსა და დეველოპერის მონაცემებს.',
+    'ARI’s members-only development and investment platform for apartments and land in Georgia.':'ARI-ის დახურული სადეველოპერო და საინვესტიციო პლატფორმა ბინებისა და მიწებისთვის საქართველოში.','Hover a dot to see each step':'მიიტანე მაუსი წერტილზე, რომ ნაბიჯი ნახო','Registration':'რეგისტრაცია','How a listing becomes a lead':'როგორ იქცევა განცხადება მოთხოვნად',
+    'Developer signs up':'დეველოპერი რეგისტრირდება','Adds a listing':'ამატებს განცხადებას','Review & publish':'შემოწმება და გამოქვეყნება',
+    'Investor signs up':'ინვესტორი რეგისტრირდება','Filters listings':'ფილტრავს განცხადებებს','Sets a budget':'უთითებს ბიუჯეტს',
+    'Matching':'შერჩევა','Sends interest':'აგზავნის მოთხოვნას','Developer gets the lead':'დეველოპერი იღებს მოთხოვნას',
+    // developers page
+    'List your property':'დაამატე შენი ქონება','in minutes.':'წუთებში.',
+    'Apartments in residential buildings or land plots in a development. Shown only to registered, budget-qualified investors.':'ბინები საცხოვრებელ კორპუსებში ან მიწის ნაკვეთები სადეველოპერო პროექტში. ჩანს მხოლოდ დარეგისტრირებული, შესაბამისი ბიუჯეტის მქონე ინვესტორებისთვის.',
+    'Register as a developer':'დარეგისტრირდი დეველოპერად',
+    'Signed in as a developer. Your listing workspace is below.':'შესული ხარ როგორც დეველოპერი. განცხადების სამუშაო სივრცე ქვემოთაა.',
+    'You’re signed in as an investor. Listing a property needs a developer account.':'შესული ხარ როგორც ინვესტორი. განცხადების დასამატებლად დეველოპერის ანგარიში გჭირდება.',
+    'Company verification':'კომპანიის გადამოწმება','Members-only visibility':'ჩანს მხოლოდ წევრებისთვის','Direct investor leads':'პირდაპირი მოთხოვნები ინვესტორებისგან',
+    'Your workspace':'შენი სამუშაო სივრცე','Create a new listing.':'შექმენი ახალი განცხადება.',
+    'Required fields keep listings comparable. Optional ones help yours stand out.':'სავალდებულო ველები განცხადებებს შესადარებელს ხდის. არასავალდებულო ველები შენსას გამოარჩევს.',
+    'What are you listing?':'რას ამატებ?','Apartment in a residential building':'ბინა საცხოვრებელ კორპუსში','Off-plan or under construction':'პროექტის ეტაპზე ან მშენებარე',
+    'Land plot in a development':'მიწის ნაკვეთი სადეველოპერო პროექტში','Serviced or planned plots':'კომუნიკაციებით ან დაგეგმილი ნაკვეთები',
+    'How registered investors will see it':'ასე დაინახავენ დარეგისტრირებული ინვესტორები','Preview':'გადახედვა',
+    'New listing ·':'ახალი განცხადება ·','Property details':'ქონების დეტალები','Step 2 of 3':'ნაბიჯი 2 / 3',
+    'Required':'სავალდებულო','needed to publish':'საჭიროა გამოსაქვეყნებლად','Optional':'არასავალდებულო','improves the listing':'აუმჯობესებს განცხადებას',
+    'Floor plan / dimensional drawing':'გეგმა / ზომებიანი ნახაზი','Living':'მისაღები','Bed':'საძინ.','1.2 MB · PDF, DWG or JPG':'1.2 MB · PDF, DWG ან JPG','Uploaded':'ატვირთულია',
+    'of 14':'14-დან','Location / district':'მდებარეობა / რაიონი','View':'ხედი','Price':'ფასი',
+    'Discount vs market price':'ფასდაკლება საბაზროსთან შედარებით','Shown to investors as a badge':'ინვესტორებს ნიშნად უჩანთ',
+    'Construction completion':'მშენებლობის დასრულება','Cadastral code':'საკადასტრო კოდი','Checked against the public registry':'მოწმდება საჯარო რეესტრში',
+    'Additional information':'დამატებითი ინფორმაცია',
+    'Black frame handover. Developer installment plan available up to 24 months. Underground parking on request.':'ჩაბარება შავი კარკასით. დეველოპერის განვადება 24 თვემდე. მიწისქვეშა პარკინგი მოთხოვნით.',
+    'Photos':'ფოტოები','+ Add':'+ დამატება','Land size':'მიწის ფართი',
+    'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.':'დახურული კოტეჯების დასახლების ნაწილი. გზა, წყალი და ელექტროობა ნაკვეთის საზღვრამდე. განაშენიანების კოეფიციენტი კ-2 0.4.',
+    'Listings are reviewed before they go live.':'განცხადებები გამოქვეყნებამდე მოწმდება.',
+    'In review. You’ll be notified when it goes live.':'განხილვაშია. გამოქვეყნებისას შეგატყობინებთ.',
+    'Save draft':'მონახაზის შენახვა','Submit for review':'განსახილველად გაგზავნა','Submitted':'გაგზავნილია',
+    'What you can list':'რისი დამატება შეგიძლია','Two listing types, one simple form.':'ორი ტიპის განცხადება, ერთი მარტივი ფორმა.',
+    'Prepare these details before you start. Required fields keep listings comparable for investors.':'დაწყებამდე მოამზადე ეს მონაცემები. სავალდებულო ველები ინვესტორებისთვის განცხადებებს შესადარებელს ხდის.',
+    'What you’ll need':'რა დაგჭირდება','Floor plan':'გეგმა','Size in m²':'ფართი m²-ში','Land size in m²':'მიწის ფართი m²-ში','Completion date':'დასრულების თარიღი',
+    'Dashed items are optional.':'წყვეტილი ჩარჩოთი მონიშნული ველები არასავალდებულოა.',
+    'Why list with us':'რატომ ჩვენთან','Reach active investors and sell faster.':'მიაღწიე აქტიურ ინვესტორებს და გაყიდე უფრო სწრაფად.',
+    'Investors with cash ready':'ინვესტორები მზა თანხით','Every investor states their available budget when they register.':'ყველა ინვესტორი რეგისტრაციისას უთითებს ხელმისაწვდომ ბიუჯეტს.',
+    'Your prices stay private':'შენი ფასები დახურული რჩება','Listings are visible only to signed-in investors, not the open internet.':'განცხადებებს მხოლოდ შესული ინვესტორები ხედავენ და არა მთელი ინტერნეტი.',
+    'Leads you can act on':'რეალური მოთხოვნები','Each lead shows the listing, the investor’s budget and their question.':'თითოეულ მოთხოვნაში ჩანს განცხადება, ინვესტორის ბიუჯეტი და მისი შეკითხვა.',
+    'How it works':'როგორ მუშაობს','From sign-up to qualified leads.':'რეგისტრაციიდან რეალურ მოთხოვნებამდე.',
+    'Step 1':'ნაბიჯი 1','Step 2':'ნაბიჯი 2','Step 3':'ნაბიჯი 3',
+    'Register your company':'დაარეგისტრირე კომპანია','We verify your company details before your first listing goes live.':'კომპანიის მონაცემებს ვამოწმებთ პირველი განცხადების გამოქვეყნებამდე.',
+    'Add your listing':'დაამატე განცხადება','Apartment or land plot, with floor plan, price, discount and cadastral code.':'ბინა ან მიწის ნაკვეთი გეგმით, ფასით, ფასდაკლებითა და საკადასტრო კოდით.',
+    'Leads come to you':'მოთხოვნები შენთან მოდის','Registered investors send interest. You receive each lead directly.':'დარეგისტრირებული ინვესტორები გიგზავნიან მოთხოვნას, შენ კი მას პირდაპირ იღებ.',
+    'New lead':'ახალი მოთხოვნა','Example':'მაგალითი','Listing':'განცხადება','Saburtalo · 65 m² · Floor 8':'საბურთალო · 65 m² · მე-8 სართული','Registered investor':'დარეგისტრირებული ინვესტორი',
+    'Available cash':'ხელმისაწვდომი თანხა','Interested in':'აინტერესებს','Apartments':'ბინები',
+    '“Is the 24-month installment plan available for this unit? I’d like to arrange a site visit.”':'„ამ ბინაზე 24-თვიანი განვადება ხელმისაწვდომია? მსურს ობიექტის დათვალიერება.“',
+    'Ready to reach serious investors?':'მზად ხარ სერიოზულ ინვესტორებთან შესახვედრად?',
+    'Register your company and add your first listing. Registration is free.':'დაარეგისტრირე კომპანია და დაამატე პირველი განცხადება. რეგისტრაცია უფასოა.',
+    // listing cards
+    'Apartment':'ბინა','Land plot':'მიწის ნაკვეთი','Verified':'გადამოწმებული','below market price':'საბაზროზე იაფი','Illustrative photo':'საილუსტრაციო ფოტო',
+    'Saburtalo, Tbilisi':'საბურთალო, თბილისი','Vake, Tbilisi':'ვაკე, თბილისი','Tskneti, Tbilisi':'წყნეთი, თბილისი',
+    'City view':'ქალაქის ხედი','Courtyard':'ეზოს ხედი','In development':'მშენებარე პროექტში',
+    'Size':'ფართი','Floor':'სართული','Ready':'ჩაბარება','Plot':'ნაკვეთი','Residential':'საცხოვრებელი',
+    '8 of 14':'8 / 14','8th':'მე-8','5th':'მე-5','Fits your budget':'ჯდება შენს ბიუჯეტში','View details':'დეტალები',
+    // investors page
+    'Find opportunities that match':'იპოვე შეთავაზებები, რომლებიც შეესაბამება','your budget.':'შენს ბიუჯეტს.',
+    'Discounted apartments and land plots from verified developers, visible only to registered investors.':'ფასდაკლებული ბინები და მიწის ნაკვეთები გადამოწმებული დეველოპერებისგან, ხილული მხოლოდ დარეგისტრირებული ინვესტორებისთვის.',
+    'Register as an investor':'დარეგისტრირდი ინვესტორად',
+    'Signed in as an investor. Listings that match your budget are below.':'შესული ხარ როგორც ინვესტორი. შენს ბიუჯეტზე მორგებული განცხადებები ქვემოთაა.',
+    'You’re signed in as a developer. Developers see their own listings and leads, not other developers’ offers.':'შესული ხარ როგორც დეველოპერი. დეველოპერი ხედავს საკუთარ განცხადებებსა და მოთხოვნებს და არა სხვა დეველოპერების შეთავაზებებს.',
+    'Members-only listings':'განცხადებები მხოლოდ წევრებისთვის','Verified developers':'გადამოწმებული დეველოპერები','Direct contact':'პირდაპირი კონტაქტი',
+    'Search':'ძიება','Opportunities from verified developers.':'შეთავაზებები გადამოწმებული დეველოპერებისგან.',
+    'Search listings':'განცხადებების ძიება','Try the filters':'სცადე ფილტრები','District / neighborhood':'რაიონი / უბანი','Saburtalo, Vake, Tskneti':'საბურთალო, ვაკე, წყნეთი',
+    'Property type':'ქონების ტიპი','All':'ყველა','Land':'მიწა','Discount':'ფასდაკლება','Any':'ნებისმიერი',
+    'Size range':'ფართის დიაპაზონი','Price range':'ფასის დიაპაზონი','By end of 2027':'2027 წლის ბოლომდე',
+    'Available cash budget':'ხელმისაწვდომი თანხა','Concept':'კონცეფცია','cash':'ნაღდი',
+    'Investors enter the cash they have on hand. The platform ranks listings that fit first and flags the rest.':'ინვესტორი უთითებს ხელთ არსებულ თანხას. პლატფორმა პირველ რიგში შესაფერის განცხადებებს აჩვენებს, დანარჩენს კი მონიშნავს.',
+    'Concept for further product design:':'კონცეფცია შემდგომი დამუშავებისთვის:','later versions could factor in developer installment plans.':'მომავალში შესაძლოა დეველოპერის განვადებაც გავითვალისწინოთ.',
+    'Sorted by':'დალაგება:','Budget fit, then discount':'ბიუჯეტით, შემდეგ ფასდაკლებით',
+    'No listings match these filters. Lower the discount or switch the property type.':'ამ ფილტრებით განცხადება ვერ მოიძებნა. შეამცირე ფასდაკლება ან შეცვალე ქონების ტიპი.',
+    'Example listings with illustrative prices and photos.':'მაგალითები საილუსტრაციო ფასებითა და ფოტოებით.',
+    'What you can do':'რა შეგიძლია','Everything you need to find the right deal.':'ყველაფერი, რაც სწორი გარიგების საპოვნელად გჭირდება.',
+    'Browse apartments and land':'დაათვალიერე ბინები და მიწა','Off-plan apartments and plots in developments, directly from developers.':'მშენებარე ბინები და ნაკვეთები სადეველოპერო პროექტებში, პირდაპირ დეველოპერებისგან.',
+    'Filter precisely':'ზუსტი ფილტრები','District, size, price, discount and construction completion date.':'რაიონი, ფართი, ფასი, ფასდაკლება და მშენებლობის დასრულების თარიღი.',
+    'Set your cash budget':'მიუთითე შენი ბიუჯეტი','Enter the cash you have available and see the listings that fit first.':'მიუთითე ხელმისაწვდომი თანხა და პირველ რიგში შესაფერისი განცხადებები ნახე.',
+    'Contact developers directly':'დაუკავშირდი დეველოპერებს პირდაპირ','Ask questions or arrange a site visit, with no middlemen.':'დასვი კითხვები ან დანიშნე დათვალიერება შუამავლების გარეშე.',
+    'Why invest here':'რატომ აქ','Access discounted off-plan and development opportunities.':'მიიღე წვდომა ფასდაკლებულ მშენებარე და სადეველოპერო შეთავაზებებზე.',
+    'Below-market prices':'საბაზროზე დაბალი ფასები','Developers offer discounted units to registered investors.':'დეველოპერები დარეგისტრირებულ ინვესტორებს ფასდაკლებულ ობიექტებს სთავაზობენ.',
+    'Verified listings':'გადამოწმებული განცხადებები','Developer details and cadastral codes are checked before publishing.':'დეველოპერის მონაცემები და საკადასტრო კოდები გამოქვეყნებამდე მოწმდება.',
+    'Early access':'ადრეული წვდომა','See off-plan opportunities before they reach the open market.':'ნახე მშენებარე შეთავაზებები ღია ბაზარზე გამოსვლამდე.',
+    'Three steps to your next investment.':'სამი ნაბიჯი შენს შემდეგ ინვესტიციამდე.',
+    'Register and set your budget':'დარეგისტრირდი და მიუთითე ბიუჯეტი','Tell us how much cash you have available and what interests you.':'მოგვიყევი, რა თანხა გაქვს და რა გაინტერესებს.',
+    'Search and filter':'მოძებნე და გაფილტრე','Listings that fit your budget appear first, with price, discount and floor plan.':'შენს ბიუჯეტზე მორგებული განცხადებები პირველი ჩანს, ფასით, ფასდაკლებითა და გეგმით.',
+    'Contact the developer':'დაუკავშირდი დეველოპერს','Send your interest. The developer replies to you directly.':'გაუგზავნე მოთხოვნა, დეველოპერი კი პირდაპირ გიპასუხებს.',
+    'See what fits your budget.':'ნახე, რა ჯდება შენს ბიუჯეტში.',
+    'Register in about a minute to unlock prices, discounts, locations and developer details.':'დარეგისტრირდი დაახლოებით ერთ წუთში და გახსენი ფასები, ფასდაკლებები, მისამართები და დეველოპერის მონაცემები.',
+    // platform
+    'Platform':'პლატფორმა','Platform logic':'პლატფორმის ლოგიკა','How a listing becomes a lead.':'როგორ იქცევა განცხადება მოთხოვნად.',
+    'Nine steps across three roles. Both sides register before they see listings or tools.':'ცხრა ნაბიჯი სამ როლს შორის. ორივე მხარე რეგისტრირდება, სანამ განცხადებებს ან ხელსაწყოებს ნახავს.',
+    'Swimlane diagram of the nine-step flow from developer listing to investor lead':'ცხრანაბიჯიანი სქემა: დეველოპერის განცხადებიდან ინვესტორის მოთხოვნამდე',
+    'Registration gate':'რეგისტრაციის ეტაპი','Supply side':'მიწოდება','Review & matching':'შემოწმება და შერჩევა','Demand side':'მოთხოვნა',
+    'Creates account,':'ქმნის ანგარიშს,','selects listing type':'ირჩევს ტიპს','Submits details':'ავსებს დეტალებს','+ optional media':'+ ფოტოები',
+    'Reviews and':'ამოწმებს და','publishes listing':'აქვეყნებს','Registers to':'რეგისტრირდება','unlock listings':'წვდომისთვის',
+    'Searches and':'ეძებს და','filters listings':'ფილტრავს','Enters available':'უთითებს','cash budget':'თავის ბიუჯეტს',
+    'Matches and ranks':'არჩევს და','relevant listings':'ალაგებს','Requests contact':'ითხოვს კონტაქტს','or shows interest':'ან ინტერესდება',
+    'Receives':'იღებს','the lead':'მოთხოვნას','· registration':'· რეგისტრაცია',
+    // footer
+    'A members-only marketplace for Georgian apartments and land, from developers to investors.':'დახურული პლატფორმა ბინებისა და მიწებისთვის საქართველოში, დეველოპერებიდან ინვესტორებამდე.',
+    'Pages':'გვერდები','Contact':'კონტაქტი','Copy':'კოპირება','Copied':'დაკოპირდა','Selected':'მონიშნულია','Tbilisi, Georgia':'თბილისი, საქართველო',
+    'Legal':'იურიდიული','Privacy policy':'კონფიდენციალურობის პოლიტიკა','Terms of use':'გამოყენების პირობები',
+    '© 2026 ARI Development · Photos: Unsplash':'© 2026 ARI Development · ფოტოები: Unsplash',
+    'Product concept for stakeholder review · Not a live service':'პროდუქტის კონცეფცია განსახილველად · არ არის მოქმედი სერვისი',
+    // auth modal
+    'Create your account':'შექმენი ანგარიში',
+    'Listings are visible only to members. Choose how you’ll use the platform.':'განცხადებები მხოლოდ წევრებისთვის ჩანს. აირჩიე, როგორ გამოიყენებ პლატფორმას.',
+    'Browse and contact':'ნახვა და დაკავშირება','List properties':'ქონების დამატება',
+    'Full name':'სახელი და გვარი','Email':'ელფოსტა','Phone':'ტელეფონი','Up to $50,000':'$50,000-მდე',
+    'Apartments and land':'ბინები და მიწა','Land plots':'მიწის ნაკვეთები',
+    'Company name':'კომპანიის სახელი','Company ID code':'საიდენტიფიკაციო კოდი','(9 digits)':'(9 ციფრი)','Website':'ვებსაიტი','(optional)':'(არასავალდებულო)',
+    'I agree to the Terms of use and Privacy policy.':'ვეთანხმები გამოყენების პირობებსა და კონფიდენციალურობის პოლიტიკას.',
+    'Create investor account':'ინვესტორის ანგარიშის შექმნა','Create developer account':'დეველოპერის ანგარიშის შექმნა',
+    'Concept demo. Nothing is sent or stored outside this browser tab.':'საჩვენებელი ვერსია. ამ ტაბის გარეთ არაფერი იგზავნება და არაფერი ინახება.',
+    'Welcome back':'კეთილი იყოს შენი დაბრუნება','Sign in to see listings and leads.':'შედი, რომ ნახო განცხადებები და მოთხოვნები.',
+    'Account type':'ანგარიშის ტიპი','(demo)':'(დემო)','Demo sign-in: no password needed. New here?':'დემო შესვლა: პაროლი არ სჭირდება. ახალი ხარ?','Create an account':'ანგარიშის შექმნა',
+    // toasts
+    'Investor account created (demo). Listings are now unlocked.':'ინვესტორის ანგარიში შეიქმნა (დემო). განცხადებები გაიხსნა.',
+    'Developer account created (demo). Your listing workspace is open.':'დეველოპერის ანგარიში შეიქმნა (დემო). განცხადების სამუშაო სივრცე გაიხსნა.',
+    'Signed in as a developer (demo).':'შეხვედი როგორც დეველოპერი (დემო).',
+    'Signed in as an investor (demo). Listings are unlocked.':'შეხვედი როგორც ინვესტორი (დემო). განცხადებები გაიხსნა.',
+    'Signed out. Listings and tools are hidden again.':'გამოხვედი. განცხადებები და ხელსაწყოები ისევ დამალულია.',
+    'Submitted for review (demo). Nothing was sent.':'განსახილველად გაიგზავნა (დემო). რეალურად არაფერი გაგზავნილა.',
+    'Draft saved (demo).':'მონახაზი შეინახა (დემო).',
+    'Details page with floor plan, cadastral code and developer contact (concept).':'დეტალების გვერდი გეგმით, საკადასტრო კოდითა და დეველოპერის კონტაქტით (კონცეფცია).',
+    // attributes
+    'Save listing':'შენახვა','Remove from saved':'შენახულიდან წაშლა','Close':'დახურვა','Listing type':'განცხადების ტიპი','Choose your side':'აირჩიე შენი მხარე',
+    'Search and filter':'ძიება და ფილტრები','Example lead':'მოთხოვნის მაგალითი','Breadcrumb':'ნავიგაცია','Listing form':'განცხადების ფორმა',
+    'Illustrative apartment interior':'საილუსტრაციო ინტერიერი','Illustrative land plot':'საილუსტრაციო ნაკვეთი'
+  };
+  var lang = 'en', orig = new WeakMap(), ATTRS = ['aria-label','alt','title'];
+  try { if (localStorage.getItem('bm-lang') === 'ka') lang = 'ka'; } catch(e){}
+  function norm(s){ return s.replace(/\s+/g, ' ').trim(); }
+  function translatePage(){
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: function(n){
+      var p = n.parentNode;
+      if (!p || p.nodeName === 'SCRIPT' || p.nodeName === 'STYLE') return NodeFilter.FILTER_REJECT;
+      return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }});
+    var n;
+    while ((n = w.nextNode())){
+      if (!orig.has(n)) orig.set(n, n.nodeValue);
+      var en = orig.get(n), out = en, k = KA[norm(en)];
+      if (lang === 'ka' && k){ out = en.match(/^\s*/)[0] + k + en.match(/\s*$/)[0]; }
+      if (n.nodeValue !== out) n.nodeValue = out;
+    }
+    $$('[aria-label],[alt],[title]').forEach(function(el){
+      if (el.closest('.lang')) return;
+      ATTRS.forEach(function(a){
+        if (!el.hasAttribute(a)) return;
+        var key = 'data-en-' + a, cur = el.getAttribute(a);
+        if (!el.hasAttribute(key) || (cur !== el.getAttribute(key) && cur !== KA[el.getAttribute(key)])) el.setAttribute(key, cur);
+        var en = el.getAttribute(key), out = (lang === 'ka' && KA[en]) ? KA[en] : en;
+        if (cur !== out) el.setAttribute(a, out);
+      });
+    });
+    measure();
+  }
+  var pending = false;
+  new MutationObserver(function(){
+    if (pending) return; pending = true;
+    requestAnimationFrame(function(){ pending = false; translatePage(); });
+  }).observe(document.body, { childList:true, subtree:true, characterData:true });
+  function setLang(l){
+    lang = l;
+    try { localStorage.setItem('bm-lang', l); } catch(e){}
+    document.documentElement.lang = l;
+    $$('[data-lang]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === l)); });
+    applyAuth(); update(); translatePage();
+  }
+  $$('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ setLang(b.dataset.lang); }); });
+
+  /* ---------- Boot ---------- */
+  route();
+  setLang(lang);
+  measure();
+})();
+</script>
+</body>
+</html>
