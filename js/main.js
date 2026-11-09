@@ -48,7 +48,6 @@
       b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     });
 
-    renderProjects();
     renderMap();
     document.dispatchEvent(new CustomEvent("langchange", { detail: lang }));
   }
@@ -56,13 +55,6 @@
   document.querySelectorAll("[data-lang]").forEach(function (b) {
     b.addEventListener("click", function () { applyLang(b.dataset.lang); });
   });
-
-  /* ---------- projects ---------- */
-
-  function renderProjects() {
-    var countEl = document.getElementById("project-count");
-    if (countEl) countEl.dataset.count = PROJECTS.length;
-  }
 
   /* ---------- hero map ---------- */
 
