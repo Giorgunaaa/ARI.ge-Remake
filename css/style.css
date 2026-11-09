@@ -137,10 +137,13 @@ body.nav-open { overflow: hidden; }
 /* map pins: green teardrop with the project photo */
 .pin { background: none; border: 0; }
 .pin-drop {
-  display: block; padding: 3px; background: var(--pin);
+  display: block; padding: 1.5px; background: var(--pin);
   border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
   box-shadow: -2px 4px 10px rgba(20, 55, 36, .3);
+  transition: padding .3s cubic-bezier(.2, .8, .3, 1.15);
 }
+/* the hover scale would thicken the ring too, so shrink it by the same factor */
+.pin:hover .pin-drop, .pin:focus-visible .pin-drop { padding: calc(2.5px / var(--grow, 2.4)); }
 .leaflet-container .pin-drop img {
   display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
   transform: rotate(45deg);
