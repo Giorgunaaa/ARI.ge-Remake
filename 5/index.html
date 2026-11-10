@@ -530,25 +530,44 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .ws-head{display:flex;justify-content:center;text-align:center;margin-bottom:28px}
 .ws-head .sec-head{margin-bottom:0;justify-items:center}
 .dev-grid{display:grid;gap:24px;max-width:920px;margin-inline:auto}
-.choice{display:grid;gap:12px;scroll-margin-top:calc(var(--head-h) + 20px)}
-.choice-label{font-size:14px;font-weight:600;color:var(--ink-3);text-align:center}
+.choice{display:grid;grid-template-columns:minmax(0,168px) minmax(0,1fr);gap:20px;align-items:center;padding:20px;border-radius:var(--r-lg);background:var(--band);border:1px solid var(--line);scroll-margin-top:calc(var(--head-h) + 20px)}
+.choice-head{display:grid;gap:10px;justify-items:start;min-width:0}
+.choice-step{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.choice-step::after{content:"";display:block;width:28px;height:2px;margin-top:10px;border-radius:2px;background:var(--accent-ink)}
+.choice-label{font-family:var(--f-display);font-size:clamp(22px,2.4vw,27px);font-weight:600;line-height:1.15;letter-spacing:-.01em;color:var(--ink)}
+.choice-hint{margin:0;font-size:13px;line-height:1.45;color:var(--ink-3)}
 .choice-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.choice-hint{margin:2px 0 0;text-align:center;font-size:13.5px;color:var(--ink-3)}
 .ws-form{display:grid;gap:18px;min-width:0}
 @media (prefers-reduced-motion:no-preference){.ws-form:not([hidden]){animation:wsIn .28s ease-out}}
 @keyframes wsIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.choice-opt{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:100%;height:100%;text-align:left;padding:16px 44px 16px 16px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:border-color .15s, box-shadow .15s}
+.choice-opt{position:relative;display:flex;flex-direction:column;gap:10px;width:100%;height:100%;text-align:left;padding:14px 12px 14px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:border-color .15s, background .15s, transform .15s}
 .choice-opt:hover{border-color:var(--line-2)}
-.choice-opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.choice-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--band);color:var(--ink);flex:none}
-.choice-opt[aria-pressed="true"] .choice-ico{background:var(--accent-soft);color:var(--accent-ink)}
-.choice-ico svg{width:24px;height:24px}
+.choice-opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+@media (prefers-reduced-motion:no-preference){.choice-opt:hover{transform:translateY(-2px)}}
+.choice-art{display:block;min-width:0}
+.il{display:block;width:100%;height:auto}
+.il *{stroke-linejoin:round;stroke-linecap:round}
+.il-w{fill:var(--card);stroke:var(--ink);stroke-width:.9}
+.il-sh{fill:color-mix(in srgb,#E9D6A6 42%,var(--card));stroke:var(--ink);stroke-width:.9}
+.il-awn{fill:color-mix(in srgb,#E9D6A6 55%,var(--card));stroke:var(--ink);stroke-width:.9}
+.il-s{fill:none;stroke:var(--ink);stroke-width:.9}
+.il-g{fill:none;stroke:var(--ink-3);stroke-width:.8}
+.il-win{fill:var(--accent-ink);fill-opacity:.85;stroke:var(--ink);stroke-width:.6}
+.il-glass{fill:color-mix(in srgb,var(--accent-ink) 22%,var(--card));stroke:var(--ink);stroke-width:.9}
+.il-glassd{fill:color-mix(in srgb,var(--accent-ink) 55%,var(--card));stroke:var(--ink);stroke-width:.7}
+.il-rail{fill:color-mix(in srgb,#4E9A6B 45%,var(--card));stroke:var(--ink);stroke-width:.6}
+.il-shine{fill:none;stroke:var(--card);stroke-width:.9;opacity:.8}
+.il-leaf{fill:color-mix(in srgb,#4E9A6B 34%,var(--card));stroke:var(--ink);stroke-width:.9}
+.il-grass{fill:none;stroke:#4E9A6B;stroke-width:1}
+.il-plot{fill:color-mix(in srgb,#E9D6A6 38%,var(--card));stroke:none}
+.il-post{fill:color-mix(in srgb,var(--accent-ink) 40%,var(--card));stroke:var(--ink);stroke-width:.8}
+.il-d{fill:none;stroke:var(--ink);stroke-width:1;stroke-dasharray:4.5 3;stroke-linecap:butt}
 .choice-txt{display:grid;gap:2px;min-width:0}
-.choice-txt b{font-weight:600;font-size:15.5px}
-.choice-txt span{font-size:13.5px;color:var(--ink-3)}
-.choice-radio{position:absolute;top:16px;right:16px;width:20px;height:20px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
-.choice-opt[aria-pressed="true"] .choice-radio{border-color:var(--accent)}
-.choice-opt[aria-pressed="true"] .choice-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.choice-txt b{font-weight:700;font-size:14.5px;line-height:1.3}
+.choice-txt span{display:none;font-size:13px;color:var(--ink-3)}
+.choice-check{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;opacity:0;transform:scale(.6);transition:opacity .15s, transform .15s}
+.choice-check svg{width:14px;height:14px}
+.choice-opt[aria-pressed="true"] .choice-check{opacity:1;transform:none}
 .preview{display:grid;gap:10px}
 .preview-head{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;font-weight:600;color:var(--ink-3)}
 .mock{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;min-width:0}
@@ -605,7 +624,8 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .fp-thin{stroke:var(--ink-3);fill:none}
 .fp-text{fill:var(--ink-3);font-family:var(--f-mono);font-size:9px}
 .fp-big{fill:var(--ink);font-family:var(--f-mono);font-size:11px;font-weight:500}
-@media (max-width:760px){.choice-opts{grid-template-columns:1fr}.choice-opt{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}.choice-radio{position:static;margin-left:auto}}
+@media (max-width:860px){.choice{grid-template-columns:1fr;gap:16px}}
+@media (max-width:620px){.choice{padding:16px}.choice-opts{grid-template-columns:1fr}.choice-opt{flex-direction:row;align-items:center;gap:12px;padding:10px 44px 10px 10px}.choice-art{width:104px;flex:none}.choice-txt span{display:block}.choice-check{top:50%;margin-top:-12px}}
 @media (max-width:600px){
   .fields{grid-template-columns:1fr;padding:18px}
   @supports (grid-template-rows:subgrid){.fields{padding-bottom:2px}}
@@ -943,25 +963,28 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       </div>
       <div class="dev-grid">
           <div class="choice" role="group" aria-label="Listing type">
-            <span class="choice-label">What are you listing?</span>
+            <div class="choice-head">
+              <span class="choice-step">Step 1 of 3</span>
+              <span class="choice-label">What are you listing?</span>
+              <p class="choice-hint" id="wsHint">Choose a type and its form opens below.</p>
+            </div>
             <div class="choice-opts">
             <button class="choice-opt" type="button" data-tab="apartment" aria-pressed="false">
-              <span class="choice-ico"><svg aria-hidden="true"><use href="#i-building"/></svg></span>
+              <span class="choice-art"><svg class="il" viewBox="0 0 228 100" aria-hidden="true"><path class="il-g" d="M25 92.5H201"/><polygon class="il-glassd" points="51,36.4 75.5,29.3 75.5,92 51,92"/><polygon class="il-rail" points="51,42.6 75.5,36.2 75.5,41.8 51,47.5"/><polygon class="il-w" points="49,47.5 75.5,41.8 75.5,49.1 49,54"/><polygon class="il-rail" points="51,56.4 75.5,51.8 75.5,57.4 51,61.3"/><polygon class="il-w" points="49,61.3 75.5,57.4 75.5,64.5 49,67.6"/><polygon class="il-rail" points="51,70.1 75.5,67.2 75.5,72.9 51,75"/><polygon class="il-w" points="49,75 75.5,72.9 75.5,79.9 49,81.3"/><polygon class="il-w" points="48.5,33.5 75.5,26 75.5,31.6 48.5,38.5"/><polygon class="il-w" points="51,81.3 54.4,81.1 54.4,92 51,92"/><polygon class="il-w" points="63.2,80.6 66.7,80.4 66.7,92 63.2,92"/><polygon class="il-w" points="155.5,45.8 170,51.3 170,92 155.5,92"/><polygon class="il-glassd" points="157.2,51.9 168.3,55.6 168.3,92 157.2,92"/><polygon class="il-rail" points="156.2,58.2 170,62 170,68 156.2,64.9"/><polygon class="il-rail" points="156.2,72.7 170,74.9 170,79.6 156.2,78"/><polygon class="il-w" points="155.5,45.8 172,51.3 172,55.4 155.5,50.4"/><polygon class="il-sh" points="75.5,19.5 105.5,8.5 105.5,92 75.5,92"/><polygon class="il-w" points="105.5,8.5 155.5,32 155.5,92 105.5,92"/><polygon class="il-win" points="83.8,26.7 88,25.3 88,38 83.8,39.1"/><polygon class="il-win" points="83.8,42.9 88,41.9 88,54.2 83.8,55"/><polygon class="il-win" points="83.8,59.5 88,58.9 88,72 83.8,72.4"/><polygon class="il-win" points="83.8,76.1 88,75.8 88,88.7 83.8,88.8"/><polygon class="il-win" points="93.8,23.5 98.8,21.9 98.8,35.3 93.8,36.6"/><polygon class="il-win" points="93.8,40.5 98.8,39.3 98.8,52.3 93.8,53.2"/><polygon class="il-win" points="93.8,57.9 98.8,57.2 98.8,70.9 93.8,71.4"/><polygon class="il-win" points="93.8,75.4 98.8,75 98.8,88.5 93.8,88.6"/><polygon class="il-win" points="112.5,22 117.5,24 117.5,37 112.5,35.4"/><polygon class="il-win" points="112.5,39.1 117.5,40.6 117.5,53.5 112.5,52.4"/><polygon class="il-win" points="112.5,57.5 117.5,58.5 117.5,71 112.5,70.3"/><polygon class="il-win" points="112.5,74.8 117.5,75.3 117.5,88.9 112.5,88.8"/><polygon class="il-win" points="144.5,34 149.5,36.1 149.5,47.1 144.5,45.4"/><polygon class="il-win" points="144.5,49.3 149.5,50.9 149.5,61.8 144.5,60.7"/><polygon class="il-win" points="144.5,64.6 149.5,65.6 149.5,75.4 144.5,74.7"/><polygon class="il-win" points="144.5,79.3 149.5,79.8 149.5,88.9 144.5,88.7"/><polygon class="il-glassd" points="123,21.7 138,28.3 138,92 123,92"/><polygon class="il-rail" points="123,32.2 138,37.8 138,47.3 123,42.7"/><polygon class="il-rail" points="123,49.1 138,53.1 138,61.6 123,58.5"/><polygon class="il-rail" points="123,66.4 138,68.8 138,75.6 123,73.9"/><path class="il-s" d="M130.5 77.7L130.5 92"/><path class="il-leaf" d="M27 92a4 3 0 0 1 8 0z"/><path class="il-leaf" d="M43.5 92a4.5 3.4 0 0 1 9 0z"/><path class="il-leaf" d="M75 92a5 3.8 0 0 1 10 0z"/><path class="il-leaf" d="M86.5 92a6.5 4.9 0 0 1 13 0z"/><path class="il-leaf" d="M102 92a5 3.8 0 0 1 10 0z"/><path class="il-leaf" d="M128.5 92a5.5 4.1 0 0 1 11 0z"/><path class="il-leaf" d="M155.5 92a4.5 3.4 0 0 1 9 0z"/><path class="il-leaf" d="M183 92a4 3 0 0 1 8 0z"/><path class="il-s" d="M39 76.5V92"/><path class="il-leaf" d="M49.5 74A5.2 5.2 0 0 1 44.1 80A5.2 5.2 0 0 1 35.7 80.7A5.2 5.2 0 0 1 29.3 75.7A5.2 5.2 0 0 1 28.5 68A5.2 5.2 0 0 1 33.9 62A5.2 5.2 0 0 1 42.3 61.3A5.2 5.2 0 0 1 48.7 66.3A5.2 5.2 0 0 1 49.5 74Z"/><path class="il-s" d="M39 68.8V81.5M39 76.5L34.4 71.2M39 76.5L43.6 71.2"/><path class="il-s" d="M176 83.8V92"/><path class="il-leaf" d="M182.6 83.3A4 4 0 0 1 177.3 86.8A4 4 0 0 1 171 85.2A4 4 0 0 1 168.5 79.6A4 4 0 0 1 171.6 74.4A4 4 0 0 1 178 73.4A4 4 0 0 1 182.9 77.3A4 4 0 0 1 182.6 83.3Z"/><path class="il-s" d="M176 78.5V87.1M176 83.8L172.8 80.2M176 83.8L179.2 80.2"/></svg></span>
               <span class="choice-txt"><b>Apartment in a residential building</b><span>Off-plan or under construction</span></span>
-              <span class="choice-radio" aria-hidden="true"></span>
+              <span class="choice-check" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
             </button>
             <button class="choice-opt" type="button" data-tab="land" aria-pressed="false">
-              <span class="choice-ico"><svg aria-hidden="true"><use href="#i-land"/></svg></span>
+              <span class="choice-art"><svg class="il" viewBox="0 0 230 100" aria-hidden="true"><path class="il-s" d="M75 48V62.5"/><path class="il-leaf" d="M90.7 42.9A6.8 6.8 0 0 1 85 51.5A6.8 6.8 0 0 1 74.6 54.7A6.8 6.8 0 0 1 64.4 51A6.8 6.8 0 0 1 59.2 42.2A6.8 6.8 0 0 1 61.4 32.3A6.8 6.8 0 0 1 69.9 26A6.8 6.8 0 0 1 80.9 26.3A6.8 6.8 0 0 1 89.1 33A6.8 6.8 0 0 1 90.7 42.9Z"/><path class="il-s" d="M75 36.8V55.2M75 48L68.3 40.3M75 48L81.7 40.3"/><path class="il-s" d="M148 38.8V59"/><path class="il-leaf" d="M161.6 37.8A6.6 6.6 0 0 1 153.6 44.3A6.6 6.6 0 0 1 143 44.5A6.6 6.6 0 0 1 134.8 38.4A6.6 6.6 0 0 1 132.7 28.9A6.6 6.6 0 0 1 137.8 20.3A6.6 6.6 0 0 1 147.6 16.7A6.6 6.6 0 0 1 157.7 19.9A6.6 6.6 0 0 1 163.2 28.2A6.6 6.6 0 0 1 161.6 37.8Z"/><path class="il-s" d="M148 27.9V45.7M148 38.8L141.5 31.3M148 38.8L154.5 31.3"/><path class="il-s" d="M168 45.8V62.5"/><path class="il-leaf" d="M179.4 41.1A5.5 5.5 0 0 1 175.3 48.2A5.5 5.5 0 0 1 166.9 50.5A5.5 5.5 0 0 1 159.1 46.7A5.5 5.5 0 0 1 156.6 38.9A5.5 5.5 0 0 1 160.7 31.8A5.5 5.5 0 0 1 169.1 29.5A5.5 5.5 0 0 1 176.9 33.3A5.5 5.5 0 0 1 179.4 41.1Z"/><path class="il-s" d="M168 37.7V50.9M168 45.8L163.2 40.2M168 45.8L172.8 40.2"/><polygon class="il-plot" points="42.5,72.5 119,53 191,67.5 126,90"/><path class="il-d" d="M25 77L119 53L209 71.3M42.5 72.5L126 90L191 67.5"/><rect class="il-post" x="117" y="46" width="4" height="9.5" rx="2"/><ellipse class="il-w" cx="119" cy="47.7" rx="2" ry="1.2"/><rect class="il-post" x="40.2" y="63.5" width="4.6" height="12.5" rx="2.3"/><ellipse class="il-w" cx="42.5" cy="65.4" rx="2.3" ry="1.4"/><rect class="il-post" x="188.6" y="58" width="4.8" height="13.5" rx="2.4"/><ellipse class="il-w" cx="191" cy="60" rx="2.4" ry="1.4"/><rect class="il-post" x="123.3" y="80.5" width="5.4" height="15.5" rx="2.7"/><ellipse class="il-w" cx="126" cy="82.8" rx="2.7" ry="1.6"/><path class="il-g" d="M183 84.8h17"/><path class="il-grass" d="M187.5 84.5q.6-3.6 2.4-5M190.8 84.5q0-4.6 1-6.6M194 84.5q.8-3 3-4.2"/></svg></span>
               <span class="choice-txt"><b>Land plot in a development</b><span>Serviced or planned plots</span></span>
-              <span class="choice-radio" aria-hidden="true"></span>
+              <span class="choice-check" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
             </button>
             <button class="choice-opt" type="button" data-tab="commercial" aria-pressed="false">
-              <span class="choice-ico"><svg aria-hidden="true"><use href="#i-store"/></svg></span>
+              <span class="choice-art"><svg class="il" viewBox="0 0 232 100" aria-hidden="true"><path class="il-g" d="M22 90.5H212"/><path class="il-s" d="M194 70.2V89.5"/><path class="il-leaf" d="M206.1 66.8A5.9 5.9 0 0 1 200.4 73.9A5.9 5.9 0 0 1 190.9 75.1A5.9 5.9 0 0 1 183.2 69.9A5.9 5.9 0 0 1 181.9 61.2A5.9 5.9 0 0 1 187.6 54.1A5.9 5.9 0 0 1 197.1 52.9A5.9 5.9 0 0 1 204.8 58.1A5.9 5.9 0 0 1 206.1 66.8Z"/><path class="il-s" d="M194 61.5V75.9M194 70.2L188.8 64.2M194 70.2L199.2 64.2"/><path class="il-leaf" d="M181 89.5a3.5 2.6 0 0 1 7 0z"/><polygon class="il-w" points="57,30.5 153.5,24 153.5,90 57,90"/><polygon class="il-sh" points="153.5,24 180.5,34 180.5,89 153.5,90"/><polygon class="il-glass" points="67,53.9 81.1,53.3 81.1,89.1 67,89.1"/><polygon class="il-glass" points="81.1,53.3 95.5,52.7 95.5,89.1 81.1,89.1"/><polygon class="il-glass" points="97.5,52.7 113.7,52 113.7,82.1 97.5,82.2"/><polygon class="il-glass" points="114.9,52 130.5,51.3 130.5,81.9 114.9,82.1"/><polygon class="il-glass" points="131.8,51.3 145,50.7 145,81.8 131.8,81.9"/><polygon class="il-w" points="97.5,82.2 145,81.8 145,89 97.5,89.1"/><path class="il-s" d="M78.7 71.7L78.7 75.4M83.5 71.6L83.5 75.3"/><path class="il-shine" d="M102.4 60L107.2 54.8M119.7 62L126.5 54.7M136.1 60.2L141 54.8M71.5 65.8L76.3 59.6"/><polygon class="il-glassd" points="164.6,47.8 172.4,49.7 172.4,82.3 164.6,82.2"/><polygon class="il-w" points="164.6,82.2 172.4,82.3 172.4,88.4 164.6,88.7"/><polygon class="il-glassd" points="146,39 146,51.2 132.5,52"/><polygon class="il-awn" points="60,43 146,39 132.5,52 47,54"/><path class="il-s" d="M74.3 42.3L61.2 53.7M88.7 41.7L75.5 53.3M103 41L89.8 53M117.3 40.3L104 52.7M131.7 39.7L118.2 52.3"/><path class="il-s" d="M47 55.6L132.5 53.6"/><path class="il-leaf" d="M46.5 82Q37.8 77.7 38 74.5Q42.2 78.8 46.5 82ZM46.5 82Q40.4 74.7 42 68.5Q44.9 75.8 46.5 82ZM46.5 82Q44.3 73.7 46.5 66.5Q48.7 74.8 46.5 82ZM46.5 82Q48.1 74.9 51 69Q52.6 76.1 46.5 82ZM46.5 82Q50.6 77.9 54.8 75Q55.1 79.1 46.5 82Z"/><polygon class="il-post" points="41,82 52,82 50.8,90.5 42.2,90.5"/></svg></span>
               <span class="choice-txt"><b>Commercial space</b><span>Retail, office or restaurant unit</span></span>
-              <span class="choice-radio" aria-hidden="true"></span>
+              <span class="choice-check" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
             </button>
             </div>
-            <p class="choice-hint" id="wsHint">Choose a type and its form opens below.</p>
           </div>
 
         <div class="ws-form" id="wsForm" hidden>
@@ -2451,6 +2474,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Your workspace':'შენი სამუშაო სივრცე','Create a new listing.':'შექმენი ახალი განცხადება.',
     'Required fields keep listings comparable. Optional ones help yours stand out.':'სავალდებულო ველები განცხადებებს შესადარებელს ხდის. არასავალდებულო ველები შენსას გამოარჩევს.',
     'What are you listing?':'რას ამატებ?','Apartment in a residential building':'ბინა საცხოვრებელ კორპუსში','Off-plan or under construction':'პროექტის ეტაპზე ან მშენებარე',
+    'Step 1 of 3':'ნაბიჯი 1 / 3',
     'Choose a type and its form opens below.':'აირჩიე ტიპი და მისი ფორმა ქვემოთ გაიხსნება.',
     'Handover condition':'ჩაბარების მდგომარეობა','Black frame':'შავი კარკასი','White frame':'თეთრი კარკასი','Green frame':'მწვანე კარკასი','Renovated':'რემონტით',
     'Shown to investors on the listing card':'ინვესტორებს განცხადების ბარათზე უჩანთ',
