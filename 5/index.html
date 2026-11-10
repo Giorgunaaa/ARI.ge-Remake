@@ -2089,7 +2089,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   /* completion: the next twelve quarters */
   (function(){
     var d = new Date(), q = Math.floor(d.getMonth() / 3) + 1, y = d.getFullYear(), opts = '';
-    for (var i = 0; i < 12; i++){ q++; if (q > 4){ q = 1; y++; } opts += '<option>Q' + q + ' ' + y + '</option>'; }
+    for (var i = 0; i < 12; i++){ q++; if (q > 4){ q = 1; y++; } opts += '<option value="Q' + q + ' ' + y + '">Q' + q + ' ' + y + '</option>'; }
     $$('select[name="ready"]').forEach(function(sel){ sel.insertAdjacentHTML('beforeend', opts); });
   })();
 
@@ -3042,6 +3042,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   var lang = 'en', orig = new WeakMap(), ATTRS = ['aria-label','alt','title','placeholder'];
   try { if (localStorage.getItem('bm-lang') === 'ka') lang = 'ka'; } catch(e){}
   function norm(s){ return s.replace(/\s+/g, ' ').trim(); }
+  /* completion quarters are stored as 'Q3 2027'; the Georgian page shows 'III კვარტალი 2027' */
+  function kaQuarter(t, short){ var m = /^Q([1-4]) (\d{4})$/.exec(t); return m ? ['I', 'II', 'III', 'IV'][m[1] - 1] + (short ? ' კვ. ' : ' კვარტალი ') + m[2] : null; }
   function translatePage(){
     var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: function(n){
       var p = n.parentNode;
@@ -3051,7 +3053,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var n;
     while ((n = w.nextNode())){
       if (!orig.has(n)) orig.set(n, n.nodeValue);
-      var en = orig.get(n), out = en, k = KA[norm(en)];
+      var en = orig.get(n), out = en, k = KA[norm(en)] || kaQuarter(norm(en), !!(n.parentNode.closest && n.parentNode.closest('.specs')));
       if (lang === 'ka' && k){ out = en.match(/^\s*/)[0] + k + en.match(/\s*$/)[0]; }
       if (n.nodeValue !== out) n.nodeValue = out;
     }
