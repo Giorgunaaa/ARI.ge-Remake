@@ -562,7 +562,14 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 22px;background:var(--band);border-bottom:1px solid var(--line);font-size:13px;color:var(--ink-2)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 18px;padding:22px}
-.field{display:grid;gap:7px;min-width:0}
+.field{display:grid;gap:7px;min-width:0;align-content:start}
+/* label, input and hint share rows across a pair of fields, so neighbours always line up */
+@supports (grid-template-rows:subgrid){
+  .fields{row-gap:0;padding-bottom:6px}
+  .fields>.field{grid-row:span 3;grid-template-rows:subgrid;gap:0;padding-bottom:16px}
+  .fields>.field>.field-label{align-self:end;margin-bottom:7px}
+  .fields>.field>.hint{margin-top:7px}
+}
 .field.full{grid-column:1/-1}
 .field-label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
 .req,.opt{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:6px;white-space:nowrap}
@@ -601,6 +608,7 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 @media (max-width:760px){.choice-opts{grid-template-columns:1fr}.choice-opt{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}.choice-radio{position:static;margin-left:auto}}
 @media (max-width:600px){
   .fields{grid-template-columns:1fr;padding:18px}
+  @supports (grid-template-rows:subgrid){.fields{padding-bottom:2px}}
   .mock-head,.legend,.mock-foot{padding-left:18px;padding-right:18px}
   .drop{grid-template-columns:1fr}
   .drop svg.fp{width:100%;max-width:240px}
