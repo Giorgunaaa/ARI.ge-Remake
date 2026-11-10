@@ -601,8 +601,13 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .input.area{align-items:flex-start;min-height:76px;padding-block:11px;line-height:1.45;color:var(--ink-2);font-size:14px}
 .hint{font-size:12.5px;color:var(--ink-3)}
 .hint-accent{color:var(--accent-ink);font-weight:600}
-.drop{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;padding:14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);background:var(--field)}
+.drop{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px;border:1.5px dashed var(--line-2);border-radius:var(--r-md);background:var(--field)}
 .drop svg.fp{width:150px;height:auto;display:block}
+.drop-prev{width:150px;aspect-ratio:200/130;border-radius:8px;border:1px solid var(--line);background:var(--card);overflow:hidden;display:grid;place-items:center}
+.drop-prev img{width:100%;height:100%;object-fit:contain;display:block}
+.drop-file{display:grid;justify-items:center;gap:4px;color:var(--ink-3);font-family:var(--f-mono);font-size:12px;font-weight:500}
+.drop-file svg{width:30px;height:30px}
+.drop-add{white-space:nowrap}
 .drop-meta{display:grid;gap:4px;min-width:0}
 .drop-meta b{font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .drop-meta span{font-size:13px;color:var(--ink-3)}
@@ -631,7 +636,8 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
   @supports (grid-template-rows:subgrid){.fields{padding-bottom:2px}}
   .mock-head,.legend,.mock-foot{padding-left:18px;padding-right:18px}
   .drop{grid-template-columns:1fr}
-  .drop svg.fp{width:100%;max-width:240px}
+  .drop svg.fp,.drop-prev{width:100%;max-width:240px}
+  .drop-add{justify-self:start}
   .mock-foot .btns{width:100%}
   .mock-foot .btns .btn{flex:1}
 }
@@ -1017,6 +1023,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                   <span>1.2 MB · PDF, DWG or JPG</span>
                   <span class="file-ok"><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span>
                 </div>
+                <button class="btn btn-outline btn-sm drop-add" type="button" data-plan-add aria-label="Upload floor plan">+ Add</button>
+                <input type="file" accept=".pdf,.dwg,image/*" hidden data-plan-input>
               </div>
             </div>
             <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input">65<span class="unit">m²</span></div></div>
@@ -1078,6 +1086,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                   <span>1.4 MB · PDF, DWG or JPG</span>
                   <span class="file-ok"><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span>
                 </div>
+                <button class="btn btn-outline btn-sm drop-add" type="button" data-plan-add aria-label="Upload floor plan">+ Add</button>
+                <input type="file" accept=".pdf,.dwg,image/*" hidden data-plan-input>
               </div>
             </div>
             <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input">120<span class="unit">m²</span></div></div>
@@ -2010,6 +2020,32 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     }
     $('#statRev').textContent = String(+$('#statRev').textContent + 1);
   }); });
+  /* listing form: upload the floor plan (replaces the one shown) */
+  $$('[data-plan-add]').forEach(function(btn){
+    var box = btn.closest('.drop'), inp = box.querySelector('[data-plan-input]');
+    btn.addEventListener('click', function(){ inp.click(); });
+    inp.addEventListener('change', function(){
+      var file = inp.files && inp.files[0]; inp.value = '';
+      if (!file) return;
+      var ext = (file.name.split('.').pop() || '').toLowerCase(), isImg = file.type.indexOf('image/') === 0;
+      if (!isImg && ext !== 'pdf' && ext !== 'dwg'){ toast('Use a PDF, DWG or image file.'); return; }
+      var prev = box.querySelector('.drop-prev');
+      if (!prev){ prev = document.createElement('div'); prev.className = 'drop-prev'; box.insertBefore(prev, box.firstChild); box.querySelector('svg.fp').style.display = 'none'; }
+      if (prev.dataset.url) URL.revokeObjectURL(prev.dataset.url);
+      delete prev.dataset.url;
+      if (isImg){
+        prev.dataset.url = URL.createObjectURL(file);
+        prev.innerHTML = '<img alt="">'; prev.firstChild.src = prev.dataset.url;
+      } else {
+        prev.innerHTML = '<span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span>';
+        prev.querySelector('.drop-file span').textContent = ext.toUpperCase();
+      }
+      var kb = file.size / 1024, meta = box.querySelector('.drop-meta');
+      meta.querySelector('b').textContent = file.name;
+      meta.querySelector('span').textContent = (kb < 1024 ? Math.max(1, Math.round(kb)) + ' KB' : (kb / 1024).toFixed(1) + ' MB') + ' · ' + ext.toUpperCase();
+      toast('Floor plan added.');
+    });
+  });
   /* listing form: add and remove photos */
   var MAX_PHOTOS = 10;
   $$('[data-photo-input]').forEach(function(inp){
@@ -2255,6 +2291,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Developer lists a property':'დეველოპერი ამატებს ქონებას','Investor filters by budget':'ინვესტორი ფილტრავს ბიუჯეტით','They connect directly':'ისინი პირდაპირ უკავშირდებიან',
     'How the platform works':'როგორ მუშაობს პლატფორმა','© 2026 ARI Development':'© 2026 ARI Development','Investment platform':'საინვესტიციო პლატფორმა','ARI home':'ARI მთავარი',
     'Full diagram':'სრული სქემა',
+    'Upload floor plan':'გეგმის ატვირთვა','Floor plan added.':'გეგმა დაემატა.','Use a PDF, DWG or image file.':'გამოიყენე PDF, DWG ან სურათის ფაილი.',
     'Remove photo':'ფოტოს წაშლა','You can add up to 10 photos.':'შეგიძლია დაამატო მაქსიმუმ 10 ფოტო.','Photo added.':'ფოტო დაემატა.',
     "Edit listing":"განცხადების რედაქტირება",
     "Replace photo":"ფოტოს შეცვლა",
