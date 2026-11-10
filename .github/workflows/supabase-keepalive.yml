@@ -26,3 +26,11 @@ jobs:
           curl --fail --silent --show-error --max-time 30 \
             "$URL/rest/v1/units?select=id&limit=1" \
             -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
+      # მეორე პროექტი: საინვესტიციო პლატფორმა (designhub.ge/5). URL და საჯარო key — 5/index.html-იდან.
+      - name: Read one row (investment platform)
+        run: |
+          URL=$(grep -oP "SB_URL = '\K[^']+" 5/index.html)
+          KEY=$(grep -oP "SB_KEY = '\K[^']+" 5/index.html)
+          curl --fail --silent --show-error --max-time 30 \
+            "$URL/rest/v1/platform_listings?select=id&limit=1" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
