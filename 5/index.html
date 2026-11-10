@@ -486,8 +486,11 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .my-card .listing-body{padding:14px;gap:10px}
 .my-card .listing-loc{font-size:13px}
 .my-card .listing-loc .chip{display:none}
+.my-card .listing-loc .chip-cond{display:inline-flex;font-size:11.5px}
 .my-card .listing-price strong{font-size:21px}
 .my-card .listing-price .was{font-size:14px}
+.my-card .listing-price{gap:4px 7px}
+.my-card .listing-price .price-pct{font-size:11.5px;padding:1px 6px}
 .my-card .price-meta{font-size:12.5px;margin-top:-4px}
 .my-card .specs div{padding:7px 9px}
 .my-card .specs dt{font-size:10.5px}
@@ -524,13 +527,17 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .final p{color:var(--on-navy-2);font-size:1.08rem;max-width:50ch}
 
 /* Workspace (signed-in tools) */
-.ws-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px;margin-bottom:28px}
-.ws-head .sec-head{margin-bottom:0}
-.dev-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,56px);align-items:start}
-.dev-side{display:grid;gap:22px;min-width:0}
-.choice{display:grid;gap:10px}
-.choice-label{font-size:13px;font-weight:600;color:var(--ink-3)}
-.choice-opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:border-color .15s, box-shadow .15s}
+.ws-head{display:flex;justify-content:center;text-align:center;margin-bottom:28px}
+.ws-head .sec-head{margin-bottom:0;justify-items:center}
+.dev-grid{display:grid;gap:24px;max-width:920px;margin-inline:auto}
+.choice{display:grid;gap:12px;scroll-margin-top:calc(var(--head-h) + 20px)}
+.choice-label{font-size:14px;font-weight:600;color:var(--ink-3);text-align:center}
+.choice-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.choice-hint{margin:2px 0 0;text-align:center;font-size:13.5px;color:var(--ink-3)}
+.ws-form{display:grid;gap:18px;min-width:0}
+@media (prefers-reduced-motion:no-preference){.ws-form:not([hidden]){animation:wsIn .28s ease-out}}
+@keyframes wsIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.choice-opt{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:100%;height:100%;text-align:left;padding:16px 44px 16px 16px;border-radius:var(--r-md);border:1.5px solid var(--line);background:var(--card);cursor:pointer;transition:border-color .15s, box-shadow .15s}
 .choice-opt:hover{border-color:var(--line-2)}
 .choice-opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .choice-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--band);color:var(--ink);flex:none}
@@ -539,7 +546,7 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .choice-txt{display:grid;gap:2px;min-width:0}
 .choice-txt b{font-weight:600;font-size:15.5px}
 .choice-txt span{font-size:13.5px;color:var(--ink-3)}
-.choice-radio{margin-left:auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
+.choice-radio{position:absolute;top:16px;right:16px;width:20px;height:20px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
 .choice-opt[aria-pressed="true"] .choice-radio{border-color:var(--accent)}
 .choice-opt[aria-pressed="true"] .choice-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
 .preview{display:grid;gap:10px}
@@ -591,7 +598,7 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .fp-thin{stroke:var(--ink-3);fill:none}
 .fp-text{fill:var(--ink-3);font-family:var(--f-mono);font-size:9px}
 .fp-big{fill:var(--ink);font-family:var(--f-mono);font-size:11px;font-weight:500}
-@media (max-width:960px){.dev-grid{grid-template-columns:1fr}}
+@media (max-width:760px){.choice-opts{grid-template-columns:1fr}.choice-opt{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}.choice-radio{position:static;margin-left:auto}}
 @media (max-width:600px){
   .fields{grid-template-columns:1fr;padding:18px}
   .mock-head,.legend,.mock-foot{padding-left:18px;padding-right:18px}
@@ -626,6 +633,7 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .listing-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
 .listing-price strong{font-family:var(--f-display);font-size:27px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .listing-price span{font-size:13.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.listing-price .price-pct{align-self:center;font-size:13.5px;font-weight:700;color:var(--on-accent);background:var(--accent);padding:2px 8px;border-radius:7px;white-space:nowrap}
 .listing-price .was{font-family:var(--f-display);font-size:18px;font-weight:500;color:var(--ink-3);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ink-3)}
 .price-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:-6px;font-size:13.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .price-meta .saving{color:var(--accent-ink);background:var(--accent-soft);font-weight:600;padding:2px 9px;border-radius:7px}
@@ -649,6 +657,7 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .filters-title b{font-family:var(--f-display);font-size:18px;font-weight:600}
 .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
 .f{display:grid;gap:8px;align-content:start;min-width:0}
+.f-wide{grid-column:1/-1}
 .seg{display:flex;padding:3px;border-radius:11px;background:var(--band);border:1px solid var(--line)}
 .seg button{flex:1;min-height:36px;border:0;border-radius:8px;background:transparent;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow-sm)}
@@ -676,6 +685,11 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chips button{min-height:36px;padding:0 13px;border-radius:9px;border:1px solid var(--line-2);background:var(--card);font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
 .chips button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.cond-chips button,.chip-cond{display:inline-flex;align-items:center;gap:7px}
+.cond-chips button::before,.chip-cond::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--cd,#20262A);box-shadow:0 0 0 1px rgba(128,128,128,.55)}
+[data-cond="white"]{--cd:#fff}
+[data-cond="green"]{--cd:#4E9A6B}
+[data-cond="renovated"]{--cd:#C9A24A}
 .budget{background:var(--navy);color:var(--on-navy);padding:22px;display:grid;gap:14px;align-content:start}
 .budget-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .budget-top label{font-size:13px;font-weight:600;color:var(--on-navy-2)}
@@ -920,10 +934,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </div>
       </div>
       <div class="dev-grid">
-        <div class="dev-side">
           <div class="choice" role="group" aria-label="Listing type">
             <span class="choice-label">What are you listing?</span>
-            <button class="choice-opt" type="button" data-tab="apartment" aria-pressed="true">
+            <div class="choice-opts">
+            <button class="choice-opt" type="button" data-tab="apartment" aria-pressed="false">
               <span class="choice-ico"><svg aria-hidden="true"><use href="#i-building"/></svg></span>
               <span class="choice-txt"><b>Apartment in a residential building</b><span>Off-plan or under construction</span></span>
               <span class="choice-radio" aria-hidden="true"></span>
@@ -938,10 +952,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
               <span class="choice-txt"><b>Commercial space</b><span>Retail, office or restaurant unit</span></span>
               <span class="choice-radio" aria-hidden="true"></span>
             </button>
+            </div>
+            <p class="choice-hint" id="wsHint">Choose a type and its form opens below.</p>
           </div>
-          <p class="ws-note"><svg aria-hidden="true"><use href="#i-eye"/></svg><span>After you submit, follow the review and see how investors see your listing in <a href="#offers">My offers</a>.</span></p>
-        </div>
 
+        <div class="ws-form" id="wsForm" hidden>
         <div class="mock" aria-label="Listing form">
           <div class="mock-head">
             <div class="mock-title"><b>New listing · <span id="formType">Apartment</span></b><span>Property details</span></div>
@@ -977,11 +992,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input">8<span class="unit">of 14</span></div></div>
             <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</div></div>
             <div class="field"><div class="field-label"><span>View</span><span class="opt">Optional</span></div><div class="input select">City view</div></div>
+            <div class="field full"><div class="field-label"><span id="cond-l-black">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-black"><button type="button" data-cond="black" aria-pressed="true">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 68,250<span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">20<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q3 2027</div></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.10.13.002.045</span></div><span class="hint">Checked against the public registry</span></div>
-            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Black frame handover. Developer installment plan available up to 24 months. Underground parking on request.</div></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Developer installment plan available up to 24 months. Underground parking on request.</div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
               <div class="thumbs">
@@ -1037,13 +1053,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input">1<span class="unit">of 14</span></div></div>
             <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</div></div>
             <div class="field"><div class="field-label"><span>Intended use</span><span class="req">Required</span></div><div class="input select">Retail / showroom</div></div>
+            <div class="field full"><div class="field-label"><span id="cond-l-white">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-white"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="true">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 216,000<span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">20<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q2 2027</div></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.14.05.008.021</span></div><span class="hint">Checked against the public registry</span></div>
             <div class="field"><div class="field-label"><span>Ceiling height</span><span class="opt">Optional</span></div><div class="input">4.5<span class="unit">m</span></div></div>
             <div class="field"><div class="field-label"><span>Street frontage</span><span class="opt">Optional</span></div><div class="input">12.4<span class="unit">m</span></div></div>
-            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Street-facing ground floor with a separate entrance and shopfront glazing. White frame handover. Three-phase power, 40 kW.</div></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.</div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
               <div class="thumbs">
@@ -1056,6 +1073,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <p id="mockFootNote">Listings are reviewed before they go live.</p>
             <div class="btns"><button class="btn btn-outline btn-sm" type="button" data-dev-action="draft">Save draft</button><button class="btn btn-primary btn-sm" type="button" data-dev-action="submit">Submit for review</button></div>
           </div>
+        </div>
+          <p class="ws-note"><svg aria-hidden="true"><use href="#i-eye"/></svg><span>After you submit, follow the review and see how investors see your listing in <a href="#offers">My offers</a>.</span></p>
         </div>
       </div>
     </div>
@@ -1118,11 +1137,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <h3>What you’ll need</h3>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-building"/></svg>Apartment in a residential building</span>
-          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">View</li><li class="o">Photos</li></ul>
+          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Handover condition</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">View</li><li class="o">Photos</li></ul>
         </div>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-store"/></svg>Commercial space</span>
-          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Intended use</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Ceiling height</li><li class="o">Street frontage</li><li class="o">Photos</li></ul>
+          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Intended use</li><li>Handover condition</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Ceiling height</li><li class="o">Street frontage</li><li class="o">Photos</li></ul>
         </div>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-land"/></svg>Land plot in a development</span>
@@ -1224,6 +1243,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <span class="dual-hint">Up to $1,000,000</span>
           </div>
           <div class="f"><span class="f-label">Construction completion</span><div class="input select">By end of 2027</div></div>
+          <div class="f f-wide">
+            <span class="f-label" id="fcond-l">Handover condition</span>
+            <div class="chips cond-chips" id="condFilter" role="group" aria-labelledby="fcond-l">
+              <button type="button" data-cond="black" aria-pressed="false">Black frame</button>
+              <button type="button" data-cond="white" aria-pressed="false">White frame</button>
+              <button type="button" data-cond="green" aria-pressed="false">Green frame</button>
+              <button type="button" data-cond="renovated" aria-pressed="false">Renovated</button>
+            </div>
+          </div>
         </div>
         <div class="budget">
           <div class="budget-top"><label for="budget">Available cash budget</label><span class="pill pill-gold">Concept</span></div>
@@ -1249,8 +1277,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           </div>
           <div class="listing-body">
-            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span></div>
-            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong></div>
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span><span class="chip chip-cond" data-cond="black">Black frame</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $17,050</span><span>$1,050 / m²</span></div>
             <dl class="specs"><div><dt>Size</dt><dd>65 m²</dd></div><div><dt>Floor</dt><dd>8th</dd></div><div><dt>Ready</dt><dd>Q3 2027</dd></div></dl>
             <div class="listing-foot"><span class="fit fit-yes" data-fit>Fits your budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
@@ -1266,8 +1294,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           </div>
           <div class="listing-body">
-            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Courtyard</span></div>
-            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$204,000</s><strong>$153,000</strong></div>
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Courtyard</span><span class="chip chip-cond" data-cond="renovated">Renovated</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$204,000</s><strong>$153,000</strong><span class="price-pct" title="Discount vs market price">−25%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $51,000</span><span>$1,700 / m²</span></div>
             <dl class="specs"><div><dt>Size</dt><dd>90 m²</dd></div><div><dt>Floor</dt><dd>5th</dd></div><div><dt>Ready</dt><dd>Q2 2027</dd></div></dl>
             <div class="listing-foot"><span class="fit fit-no" data-fit>$83,000 over budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
@@ -1284,7 +1312,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           </div>
           <div class="listing-body">
             <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</span><span class="chip">In development</span></div>
-            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong><span class="price-pct" title="Discount vs market price">−30%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $19,300</span><span>$90 / m²</span></div>
             <dl class="specs"><div><dt>Size</dt><dd>500 m²</dd></div><div><dt>Plot</dt><dd>Residential</dd></div><div><dt>Ready</dt><dd>Q4 2027</dd></div></dl>
             <div class="listing-foot"><span class="fit fit-yes" data-fit>Fits your budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
@@ -1300,15 +1328,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
           </div>
           <div class="listing-body">
-            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Street-facing</span></div>
-            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$270,000</s><strong>$216,000</strong></div>
+            <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Street-facing</span><span class="chip chip-cond" data-cond="white">White frame</span></div>
+            <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$270,000</s><strong>$216,000</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
             <div class="price-meta"><span class="saving"><span>You save</span> $54,000</span><span>$1,800 / m²</span></div>
             <dl class="specs"><div><dt>Size</dt><dd>120 m²</dd></div><div><dt>Floor</dt><dd>1st</dd></div><div><dt>Ready</dt><dd>Q2 2027</dd></div></dl>
             <div class="listing-foot"><span class="fit fit-no" data-fit>$146,000 over budget</span><button class="btn btn-outline btn-sm" type="button" data-details>View details</button></div>
           </div>
         </article>
       </div>
-      <div class="empty" id="empty" hidden>No listings match these filters. Lower the discount or switch the property type.</div>
+      <div class="empty" id="empty" hidden>No listings match these filters. Lower the discount, clear the handover condition or switch the property type.</div>
       <p class="fine">Example listings with illustrative prices and photos.</p>
     </div>
   </section>
@@ -1437,8 +1465,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                 <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
               </div>
               <div class="listing-body">
-                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span></div>
-                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong></div>
+                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</span><span class="chip">City view</span><span class="chip chip-cond" data-cond="black">Black frame</span></div>
+                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $17,050</span><span>$1,050 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>65 m²</dd></div><div><dt>Floor</dt><dd>8 of 14</dd></div><div><dt>Ready</dt><dd>Q3 2027</dd></div></dl>
               <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
@@ -1455,7 +1483,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
               </div>
               <div class="listing-body">
                 <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</span><span class="chip">In development</span></div>
-                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong></div>
+                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong><span class="price-pct" title="Discount vs market price">−30%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $19,300</span><span>$90 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>500 m²</dd></div><div><dt>Plot</dt><dd>Residential</dd></div><div><dt>Ready</dt><dd>Q4 2027</dd></div></dl>
               <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
@@ -1473,8 +1501,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                 <button class="save" type="button" aria-label="Save listing" aria-pressed="false"><svg aria-hidden="true"><use href="#i-heart"/></svg></button>
               </div>
               <div class="listing-body">
-                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Street-facing</span></div>
-                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$270,000</s><strong>$216,000</strong></div>
+                <div class="listing-loc"><span class="loc"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</span><span class="chip">Street-facing</span><span class="chip chip-cond" data-cond="white">White frame</span></div>
+                <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$270,000</s><strong>$216,000</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
                 <div class="price-meta"><span class="saving"><span>You save</span> $54,000</span><span>$1,800 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>120 m²</dd></div><div><dt>Floor</dt><dd>1 of 14</dd></div><div><dt>Ready</dt><dd>Q2 2027</dd></div></dl>
               <div class="card-owner"><span class="status st-rev" data-status>In review</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
@@ -1793,7 +1821,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- Session (demo) ---------- */
-  var state = { role:null, type:'all', disc:null, budget:70000 };
+  var state = { role:null, type:'all', disc:null, cond:[], budget:70000 };
   try { state.role = sessionStorage.getItem('bm-role'); } catch(e){}
   function saveRole(){ try { state.role ? sessionStorage.setItem('bm-role', state.role) : sessionStorage.removeItem('bm-role'); } catch(e){} }
 
@@ -1906,7 +1934,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
   }); });
   $('#signOut').addEventListener('click', function(){
-    state.role = null; saveRole(); submitted = false;
+    state.role = null; saveRole(); submitted = false; setTab(null);
     var b = $('[data-dev-action="submit"]'); b.disabled = false; b.textContent = 'Submit for review';
     $('#mockFootNote').textContent = 'Listings are reviewed before they go live.';
     applyAuth(); toast('Signed out. Listings and tools are hidden again.');
@@ -1914,14 +1942,24 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   });
 
   /* ---------- Developer workspace ---------- */
-  var TAB_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' }, curTab = 'apartment';
+  var TAB_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' }, curTab = null;
+  /* nothing is picked at first: the form opens under the chooser once a type is chosen */
   function setTab(t){
+    var opening = !curTab && t;
     curTab = t;
     $$('[data-tab]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.tab === t)); });
+    $('#wsForm').hidden = !t; $('#wsHint').hidden = !!t;
+    if (!t) return;
     $$('[data-panel]').forEach(function(p){ p.hidden = p.dataset.panel !== t; });
     $('#formType').textContent = TAB_NAME[t];
+    if (opening) $('.choice').scrollIntoView({ behavior:'smooth', block:'start' });
   }
   $$('[data-tab]').forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
+  var COND = { black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated' };
+  $$('[data-panel] .cond-chips').forEach(function(g){ g.addEventListener('click', function(e){
+    var b = e.target.closest('[data-cond]'); if (!b) return;
+    $$('[data-cond]', g).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+  }); });
   $$('[data-dev-action]').forEach(function(b){ b.addEventListener('click', function(){
     if (b.dataset.devAction === 'draft'){ toast('Draft saved (demo).'); return; }
     if (submitted) return;
@@ -1935,6 +1973,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var copy = src.cloneNode(true);
       copy.classList.add('is-edited');
       var st = copy.querySelector('[data-status]'); st.textContent = 'In review'; st.className = 'status st-rev';
+      var pickCond = $('[data-panel="' + curTab + '"] [data-cond][aria-pressed="true"]'), cc = copy.querySelector('.chip-cond');
+      if (pickCond && cc){ cc.dataset.cond = pickCond.dataset.cond; cc.textContent = COND[pickCond.dataset.cond]; }
       $('.preview-grid').insertBefore(copy, $('.preview-grid').firstChild);
     }
     $('#statRev').textContent = String(+$('#statRev').textContent + 1);
@@ -2007,6 +2047,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     c.querySelector('.listing-price strong').textContent = money(v.p);
     c.querySelector('.listing-price .was').textContent = money(v.m);
     c.querySelector('.badge-disc b').textContent = v.d + '%';
+    c.querySelector('.price-pct').textContent = '−' + v.d + '%';
     c.querySelector('.saving').lastChild.nodeValue = ' ' + money(v.m - v.p);
     c.querySelector('.price-meta > span:last-child').textContent = money(v.p / size) + ' / m²';
     c.querySelector('.photo').src = $('#editImg').src;
@@ -2066,10 +2107,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   function update(){
     $('#budgetOut').textContent = fmt(state.budget);
     syncSizeMax();
-    var items = cards.map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type }; });
+    var items = cards.map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond }; });
     var shown = 0, fits = 0, ka = lang === 'ka';
     items.forEach(function(o){
       var vis = (state.type === 'all' || o.t === state.type) && (!state.disc || (o.d >= state.disc[0] && o.d <= state.disc[1]))
+        && (!state.cond.length || state.cond.indexOf(o.k) > -1)
         && o.s >= ranges.size.lo && o.s <= ranges.size.hi && o.p >= ranges.price.lo && o.p <= ranges.price.hi;
       var ok = o.p <= state.budget;
       o.c.hidden = !vis;
@@ -2102,6 +2144,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     state.disc = on ? b.dataset.disc.split('-').map(Number) : null;
     update();
   }); });
+  /* handover condition: pick any number, none means all */
+  $('#condFilter').addEventListener('click', function(e){
+    var b = e.target.closest('[data-cond]'); if (!b) return;
+    b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+    state.cond = $$('[data-cond][aria-pressed="true"]', this).map(function(x){ return x.dataset.cond; });
+    update();
+  });
   paintDual('size'); paintDual('price');
   $$('[data-details]').forEach(function(b){ b.addEventListener('click', function(){ toast('Details page with floor plan, cadastral code and developer contact (concept).'); }); });
   $$('.save').forEach(function(b){ b.addEventListener('click', function(){
@@ -2394,10 +2443,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Your workspace':'შენი სამუშაო სივრცე','Create a new listing.':'შექმენი ახალი განცხადება.',
     'Required fields keep listings comparable. Optional ones help yours stand out.':'სავალდებულო ველები განცხადებებს შესადარებელს ხდის. არასავალდებულო ველები შენსას გამოარჩევს.',
     'What are you listing?':'რას ამატებ?','Apartment in a residential building':'ბინა საცხოვრებელ კორპუსში','Off-plan or under construction':'პროექტის ეტაპზე ან მშენებარე',
+    'Choose a type and its form opens below.':'აირჩიე ტიპი და მისი ფორმა ქვემოთ გაიხსნება.',
+    'Handover condition':'ჩაბარების მდგომარეობა','Black frame':'შავი კარკასი','White frame':'თეთრი კარკასი','Green frame':'მწვანე კარკასი','Renovated':'რემონტით',
+    'Shown to investors on the listing card':'ინვესტორებს განცხადების ბარათზე უჩანთ',
     'Commercial space':'კომერციული ფართი','Retail, office or restaurant unit':'სავაჭრო, საოფისე ან კვების ობიექტი',
     'Intended use':'დანიშნულება','Retail / showroom':'სავაჭრო / შოურუმი','Ceiling height':'ჭერის სიმაღლე','Street frontage':'ქუჩის ფასადი',
     'Sales hall':'დარბაზი','Storage':'საწყობი','1.4 MB · PDF, DWG or JPG':'1.4 MB · PDF, DWG ან JPG',
-    'Street-facing ground floor with a separate entrance and shopfront glazing. White frame handover. Three-phase power, 40 kW.':'პირველი სართული ქუჩის მხრიდან, ცალკე შესასვლელითა და ვიტრინით. ჩაბარება თეთრი კარკასით. სამფაზა დენი, 40 კვტ.',
+    'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.':'პირველი სართული ქუჩის მხრიდან, ცალკე შესასვლელითა და ვიტრინით. სამფაზა დენი, 40 კვტ.',
     'Commercial':'კომერციული','Commercial spaces':'კომერციული ფართები','Street-facing':'ქუჩის მხრიდან','1st':'1-ლი','1 of 14':'1 / 14','Illustration':'ილუსტრაცია',
     'Illustrative commercial space':'საილუსტრაციო კომერციული ფართი',
     'Land plot in a development':'მიწის ნაკვეთი სადეველოპერო პროექტში','Serviced or planned plots':'კომუნიკაციებით ან დაგეგმილი ნაკვეთები',
@@ -2409,7 +2461,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Discount vs market price':'ფასდაკლება საბაზროსთან შედარებით','Shown to investors as a badge':'ინვესტორებს ნიშნად უჩანთ',
     'Construction completion':'მშენებლობის დასრულება','Cadastral code':'საკადასტრო კოდი','Checked against the public registry':'მოწმდება საჯარო რეესტრში',
     'Additional information':'დამატებითი ინფორმაცია',
-    'Black frame handover. Developer installment plan available up to 24 months. Underground parking on request.':'ჩაბარება შავი კარკასით. დეველოპერის განვადება 24 თვემდე. მიწისქვეშა პარკინგი მოთხოვნით.',
+    'Developer installment plan available up to 24 months. Underground parking on request.':'დეველოპერის განვადება 24 თვემდე. მიწისქვეშა პარკინგი მოთხოვნით.',
     'Photos':'ფოტოები','+ Add':'+ დამატება','Land size':'მიწის ფართი',
     'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.':'დახურული კოტეჯების დასახლების ნაწილი. გზა, წყალი და ელექტროობა ნაკვეთის საზღვრამდე. განაშენიანების კოეფიციენტი კ-2 0.4.',
     'Listings are reviewed before they go live.':'განცხადებები გამოქვეყნებამდე მოწმდება.',
@@ -2454,7 +2506,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Investors enter the cash they have on hand. The platform ranks listings that fit first and flags the rest.':'ინვესტორი უთითებს ხელთ არსებულ თანხას. პლატფორმა პირველ რიგში შესაფერის განცხადებებს აჩვენებს, დანარჩენს კი მონიშნავს.',
     'Concept for further product design:':'კონცეფცია შემდგომი დამუშავებისთვის:','later versions could factor in developer installment plans.':'მომავალში შესაძლოა დეველოპერის განვადებაც გავითვალისწინოთ.',
     'Sorted by':'დალაგება:','Budget fit, then discount':'ბიუჯეტით, შემდეგ ფასდაკლებით',
-    'No listings match these filters. Lower the discount or switch the property type.':'ამ ფილტრებით განცხადება ვერ მოიძებნა. შეამცირე ფასდაკლება ან შეცვალე ქონების ტიპი.',
+    'No listings match these filters. Lower the discount, clear the handover condition or switch the property type.':'ამ ფილტრებით განცხადება ვერ მოიძებნა. შეამცირე ფასდაკლება, მოხსენი ჩაბარების მდგომარეობა ან შეცვალე ქონების ტიპი.',
     'Example listings with illustrative prices and photos.':'მაგალითები საილუსტრაციო ფასებითა და ფოტოებით.',
     'What you can do':'რა შეგიძლია','Everything you need to find the right deal.':'ყველაფერი, რაც სწორი გარიგების საპოვნელად გჭირდება.',
     'Browse apartments and land':'დაათვალიერე ბინები და მიწა','Off-plan apartments and plots in developments, directly from developers.':'მშენებარე ბინები და ნაკვეთები სადეველოპერო პროექტებში, პირდაპირ დეველოპერებისგან.',
