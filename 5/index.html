@@ -1118,8 +1118,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.14.05.008.021" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
-            <div class="field"><div class="field-label"><span>Ceiling height</span><span class="opt">Optional</span></div><div class="input"><input type="text" name="ceil" inputmode="decimal" autocomplete="off" placeholder="4.5" data-rule="num" aria-label="Ceiling height"><span class="unit">m</span></div></div>
-            <div class="field"><div class="field-label"><span>Street frontage</span><span class="opt">Optional</span></div><div class="input"><input type="text" name="front" inputmode="decimal" autocomplete="off" placeholder="12.4" data-rule="num" aria-label="Street frontage"><span class="unit">m</span></div></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Entrance, shopfront, power supply…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
@@ -1200,7 +1198,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </div>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-store"/></svg>Commercial space</span>
-          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Intended use</li><li>Handover condition</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Ceiling height</li><li class="o">Street frontage</li><li class="o">Photos</li></ul>
+          <ul class="need"><li>Floor plan</li><li>Size in m²</li><li>Floor</li><li>Location / district</li><li>Intended use</li><li>Handover condition</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Photos</li></ul>
         </div>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-land"/></svg>Land plot in a development</span>
@@ -2238,7 +2236,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf', planInfo:'1.2 MB · PDF' },
     land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', cad:'01.19.09.011.112',
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
-    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', cad:'01.14.05.008.021', ceil:'4.5', front:'12.4',
+    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', cad:'01.14.05.008.021',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf', planInfo:'1.4 MB · PDF' }
   };
   $('[data-fill-example]').addEventListener('click', function(){
@@ -2359,7 +2357,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       return sb.from('platform_listings').insert({ id:id, type:type, district:v.district, size_m2:parseFloat(v.size),
         floor:v.floor ? +v.floor : null, floors:v.floors ? +v.floors : null, view_type:v.view || null, use_type:v.use || null, handover:v.cond || null,
         price_usd:+v.price.replace(/[^0-9]/g, ''), discount_pct:+v.disc, ready:v.ready, cadastral:v.cad,
-        ceiling_m:v.ceil ? parseFloat(v.ceil) : null, frontage_m:v.front ? parseFloat(v.front) : null, info:v.info || null, plan_path:planPath, photos:photos });
+        info:v.info || null, plan_path:planPath, photos:photos });
     }).then(function(res){
       if (res.error) throw res.error;
       done();
