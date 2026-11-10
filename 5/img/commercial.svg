@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7F0DD"/><stop offset="1" stop-color="#EBDDB8"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B6E62"/><stop offset=".55" stop-color="#2B5A4F"/><stop offset="1" stop-color="#1F443C"/></linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1E2BF" stop-opacity=".0"/><stop offset="1" stop-color="#F1E2BF" stop-opacity=".34"/></linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#sky)"/>
+  <!-- neighbouring blocks -->
+  <rect x="0" y="120" width="120" height="300" fill="#DCCDA6"/>
+  <rect x="690" y="150" width="110" height="270" fill="#DCCDA6"/>
+  <!-- building -->
+  <rect x="90" y="40" width="620" height="380" fill="#1A3732"/>
+  <!-- upper floors: window bands -->
+  <g fill="#24463F">
+    <rect x="130" y="70" width="540" height="46"/>
+    <rect x="130" y="138" width="540" height="46"/>
+  </g>
+  <g fill="#F1E2BF" opacity=".5">
+    <rect x="150" y="80" width="70" height="26"/><rect x="250" y="80" width="70" height="26"/><rect x="480" y="80" width="70" height="26"/>
+    <rect x="350" y="148" width="70" height="26"/><rect x="580" y="148" width="70" height="26"/><rect x="150" y="148" width="70" height="26"/>
+  </g>
+  <!-- fascia band -->
+  <rect x="90" y="206" width="620" height="34" fill="#F1E2BF"/>
+  <rect x="130" y="218" width="150" height="10" rx="5" fill="#1A3732" opacity=".8"/>
+  <rect x="520" y="218" width="150" height="10" rx="5" fill="#1A3732" opacity=".35"/>
+  <!-- shopfront glazing -->
+  <rect x="120" y="252" width="560" height="168" fill="url(#glass)"/>
+  <rect x="120" y="252" width="560" height="168" fill="url(#glow)"/>
+  <g stroke="#F1E2BF" stroke-width="5" fill="none">
+    <path d="M120 252h560v168H120zM260 252v168M540 252v168M120 300h140M540 300h140"/>
+  </g>
+  <!-- entrance -->
+  <rect x="340" y="262" width="120" height="158" fill="#16302B"/>
+  <g stroke="#F1E2BF" stroke-width="5" fill="none"><path d="M340 262h120v158M340 262v158M400 262v158"/></g>
+  <path d="M388 340v26M412 340v26" stroke="#F1E2BF" stroke-width="5" stroke-linecap="round"/>
+  <!-- reflections -->
+  <g stroke="#FFF8E8" stroke-width="7" stroke-linecap="round" opacity=".16">
+    <path d="M150 400l70-110M180 404l50-78M570 400l70-110M600 404l50-78"/>
+  </g>
+  <!-- pavement -->
+  <rect x="0" y="420" width="800" height="80" fill="#CFC1A0"/>
+  <rect x="0" y="420" width="800" height="8" fill="#B9AA86"/>
+  <path d="M0 462h800" stroke="#B9AA86" stroke-width="2" stroke-dasharray="46 22"/>
+</svg>
