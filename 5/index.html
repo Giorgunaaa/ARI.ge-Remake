@@ -495,6 +495,53 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .card-owner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
 .card-owner .btn svg{width:16px;height:16px}
 .my-card.is-edited{box-shadow:0 0 0 3px var(--gold-soft);border-color:var(--gold-line)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.modal-card.detail-card{width:min(100%,760px);padding:0}
+.detail-card .modal-x{z-index:3;background:rgba(255,255,255,.92)}
+.d-gallery{position:relative;background:var(--band)}
+.d-main{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.d-gallery .badge-disc{bottom:auto;top:14px;left:14px}
+.d-strip{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.d-thumbs{display:flex;gap:8px;overflow-x:auto;flex:1;min-width:0}
+.d-dlall{flex:none;margin-left:auto}
+.d-dlall svg,.d-plan-bar .btn svg{width:16px;height:16px}
+.d-gallery.one .d-thumbs{visibility:hidden}
+.d-thumbs button{flex:none;width:76px;height:52px;padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none}
+.d-thumbs button[aria-pressed="true"]{border-color:var(--accent)}
+.d-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.d-body{display:grid;gap:14px;padding:22px 26px 26px}
+.d-head{display:grid;gap:8px;justify-items:start}
+.detail-card h3{display:flex;align-items:center;gap:8px;margin:0;font-size:1.45rem}
+.detail-card h3 svg{width:20px;height:20px;color:var(--ink-3);flex:none}
+.d-price strong{font-size:30px}
+.d-specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.d-specs div{padding:10px 12px;min-width:0;border-top:1px solid var(--line);border-left:1px solid var(--line);margin:-1px 0 0 -1px}
+.d-specs dt{font-size:11.5px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+html[lang="ka"] .d-specs dt{letter-spacing:.01em}
+.d-specs dd{margin:3px 0 0;font-weight:600;font-size:14.5px;overflow-wrap:break-word}
+.d-block h4,.d-interest h4{margin:0 0 6px;font-size:15px}
+.d-block p{margin:0;color:var(--ink-2);font-size:14.5px;line-height:1.55;white-space:pre-line}
+.d-plan{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.d-plan:empty{display:none}
+.d-plan img{display:block;width:100%;max-height:460px;object-fit:contain}
+.d-plan iframe{display:block;width:100%;height:460px;border:0}
+.d-plan svg.fp{display:block;width:100%;max-width:520px;height:auto;margin:0 auto;padding:18px}
+.d-plan .d-nopreview{display:grid;place-items:center;gap:6px;padding:30px 16px;color:var(--ink-3);font-size:14px;text-align:center}
+.d-plan .d-nopreview svg{width:34px;height:34px}
+.d-plan-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.d-plan-bar .d-file{min-width:0;overflow-wrap:anywhere}
+@media (max-width:620px){.d-plan iframe{height:340px}.d-strip{flex-wrap:wrap}.d-dlall{margin-left:0}}
+.d-file{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--accent-ink)}
+.d-file svg{width:18px;height:18px}
+.d-muted{color:var(--ink-3);font-size:14px}
+.d-interest{display:grid;gap:10px;margin-top:4px;padding:18px;border-radius:var(--r-md);background:var(--band);border:1px solid var(--line)}
+.d-interest p{margin:0;color:var(--ink-2);font-size:14px}
+.d-interest textarea{width:100%;min-height:62px;padding:10px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--card);font:inherit;font-size:14.5px;color:var(--ink);resize:vertical}
+.d-interest textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.d-interest .btn svg{width:18px;height:18px}
+.d-sent{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--accent-ink)}
+.d-sent svg{width:18px;height:18px;flex:none}
+@media (max-width:620px){.d-body{padding:18px}.d-specs{grid-template-columns:1fr 1fr}.d-price strong{font-size:26px}}
 .edit-photo{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .edit-photo img{width:120px;height:80px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
 .edit-photo .btn svg{width:16px;height:16px}
@@ -870,6 +917,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     <symbol id="i-wallet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 016.5 5H18v3"/><rect x="3.5" y="8" width="17" height="11" rx="2.5"/><circle cx="16.5" cy="13.5" r="1.2" fill="currentColor"/></g></symbol>
     <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="8" cy="8" r="1.6"/></g></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></g></symbol>
     <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
     <symbol id="i-handshake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M2.5 11.5l4-4 3 1 2.5-1.5 3 .5 6.5 4"/><path d="M6.5 7.5l-4 4 6 6 1.5-1.5"/><path d="M21.5 11.5l-6 6-2-2"/><path d="M10 16l2 2 1.5-1.5M12 13.5l2.5 2.5M9.5 9.5l3.5 3.5"/></g></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></g></symbol>
@@ -1806,6 +1854,37 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   </div>
 </div>
 
+<div class="modal" id="detailModal" hidden role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="modal-backdrop" data-close-detail></div>
+  <div class="modal-card detail-card">
+    <button class="modal-x" type="button" data-close-detail aria-label="Close">×</button>
+    <div class="d-gallery">
+      <img class="d-main" id="dMain" src="" alt="">
+      <span class="badge-disc"><svg aria-hidden="true"><use href="#i-down"/></svg><b id="dBadge"></b> below market price</span>
+      <div class="d-strip"><div class="d-thumbs" id="dThumbs"></div><button class="btn btn-outline btn-sm d-dlall" type="button" id="dDlAll"><svg aria-hidden="true"><use href="#i-dl"/></svg><span>Download photos</span></button></div>
+    </div>
+    <div class="d-body">
+      <div class="d-head">
+        <span class="pill pill-muted" id="dType"></span>
+        <h3 id="dTitle"><svg aria-hidden="true"><use href="#i-pin"/></svg><span id="dDistrict"></span></h3>
+      </div>
+      <div class="listing-price d-price"><s class="was" id="dWas" title="Market price"></s><strong id="dPrice"></strong><span class="price-pct" id="dPct"></span></div>
+      <div class="price-meta"><span class="saving"><span>You save</span> <b id="dSave"></b></span><span id="dPerM"></span></div>
+      <dl class="d-specs" id="dSpecs"></dl>
+      <div class="d-block" id="dInfoBox"><h4>Additional information</h4><p id="dInfo"></p></div>
+      <div class="d-block" id="dPlanBox"><h4>Floor plan / dimensional drawing</h4><div class="d-plan" id="dPlan"></div><div class="d-plan-bar"><span class="d-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span id="dPlanName"></span></span><a class="btn btn-outline btn-sm" id="dPlanDl" href="#" download><svg aria-hidden="true"><use href="#i-dl"/></svg>Download plan</a></div></div>
+      <form class="d-interest" id="dInterest" novalidate>
+        <h4>Interested in this property?</h4>
+        <p>ARI will call you to answer questions and arrange a viewing. The developer doesn’t see your contact details.</p>
+        <label class="sr-only" for="dMsg">Your question</label>
+        <textarea id="dMsg" rows="2" maxlength="1000" placeholder="Your question (optional)"></textarea>
+        <button class="btn btn-primary btn-block" type="submit" id="dSend"><svg aria-hidden="true"><use href="#i-chat"/></svg>I’m interested</button>
+        <p class="d-sent" id="dSent" hidden><svg aria-hidden="true"><use href="#i-check"/></svg><span>Request sent. ARI will contact you soon.</span></p>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="editModal" hidden role="dialog" aria-modal="true" aria-labelledby="editTitle">
   <div class="modal-backdrop" data-close-edit></div>
   <div class="modal-card">
@@ -1847,7 +1926,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
      can't load, the page keeps working on sample data and nothing is sent. The key below is the
      public one; what each account may read or write is decided by the database rules. ---------- */
   var SB_URL = 'https://jirqxouwxetighqvhzjh.supabase.co', SB_KEY = 'sb_publishable_K-MhgBEzBTzo4zNR1iK0Cw_UWnEcVJL', BUCKET = 'platform-listings', MAX_FILE = 10 * 1024 * 1024;
-  var sb = null, user = null, MINE = {};
+  var sb = null, user = null, MINE = {}, PUB = {}, SENT = {}, DEMO_SENT = {};
   try { if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){}
   var fromEmail = /access_token=|type=signup/.test(location.hash);
 
@@ -1992,7 +2071,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* leaving an account, real or demo: back to guest and to the sample data */
   function leave(){
-    user = null; MINE = {}; state.role = null; saveRole(); setTab(null);
+    user = null; MINE = {}; PUB = {}; SENT = {}; state.role = null; saveRole(); setTab(null);
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
@@ -2250,10 +2329,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     for (var i = 0; i < 16; i++) h += (b[i] < 16 ? '0' : '') + b[i].toString(16) + (i === 3 || i === 5 || i === 7 || i === 9 ? '-' : '');
     return h;
   }
-  function signUrls(paths){   /* private files are shown through links that expire in an hour */
+  function signUrls(paths, download){   /* private files are shown through links that expire in an hour */
     paths = paths.filter(Boolean);
     if (!paths.length) return Promise.resolve({});
-    return sb.storage.from(BUCKET).createSignedUrls(paths, 3600).then(function(res){
+    return sb.storage.from(BUCKET).createSignedUrls(paths, 3600, download ? { download:true } : undefined).then(function(res){
       var map = {}; (res.data || []).forEach(function(x){ if (x.signedUrl) map[x.path] = x.signedUrl; }); return map;
     }, function(){ return {}; });
   }
@@ -2279,17 +2358,22 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   function loadPublished(){
     var uid = user && user.id; if (!uid) return;
-    sb.from('platform_listings').select('id,type,status,district,size_m2,floor,floors,view_type,use_type,handover,price_usd,discount_pct,ready,photos')
+    sb.from('platform_listings').select('id,type,status,district,size_m2,floor,floors,view_type,use_type,handover,price_usd,discount_pct,ready,cadastral,info,plan_path,photos')
       .eq('status', 'published').order('created_at', { ascending:false }).then(function(res){
       if (res.error){ toast('Couldn’t load listings. Refresh the page.'); return; }
       var rows = res.data || [];
       signUrls(firstPhotos(rows)).then(function(urls){
         if (!user || user.id !== uid) return;
-        var box = $('#results'); box.innerHTML = '';
-        rows.forEach(function(r){ box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
+        var box = $('#results'); box.innerHTML = ''; PUB = {};
+        rows.forEach(function(r){ PUB[r.id] = r; box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
         update();
       });
     }, function(){ toast(OFFLINE); });
+    /* which listings this investor already asked about (fails quietly until interests.sql has been run) */
+    sb.from('platform_interests').select('listing_id').then(function(res){
+      if (!user || user.id !== uid || res.error) return;
+      SENT = {}; (res.data || []).forEach(function(x){ SENT[x.listing_id] = 1; });
+    }, function(){});
   }
   function sendListing(type, v, p, btn){
     var id = newId(), base = user.id + '/' + id + '/', store = sb.storage.from(BUCKET), ups = [], planPath = null, photos = [];
@@ -2457,6 +2541,144 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     });
   }
 
+  /* ---------- Listing details, with "I'm interested" ----------
+     Opens from a result card. Stored listings come from the database (photos and plan through
+     short-lived links); the sample cards carry their own example data. The interest goes to ARI
+     only (platform_interests); the developer never sees it. */
+  var DEMO_DETAIL = [
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', cad:'01.10.13.002.045', photos:['img/interior.jpg', 'img/room.jpg', 'img/home-inv.jpg'], sketch:'apartment',
+      info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf' },
+    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', cad:'01.14.05.011.027', photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
+      info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan:'plan_vake_floor-5_unit-18.pdf' },
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', photos:['img/land.jpg'],
+      info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
+    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', cad:'01.14.05.008.021', photos:['img/commercial.svg'], sketch:'commercial',
+      info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf' }
+  ];
+  DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; });
+  var dCur = null, dPhotos = [], dIdx = 0;
+  function closeDetail(){ $('#detailModal').hidden = true; document.body.classList.remove('modal-open'); dCur = null; }
+  function fileName(u, i){ var n = (u.split('?')[0].split('/').pop() || 'photo'); return n.indexOf('.') > 0 ? n : 'photo-' + (i + 1) + '.jpg'; }
+  function setMain(i){
+    var ph = dPhotos[i]; if (!ph) return;
+    dIdx = i; $('#dMain').src = ph.view;
+    $$('#dThumbs button').forEach(function(b, j){ b.setAttribute('aria-pressed', String(j === i)); });
+  }
+  /* a drawn example plan (sample listings): copy its computed colours inline so the saved file looks the same */
+  function sketchFile(svg, name){
+    var copy = svg.cloneNode(true), src = svg.querySelectorAll('*'), dst = copy.querySelectorAll('*');
+    for (var i = 0; i < src.length; i++){
+      var cs = getComputedStyle(src[i]);
+      ['fill', 'stroke', 'font-family', 'font-size', 'font-weight'].forEach(function(k){ dst[i].style.setProperty(k, cs.getPropertyValue(k)); });
+    }
+    copy.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); copy.removeAttribute('class'); copy.style.removeProperty('display'); copy.style.background = '#fff';
+    return { url:URL.createObjectURL(new Blob([copy.outerHTML], { type:'image/svg+xml' })), name:name.replace(/\.[a-z0-9]+$/i, '') + '.svg' };
+  }
+  var sketchUrl = null;
+  /* D: listing data; photos: [{view, dl, name}]; plan: {view, dl, name, ext} or null */
+  function showDetail(D, photos, plan){
+    var m = Math.round(D.price / (1 - D.disc / 100) / 100) * 100, specs = [];
+    $('#dType').textContent = D.type === 'land' ? 'Land plot' : D.type === 'commercial' ? 'Commercial space' : 'Apartment';
+    $('#dDistrict').textContent = D.district;
+    $('#dBadge').textContent = D.disc + '%';
+    $('#dWas').textContent = money(m); $('#dPrice').textContent = money(D.price); $('#dPct').textContent = '−' + D.disc + '%';
+    $('#dSave').textContent = money(m - D.price); $('#dPerM').textContent = money(D.price / D.size) + ' / m²';
+    specs.push([D.type === 'land' ? 'Land size' : 'Size', D.size.toLocaleString('en-US') + ' m²']);
+    if (D.floor) specs.push(['Floor', D.floor + ' / ' + D.floors]);
+    if (D.view) specs.push(['View', D.view]);
+    if (D.use) specs.push(['Intended use', D.use]);
+    if (D.cond) specs.push(['Handover condition', COND[D.cond]]);
+    specs.push(['Construction completion', D.ready]);
+    specs.push(['Cadastral code', D.cad]);
+    var dl = $('#dSpecs'); dl.innerHTML = '';
+    specs.forEach(function(x){
+      var d = document.createElement('div'); d.innerHTML = '<dt></dt><dd></dd>';
+      d.firstChild.textContent = x[0]; d.lastChild.textContent = x[1]; dl.appendChild(d);
+    });
+    $('#dInfoBox').hidden = !D.info; $('#dInfo').textContent = D.info || '';
+
+    /* floor plan: the drawing itself, plus a download button */
+    var box = $('#dPlan'); box.innerHTML = '';
+    if (sketchUrl){ URL.revokeObjectURL(sketchUrl); sketchUrl = null; }
+    $('#dPlanBox').hidden = !plan;
+    if (plan){
+      if (plan.svg){ box.appendChild(plan.svg); }
+      else if (/^(png|jpe?g|webp|gif)$/.test(plan.ext)){ var im = document.createElement('img'); im.alt = ''; im.src = plan.view; box.appendChild(im); }
+      else if (plan.ext === 'pdf'){ var fr = document.createElement('iframe'); fr.title = 'Floor plan'; fr.src = plan.view + '#navpanes=0&view=FitH'; box.appendChild(fr); }
+      else { box.innerHTML = '<div class="d-nopreview"><svg aria-hidden="true"><use href="#i-doc"/></svg><span>No preview for this file type. Download it to open.</span></div>'; }
+      $('#dPlanName').textContent = plan.name;
+      $('#dPlanDl').href = plan.dl; $('#dPlanDl').setAttribute('download', plan.name);
+    }
+
+    /* photos */
+    dPhotos = photos.filter(function(x){ return x && x.view; });
+    if (!dPhotos.length) dPhotos = [{ view:'img/interior.jpg', dl:'img/interior.jpg', name:'photo.jpg' }];
+    var th = $('#dThumbs'); th.innerHTML = '';
+    if (dPhotos.length > 1) dPhotos.forEach(function(ph, i){
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Photo ' + (i + 1));
+      b.innerHTML = '<img alt="">'; b.firstChild.src = ph.view; b.addEventListener('click', function(){ setMain(i); }); th.appendChild(b);
+    });
+    $('.d-gallery').classList.toggle('one', dPhotos.length < 2);
+    setMain(0);
+
+    var sent = D.id ? !!SENT[D.id] : !!DEMO_SENT[D.demo];
+    $('#dMsg').value = ''; $('#dMsg').hidden = sent; $('#dSend').hidden = sent; $('#dSend').disabled = false; $('#dSent').hidden = !sent;
+    $('#detailModal').hidden = false; document.body.classList.add('modal-open');
+    $('.detail-card').scrollTop = 0;
+  }
+  /* every photo, one after another (browsers may ask once to allow several downloads) */
+  $('#dDlAll').addEventListener('click', function(){
+    dPhotos.forEach(function(ph, i){
+      setTimeout(function(){ var a = document.createElement('a'); a.href = ph.dl; a.download = ph.name; document.body.appendChild(a); a.click(); a.remove(); }, i * 400);
+    });
+  });
+  function openDetail(card){
+    if (!card) return;
+    if (card.dataset.id && PUB[card.dataset.id]){
+      var r = PUB[card.dataset.id], ph = r.photos || [], paths = ph.concat(r.plan_path ? [r.plan_path] : []);
+      dCur = { id:r.id };
+      var D = { id:r.id, type:r.type, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type, cond:r.handover,
+        price:r.price_usd, disc:r.discount_pct, ready:r.ready, cad:r.cadastral, info:r.info };
+      Promise.all([signUrls(paths), signUrls(paths, true)]).then(function(u){
+        if (!dCur || dCur.id !== r.id) return;
+        var view = u[0], save = u[1], plan = null;
+        if (r.plan_path){
+          var ext = (r.plan_path.split('.').pop() || '').toLowerCase();
+          plan = { view:view[r.plan_path], dl:save[r.plan_path] || view[r.plan_path], ext:ext, name:'floor-plan.' + ext };
+        }
+        showDetail(D, ph.map(function(x, i){ return { view:view[x], dl:save[x] || view[x], name:'photo-' + (i + 1) + '.' + (x.split('.').pop() || 'jpg') }; }), plan);
+      });
+      return;
+    }
+    var i = +card.dataset.demo, X = DEMO_DETAIL[i]; if (!X) return;
+    var D = {}; Object.keys(X).forEach(function(k){ D[k] = X[k]; }); D.demo = i; D.info = tr(X.info);
+    dCur = { demo:i };
+    var plan = null, src = X.sketch && $('[data-panel="' + X.sketch + '"] svg.fp');
+    if (src){
+      var svg = src.cloneNode(true), file = sketchFile(src, X.plan);
+      svg.removeAttribute('style');
+      plan = { svg:svg, dl:file.url, name:file.name };
+    }
+    showDetail(D, (X.photos || [card.querySelector('.photo').src]).map(function(u, j){ return { view:u, dl:u, name:fileName(u, j) }; }), plan);
+    if (plan) sketchUrl = plan.dl;
+  }
+  document.addEventListener('click', function(e){ if (e.target.closest('[data-close-detail]')) closeDetail(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#detailModal').hidden) closeDetail(); });
+  $('#dInterest').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!dCur) return;
+    var done = function(){ $('#dMsg').hidden = true; $('#dSend').hidden = true; $('#dSent').hidden = false; };
+    if (dCur.demo != null){ DEMO_SENT[dCur.demo] = 1; done(); toast('Request sent to ARI (demo). Nothing was sent.'); return; }
+    var id = dCur.id, btn = $('#dSend'); btn.disabled = true;
+    sb.from('platform_interests').insert({ listing_id:id, message:$('#dMsg').value.trim() || null }).then(function(res){
+      btn.disabled = false;
+      if (res.error && res.error.code !== '23505'){ toast('Couldn’t send the request. Try again.'); return; }
+      SENT[id] = 1;
+      if (dCur && dCur.id === id) done();
+      toast(res.error ? 'You already sent a request for this listing.' : 'Request sent. ARI will contact you soon.');
+    }, function(){ btn.disabled = false; toast(OFFLINE); });
+  });
+
   /* ---------- Investor search ---------- */
   var cards = $$('#results .listing');
   var ranges = { size:{lo:0, hi:5000, max:5000, step:5}, price:{lo:0, hi:1000000, max:1000000, step:5000} };
@@ -2550,7 +2772,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   });
   paintDual('size'); paintDual('price');
   document.addEventListener('click', function(e){   /* delegated: the cards can be replaced by stored listings */
-    if (e.target.closest('[data-details]')){ toast('Details page with floor plan, cadastral code and developer contact (concept).'); return; }
+    var dt = e.target.closest('[data-details]');
+    if (dt){ openDetail(dt.closest('.listing')); return; }
     var b = e.target.closest('.save'); if (!b) return;
     var on = b.getAttribute('aria-pressed') !== 'true';
     b.setAttribute('aria-pressed', String(on));
@@ -2636,6 +2859,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Changes sent to ARI for review.':'ცვლილებები გაეგზავნა ARI-ს განსახილველად.','Couldn’t save the changes. Try again.':'ცვლილებები ვერ შეინახა. სცადე თავიდან.','Rejected':'უარყოფილია',
     'You have no listings yet. Add your first one.':'ჯერ განცხადება არ გაქვს. დაამატე პირველი.','Each file can be up to 10 MB.':'თითო ფაილი მაქსიმუმ 10 MB შეიძლება იყოს.',
     'No published listings yet. ARI reviews each listing before it appears here.':'გამოქვეყნებული განცხადება ჯერ არ არის. ARI ყველა განცხადებას ამოწმებს, სანამ აქ გამოჩნდება.',
+    'Interested in this property?':'დაგაინტერესა ეს ქონება?','I’m interested':'მაინტერესებს','Your question (optional)':'შენი კითხვა (არასავალდებულო)','Your question':'შენი კითხვა',
+    'ARI will call you to answer questions and arrange a viewing. The developer doesn’t see your contact details.':'ARI დაგირეკავს, უპასუხებს კითხვებს და დათვალიერებას მოაწყობს. დეველოპერი შენს საკონტაქტო მონაცემებს ვერ ხედავს.',
+    'Request sent. ARI will contact you soon.':'მოთხოვნა გაიგზავნა. ARI მალე დაგიკავშირდება.','Request sent to ARI (demo). Nothing was sent.':'მოთხოვნა ARI-ს გაეგზავნა (დემო). რეალურად არაფერი გაგზავნილა.',
+    'You already sent a request for this listing.':'ამ განცხადებაზე მოთხოვნა უკვე გაგზავნილი გაქვს.','Couldn’t send the request. Try again.':'მოთხოვნა ვერ გაიგზავნა. სცადე თავიდან.',
+    'Download photos':'ფოტოების ჩამოტვირთვა','Download plan':'გეგმის ჩამოტვირთვა','Floor plan':'გეგმა',
+    'No preview for this file type. Download it to open.':'ამ ტიპის ფაილის გადახედვა აქ ვერ ხერხდება. ჩამოტვირთე და ისე გახსენი.',
+    'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.':'სრულად გარემონტებული, ჩაშენებული სამზარეულოთი. ორი საძინებელი მშვიდ ეზოზე.',
     'No file chosen':'ფაილი არ არის არჩეული','PDF, DWG or JPG':'PDF, DWG ან JPG','Choose':'აირჩიე','Fill with example':'მაგალითით შევსება','Total floors':'სართულების რაოდენობა',
     'Fill in this field.':'შეავსე ეს ველი.','Choose one.':'აირჩიე ერთ-ერთი.','Enter a number above 0.':'შეიყვანე 0-ზე მეტი რიცხვი.',
     'Discount must be between 1% and 60%.':'ფასდაკლება უნდა იყოს 1%-დან 60%-მდე.','Floor can’t be higher than the total.':'სართული სართულების რაოდენობას ვერ გადააჭარბებს.',
