@@ -25,7 +25,7 @@
   --line:#E7E1D3; --line-2:#D6CDB9;
   --ink:#16231F; --ink-2:#47554F; --ink-3:#717B76;
   --navy:#1A3732; --navy-2:#24463F; --on-navy:#FFF8E8; --on-navy-2:#CFC8B4; --navy-line:rgba(241,226,191,.16);
-  --accent:#1A3732; --accent-hover:#24463F; --on-accent:#F1E2BF; --accent-ink:#2B5A4F; --accent-soft:#F3ECDA;
+  --accent:#1A3732; --accent-hover:#24463F; --on-accent:#F1E2BF; --bad:#B4462F; --accent-ink:#2B5A4F; --accent-soft:#F3ECDA;
   --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
   --mint:#E9D6A6;
   --gold:#8A6D2F; --gold-soft:#F6EEDB; --gold-line:#E4D2A8;
@@ -47,7 +47,7 @@
     --line:#22382F; --line-2:#2F4A42;
     --ink:#F1EDE2; --ink-2:#C9C3B2; --ink-3:#9D988B;
     --navy:#0E201C; --navy-2:#163029; --on-navy:#FFF8E8; --on-navy-2:#C7C0AC; --navy-line:rgba(241,226,191,.14);
-    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
+    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --bad:#F0907A; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
     --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
     --gold:#E3C27A; --gold-soft:rgba(227,194,122,.13); --gold-line:rgba(227,194,122,.35);
     --lane-dev:#8FC1B2; --lane-plat:#E3C27A; --lane-inv:#A9B6D6;
@@ -61,7 +61,7 @@
     --line:#22382F; --line-2:#2F4A42;
     --ink:#F1EDE2; --ink-2:#C9C3B2; --ink-3:#9D988B;
     --navy:#0E201C; --navy-2:#163029; --on-navy:#FFF8E8; --on-navy-2:#C7C0AC; --navy-line:rgba(241,226,191,.14);
-    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
+    --accent:#E9D6A6; --accent-hover:#F1E2BF; --on-accent:#1A3732; --bad:#F0907A; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
     --champ:#F1E2BF; --champ-hover:#E7D3A6; --on-champ:#1A3732;
     --gold:#E3C27A; --gold-soft:rgba(227,194,122,.13); --gold-line:rgba(227,194,122,.35);
     --lane-dev:#8FC1B2; --lane-plat:#E3C27A; --lane-inv:#A9B6D6;
@@ -595,6 +595,25 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .req{background:var(--navy);color:var(--on-navy)}
 .opt{background:transparent;color:var(--ink-3);border:1px solid var(--line-2)}
 .input{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 13px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--field);font-size:15px;color:var(--ink);min-width:0}
+.input input,.input select,.input textarea{flex:1;min-width:0;width:100%;border:0;background:none;font:inherit;color:inherit;outline:0;padding:0;margin:0}
+.input input::placeholder,.input textarea::placeholder{color:var(--ink-3);opacity:.65}
+.input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.input .pre{color:var(--ink-3)}
+.input input.mono{font-family:var(--f-mono);font-size:.9em}
+.input.pair input{flex:none;width:3.2em}
+.input.pair input:last-of-type{flex:1}
+.input.pair .sep{margin:0 6px 0 0}
+.input.select.is-live{position:relative;padding:0}
+.input.select.is-live select{min-height:42px;padding:0 38px 0 13px;border-radius:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+.input.select.is-live select.is-empty{color:var(--ink-3)}
+.input.select.is-live option{color:var(--ink);background:var(--card)}
+.input.select.is-live.has-ico>svg{position:absolute;left:13px;top:50%;margin-top:-8px;pointer-events:none}
+.input.select.is-live.has-ico select{padding-left:37px}
+.input.select.is-live::after{position:absolute;right:15px;top:50%;margin:-6px 0 0;pointer-events:none}
+.input.area textarea{min-height:54px;resize:vertical;line-height:1.45}
+.field.is-bad .input,.field.is-bad .drop,.field.is-bad .cond-chips button{border-color:var(--bad)}
+.hint.err{color:var(--bad);font-weight:600}
+.legend-fill{margin-left:auto;border:0;background:none;padding:4px 0;font:inherit;font-weight:600;color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .input .unit{margin-left:auto;color:var(--ink-3);font-size:13.5px}
 .input svg{width:16px;height:16px;color:var(--ink-3);flex:none}
 .input.select::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg) translateY(-3px);flex:none}
@@ -1002,12 +1021,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <div class="legend">
             <span><span class="req">Required</span>needed to publish</span>
             <span><span class="opt">Optional</span>improves the listing</span>
+            <button class="legend-fill" type="button" data-fill-example>Fill with example</button>
           </div>
           <div class="fields" data-panel="apartment">
-            <div class="field full">
-              <div class="field-label"><span>Floor plan / dimensional drawing</span><span class="req">Required</span></div>
-              <div class="drop">
-                <svg class="fp" viewBox="0 0 200 130" aria-hidden="true">
+            <div class="field full"><div class="field-label"><span>Floor plan / dimensional drawing</span><span class="req">Required</span></div>
+              <div class="drop" data-plan>
+                <svg class="fp" style="display:none" viewBox="0 0 200 130" aria-hidden="true">
                   <rect class="fp-wall" x="20" y="18" width="164" height="96" stroke-width="3"/>
                   <path class="fp-wall" d="M96 18v40M96 78v36M20 66h44M140 18v50h44" stroke-width="2"/>
                   <path class="fp-thin" d="M64 66a14 14 0 0 1 14 -14M96 58a14 14 0 0 1 14 14M140 68a12 12 0 0 0 -12 12" stroke-width="1"/>
@@ -1018,56 +1037,48 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                   <text class="fp-text" x="56" y="94" text-anchor="middle">Bed</text>
                   <text class="fp-big" x="138" y="98" text-anchor="middle">65.0 m²</text>
                 </svg>
-                <div class="drop-meta">
-                  <b>plan_block-B_floor-8_unit-12.pdf</b>
-                  <span>1.2 MB · PDF, DWG or JPG</span>
-                  <span class="file-ok"><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span>
-                </div>
+                <div class="drop-prev"><span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span></div>
+                <div class="drop-meta"><b>No file chosen</b><span>PDF, DWG or JPG</span><span class="file-ok" hidden><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span></div>
                 <button class="btn btn-outline btn-sm drop-add" type="button" data-plan-add aria-label="Upload floor plan">+ Add</button>
                 <input type="file" accept=".pdf,.dwg,image/*" hidden data-plan-input>
               </div>
             </div>
-            <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input">65<span class="unit">m²</span></div></div>
-            <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input">8<span class="unit">of 14</span></div></div>
-            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Tbilisi</div></div>
-            <div class="field"><div class="field-label"><span>View</span><span class="opt">Optional</span></div><div class="input select">City view</div></div>
-            <div class="field full"><div class="field-label"><span id="cond-l-black">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-black"><button type="button" data-cond="black" aria-pressed="true">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
-            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 68,250<span class="unit">USD</span></div></div>
-            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">20<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
-            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q3 2027</div></div>
-            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.10.13.002.045</span></div><span class="hint">Checked against the public registry</span></div>
-            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Developer installment plan available up to 24 months. Underground parking on request.</div></div>
+            <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="65" data-rule="num" aria-label="Size" data-req><span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input pair"><input type="text" name="floor" inputmode="numeric" autocomplete="off" placeholder="8" data-rule="int" aria-label="Floor" data-req><span class="unit sep">/</span><input type="text" name="floors" inputmode="numeric" autocomplete="off" placeholder="14" data-rule="int" aria-label="Total floors" data-req></div></div>
+            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
+            <div class="field"><div class="field-label"><span>View</span><span class="opt">Optional</span></div><div class="input select is-live"><select class="is-empty" name="view" aria-label="View"><option value="">Choose</option><option value="City view">City view</option><option value="Courtyard">Courtyard</option><option value="Mountain view">Mountain view</option><option value="Park view">Park view</option><option value="River view">River view</option></select></div></div>
+            <div class="field full"><div class="field-label"><span id="cond-l-apartment">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-apartment"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
+            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="68,250" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
+            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
+            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.10.13.002.045" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Installment terms, parking, finishes…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
               <div class="thumbs">
-                <div class="thumb"><img src="img/interior.jpg" alt="" loading="lazy"></div>
-                <div class="thumb"><img src="img/room.jpg" alt="" loading="lazy"></div>
-                <div class="thumb"><svg viewBox="0 0 200 130" preserveAspectRatio="xMidYMid meet" aria-hidden="true" style="background:var(--field)"><rect class="fp-wall" x="20" y="18" width="164" height="96" stroke-width="3"/><path class="fp-wall" d="M96 18v40M96 78v36M20 66h44M140 18v50h44" stroke-width="2"/></svg></div>
                 <label class="thumb thumb-add"><input type="file" accept="image/*" multiple hidden data-photo-input><span>+ Add</span></label>
               </div>
             </div>
           </div>
           <div class="fields" data-panel="land" hidden>
-            <div class="field"><div class="field-label"><span>Land size</span><span class="req">Required</span></div><div class="input">500<span class="unit">m²</span></div></div>
-            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Tskneti, Tbilisi</div></div>
-            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 45,000<span class="unit">USD</span></div></div>
-            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">30<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
-            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q4 2027</div></div>
-            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.19.09.011.112</span></div><span class="hint">Checked against the public registry</span></div>
-            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.</div></div>
+            <div class="field"><div class="field-label"><span>Land size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="500" data-rule="num" aria-label="Land size" data-req><span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
+            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="45,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
+            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="30" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
+            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.19.09.011.112" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Utilities, access road, building coefficient…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
               <div class="thumbs">
-                <div class="thumb"><img src="img/land.jpg" alt="" loading="lazy"></div>
                 <label class="thumb thumb-add"><input type="file" accept="image/*" multiple hidden data-photo-input><span>+ Add</span></label>
               </div>
             </div>
           </div>
           <div class="fields" data-panel="commercial" hidden>
-            <div class="field full">
-              <div class="field-label"><span>Floor plan / dimensional drawing</span><span class="req">Required</span></div>
-              <div class="drop">
-                <svg class="fp" viewBox="0 0 200 130" aria-hidden="true">
+            <div class="field full"><div class="field-label"><span>Floor plan / dimensional drawing</span><span class="req">Required</span></div>
+              <div class="drop" data-plan>
+                <svg class="fp" style="display:none" viewBox="0 0 200 130" aria-hidden="true">
                   <rect class="fp-wall" x="20" y="18" width="164" height="96" stroke-width="3"/>
                   <path class="fp-wall" d="M140 18v34h44M140 78v36" stroke-width="2"/>
                   <path class="fp-thin" d="M140 52a12 12 0 0 0 -12 12" stroke-width="1"/>
@@ -1081,31 +1092,27 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                   <text class="fp-text" x="162" y="100" text-anchor="middle">Storage</text>
                   <text class="fp-big" x="80" y="92" text-anchor="middle">120.0 m²</text>
                 </svg>
-                <div class="drop-meta">
-                  <b>plan_block-A_ground_unit-C2.pdf</b>
-                  <span>1.4 MB · PDF, DWG or JPG</span>
-                  <span class="file-ok"><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span>
-                </div>
+                <div class="drop-prev"><span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span></div>
+                <div class="drop-meta"><b>No file chosen</b><span>PDF, DWG or JPG</span><span class="file-ok" hidden><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span></div>
                 <button class="btn btn-outline btn-sm drop-add" type="button" data-plan-add aria-label="Upload floor plan">+ Add</button>
                 <input type="file" accept=".pdf,.dwg,image/*" hidden data-plan-input>
               </div>
             </div>
-            <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input">120<span class="unit">m²</span></div></div>
-            <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input">1<span class="unit">of 14</span></div></div>
-            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Vake, Tbilisi</div></div>
-            <div class="field"><div class="field-label"><span>Intended use</span><span class="req">Required</span></div><div class="input select">Retail / showroom</div></div>
-            <div class="field full"><div class="field-label"><span id="cond-l-white">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-white"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="true">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
-            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input">$ 216,000<span class="unit">USD</span></div></div>
-            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input">20<span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
-            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select">Q2 2027</div></div>
-            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><span class="mono">01.14.05.008.021</span></div><span class="hint">Checked against the public registry</span></div>
-            <div class="field"><div class="field-label"><span>Ceiling height</span><span class="opt">Optional</span></div><div class="input">4.5<span class="unit">m</span></div></div>
-            <div class="field"><div class="field-label"><span>Street frontage</span><span class="opt">Optional</span></div><div class="input">12.4<span class="unit">m</span></div></div>
-            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area">Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.</div></div>
+            <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="65" data-rule="num" aria-label="Size" data-req><span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input pair"><input type="text" name="floor" inputmode="numeric" autocomplete="off" placeholder="8" data-rule="int" aria-label="Floor" data-req><span class="unit sep">/</span><input type="text" name="floors" inputmode="numeric" autocomplete="off" placeholder="14" data-rule="int" aria-label="Total floors" data-req></div></div>
+            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
+            <div class="field"><div class="field-label"><span>Intended use</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="use" aria-label="Intended use" data-req><option value="">Choose</option><option value="Retail / showroom">Retail / showroom</option><option value="Office">Office</option><option value="Restaurant / café">Restaurant / café</option><option value="Warehouse">Warehouse</option><option value="Other">Other</option></select></div></div>
+            <div class="field full"><div class="field-label"><span id="cond-l-commercial">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-commercial"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
+            <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="216,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
+            <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
+            <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.14.05.008.021" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field"><div class="field-label"><span>Ceiling height</span><span class="opt">Optional</span></div><div class="input"><input type="text" name="ceil" inputmode="decimal" autocomplete="off" placeholder="4.5" data-rule="num" aria-label="Ceiling height"><span class="unit">m</span></div></div>
+            <div class="field"><div class="field-label"><span>Street frontage</span><span class="opt">Optional</span></div><div class="input"><input type="text" name="front" inputmode="decimal" autocomplete="off" placeholder="12.4" data-rule="num" aria-label="Street frontage"><span class="unit">m</span></div></div>
+            <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Entrance, shopfront, power supply…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
               <div class="thumbs">
-                <div class="thumb"><img src="img/commercial.svg" alt="" loading="lazy"></div>
                 <label class="thumb thumb-add"><input type="file" accept="image/*" multiple hidden data-photo-input><span>+ Add</span></label>
               </div>
             </div>
@@ -1803,7 +1810,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="fg" data-for-role="investor"><label for="r-budget">Available cash</label>
           <select id="r-budget"><option value="50000">Up to $50,000</option><option value="100000" selected>$50,000 – $100,000</option><option value="250000">$100,000 – $250,000</option><option value="250000+">$250,000+</option></select></div>
         <div class="fg" data-for-role="investor"><label for="r-interest">Interested in</label>
-          <select id="r-interest"><option>Apartments and land</option><option>Apartments</option><option>Land plots</option><option>Commercial spaces</option></select></div>
+          <select id="r-interest"><option value="Apartments and land">Apartments and land</option><option value="Apartments">Apartments</option><option value="Land plots">Land plots</option><option value="Commercial spaces">Commercial spaces</option></select></div>
         <div class="fg full" data-for-role="developer" hidden><label for="r-company">Company name</label><input id="r-company" autocomplete="organization"></div>
         <div class="fg" data-for-role="developer" hidden><label for="r-code">Company ID code <small>(9 digits)</small></label><input id="r-code" inputmode="numeric" pattern="\d{9}" maxlength="9"></div>
         <div class="fg" data-for-role="developer" hidden><label for="r-site">Website <small>(optional)</small></label><input id="r-site" type="url" placeholder="https://"></div>
@@ -1984,6 +1991,136 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* ---------- Developer workspace ---------- */
   var TAB_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' }, curTab = null;
+  var COND = { black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated' };
+  function tr(str){ return lang === 'ka' && KA[str] ? KA[str] : str; }
+  function panelOf(t){ return $('[data-panel="' + t + '"]'); }
+  function ctrls(root){ return $$('input[name],select[name],textarea[name]', root); }
+  function draftKey(t){ return 'ari-draft-' + t; }
+
+  /* completion: the next twelve quarters */
+  (function(){
+    var d = new Date(), q = Math.floor(d.getMonth() / 3) + 1, y = d.getFullYear(), opts = '';
+    for (var i = 0; i < 12; i++){ q++; if (q > 4){ q = 1; y++; } opts += '<option>Q' + q + ' ' + y + '</option>'; }
+    $$('select[name="ready"]').forEach(function(sel){ sel.insertAdjacentHTML('beforeend', opts); });
+  })();
+
+  /* read and write a panel's values (files are handled separately) */
+  function getVals(p){
+    var v = {};
+    ctrls(p).forEach(function(el){ v[el.name] = el.value.trim(); });
+    var c = p.querySelector('.cond-chips [aria-pressed="true"]'); if (c) v.cond = c.dataset.cond;
+    return v;
+  }
+  function setVals(p, v){
+    ctrls(p).forEach(function(el){
+      el.value = v[el.name] == null ? '' : v[el.name];
+      if (el.tagName === 'SELECT') el.classList.toggle('is-empty', !el.value);
+    });
+    $$('.cond-chips [data-cond]', p).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.cond === v.cond)); });
+  }
+
+  /* floor plan box: empty, a chosen file, or the example sketch */
+  function setPlan(box, st){
+    var prev = box.querySelector('.drop-prev'), meta = box.querySelector('.drop-meta'), demo = !!(st && st.demo);
+    if (prev.dataset.url){ URL.revokeObjectURL(prev.dataset.url); delete prev.dataset.url; }
+    box.querySelector('svg.fp').style.display = demo ? '' : 'none';
+    prev.hidden = demo;
+    if (st && st.url){ prev.innerHTML = '<img alt="">'; prev.firstChild.src = st.url; prev.dataset.url = st.url; }
+    else {
+      prev.innerHTML = '<span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span>';
+      prev.querySelector('.drop-file span').textContent = st && st.ext ? st.ext : '';
+    }
+    meta.querySelector('b').textContent = st ? st.name : 'No file chosen';
+    meta.querySelector('span').textContent = st ? st.info : 'PDF, DWG or JPG';
+    meta.querySelector('.file-ok').hidden = !st;
+    if (st) box.dataset.has = '1'; else delete box.dataset.has;
+  }
+  $$('[data-plan-add]').forEach(function(btn){
+    var box = btn.closest('.drop'), inp = box.querySelector('[data-plan-input]');
+    btn.addEventListener('click', function(){ inp.click(); });
+    inp.addEventListener('change', function(){
+      var file = inp.files && inp.files[0]; inp.value = '';
+      if (!file) return;
+      var ext = (file.name.split('.').pop() || '').toLowerCase(), isImg = file.type.indexOf('image/') === 0;
+      if (!isImg && ext !== 'pdf' && ext !== 'dwg'){ toast('Use a PDF, DWG or image file.'); return; }
+      var kb = file.size / 1024;
+      setPlan(box, { name:file.name, ext:ext.toUpperCase(), url:isImg ? URL.createObjectURL(file) : null,
+        info:(kb < 1024 ? Math.max(1, Math.round(kb)) + ' KB' : (kb / 1024).toFixed(1) + ' MB') + ' · ' + ext.toUpperCase() });
+      mark(box.closest('.field'), '');
+      toast('Floor plan added.');
+    });
+  });
+
+  /* validation: one message per field, shown under it */
+  function fieldMsg(f){
+    var plan = f.querySelector('[data-plan]');
+    if (plan) return plan.dataset.has ? '' : 'Upload a floor plan.';
+    var chips = f.querySelector('.cond-chips');
+    if (chips) return chips.querySelector('[aria-pressed="true"]') ? '' : 'Choose one.';
+    var els = ctrls(f), msg = '';
+    els.forEach(function(el){
+      if (msg) return;
+      var v = el.value.trim(), rule = el.dataset.rule;
+      if (!v){ if (el.hasAttribute('data-req')) msg = el.tagName === 'SELECT' ? 'Choose one.' : 'Fill in this field.'; return; }
+      if ((rule === 'num' && !(parseFloat(v) > 0)) || (rule === 'int' && !(parseInt(v, 10) > 0)) || (rule === 'money' && !(+v.replace(/[^0-9]/g, '') > 0))) msg = 'Enter a number above 0.';
+      else if (rule === 'pct' && !(+v >= 1 && +v <= 60)) msg = 'Discount must be between 1% and 60%.';
+      else if (rule === 'cad' && !/^\d{2}\.\d{2}\.\d{2}\.\d{3}\.\d{3}(\.\d{2}\.\d{3})?$/.test(v)) msg = 'Use the format 01.10.13.002.045.';
+    });
+    if (!msg && els.length === 2 && els[0].name === 'floor' && parseInt(els[0].value, 10) > parseInt(els[1].value, 10)) msg = 'Floor can’t be higher than the total.';
+    return msg;
+  }
+  function mark(f, msg){
+    var e = f.querySelector(':scope > .err'), h = f.querySelector(':scope > .hint:not(.err)');
+    f.classList.toggle('is-bad', !!msg);
+    if (!msg){ if (e) e.remove(); if (h) h.hidden = false; return; }
+    if (!e){ e = document.createElement('span'); e.className = 'hint err'; f.appendChild(e); }
+    if (e.dataset.msg !== msg){ e.dataset.msg = msg; e.textContent = msg; }
+    if (h) h.hidden = true;
+  }
+  function validate(p){
+    var first = null;
+    $$(':scope > .field', p).forEach(function(f){ var m = fieldMsg(f); mark(f, m); if (m && !first) first = f; });
+    return first;
+  }
+  function resetPanel(p){
+    setVals(p, {});
+    $$(':scope > .field', p).forEach(function(f){ mark(f, ''); });
+    var box = p.querySelector('[data-plan]'); if (box) setPlan(box, null);
+    $$('.thumb-user', p).forEach(function(t){ t.remove(); });
+  }
+
+  /* cadastral code: dots go in by themselves and typing stops at the full length,
+     01.10.13.002.045 for a parcel and 01.10.13.002.045.01.500 for a unit in a building (17 digits) */
+  function fmtCad(raw){
+    var d = raw.replace(/\D/g, '').slice(0, 17), parts = [], pos = 0;
+    [2, 2, 2, 3, 3, 2, 3].forEach(function(len){ if (pos < d.length) parts.push(d.substr(pos, len)); pos += len; });
+    return parts.join('.');
+  }
+  /* keep typed values tidy, and clear an error as soon as the field is fixed */
+  $('#wsForm').addEventListener('input', function(e){
+    var el = e.target, rule = el.dataset && el.dataset.rule, v = el.value;
+    if (rule === 'int' || rule === 'pct') el.value = v.replace(/[^0-9]/g, '');
+    else if (rule === 'money'){ var d = v.replace(/[^0-9]/g, ''); el.value = d ? (+d).toLocaleString('en-US') : ''; }
+    else if (rule === 'num'){ v = v.replace(',', '.').replace(/[^0-9.]/g, ''); var i = v.indexOf('.'); el.value = i < 0 ? v : v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, ''); }
+    else if (rule === 'cad'){
+      var caret = el.selectionStart == null ? v.length : el.selectionStart, before = v.slice(0, caret).replace(/\D/g, '').length, out = fmtCad(v), j = 0, k = 0;
+      el.value = out;
+      while (j < out.length && k < before){ if (/\d/.test(out.charAt(j))) k++; j++; }
+      if (document.activeElement === el) el.setSelectionRange(j, j);
+    }
+    var f = el.closest('.field'); if (f && f.classList.contains('is-bad')) mark(f, fieldMsg(f));
+  });
+  $('#wsForm').addEventListener('change', function(e){
+    var el = e.target; if (el.tagName !== 'SELECT') return;
+    el.classList.toggle('is-empty', !el.value);
+    var f = el.closest('.field'); if (f && f.classList.contains('is-bad')) mark(f, fieldMsg(f));
+  });
+  $$('[data-panel] .cond-chips').forEach(function(g){ g.addEventListener('click', function(e){
+    var b = e.target.closest('[data-cond]'); if (!b) return;
+    $$('[data-cond]', g).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    mark(g.closest('.field'), '');
+  }); });
+
   /* nothing is picked at first: the form opens under the chooser once a type is chosen */
   function setTab(t){
     var opening = !curTab && t;
@@ -1993,59 +2130,78 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (!t) return;
     $$('[data-panel]').forEach(function(p){ p.hidden = p.dataset.panel !== t; });
     $('#formType').textContent = TAB_NAME[t];
+    var p = panelOf(t);
+    if (!p.dataset.loaded){
+      p.dataset.loaded = '1';
+      try { var d = JSON.parse(localStorage.getItem(draftKey(t)) || 'null'); if (d){ setVals(p, d); toast('Draft restored.'); } } catch(e){}
+    }
     if (opening) $('.choice').scrollIntoView({ behavior:'smooth', block:'start' });
   }
   $$('[data-tab]').forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
-  var COND = { black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated' };
-  $$('[data-panel] .cond-chips').forEach(function(g){ g.addEventListener('click', function(e){
-    var b = e.target.closest('[data-cond]'); if (!b) return;
-    $$('[data-cond]', g).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
-  }); });
-  $$('[data-dev-action]').forEach(function(b){ b.addEventListener('click', function(){
-    if (b.dataset.devAction === 'draft'){ toast('Draft saved (demo).'); return; }
-    if (submitted) return;
-    submitted = true;
-    b.innerHTML = '<svg aria-hidden="true"><use href="#i-check"/></svg>Submitted';
-    b.disabled = true;
-    $('#mockFootNote').textContent = 'In review. You’ll be notified when it goes live.';
-    toast('Submitted for review (demo). It now appears in My offers.');
-    var src = curTab === 'commercial' ? $('#tplCommercial').content.firstElementChild : $$('.preview-grid .my-card')[curTab === 'land' ? 1 : 0];
-    if (src){
-      var copy = src.cloneNode(true);
-      copy.classList.add('is-edited');
-      var st = copy.querySelector('[data-status]'); st.textContent = 'In review'; st.className = 'status st-rev';
-      var pickCond = $('[data-panel="' + curTab + '"] [data-cond][aria-pressed="true"]'), cc = copy.querySelector('.chip-cond');
-      if (pickCond && cc){ cc.dataset.cond = pickCond.dataset.cond; cc.textContent = COND[pickCond.dataset.cond]; }
-      $('.preview-grid').insertBefore(copy, $('.preview-grid').firstChild);
-    }
-    $('#statRev').textContent = String(+$('#statRev').textContent + 1);
-  }); });
-  /* listing form: upload the floor plan (replaces the one shown) */
-  $$('[data-plan-add]').forEach(function(btn){
-    var box = btn.closest('.drop'), inp = box.querySelector('[data-plan-input]');
-    btn.addEventListener('click', function(){ inp.click(); });
-    inp.addEventListener('change', function(){
-      var file = inp.files && inp.files[0]; inp.value = '';
-      if (!file) return;
-      var ext = (file.name.split('.').pop() || '').toLowerCase(), isImg = file.type.indexOf('image/') === 0;
-      if (!isImg && ext !== 'pdf' && ext !== 'dwg'){ toast('Use a PDF, DWG or image file.'); return; }
-      var prev = box.querySelector('.drop-prev');
-      if (!prev){ prev = document.createElement('div'); prev.className = 'drop-prev'; box.insertBefore(prev, box.firstChild); box.querySelector('svg.fp').style.display = 'none'; }
-      if (prev.dataset.url) URL.revokeObjectURL(prev.dataset.url);
-      delete prev.dataset.url;
-      if (isImg){
-        prev.dataset.url = URL.createObjectURL(file);
-        prev.innerHTML = '<img alt="">'; prev.firstChild.src = prev.dataset.url;
-      } else {
-        prev.innerHTML = '<span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span>';
-        prev.querySelector('.drop-file span').textContent = ext.toUpperCase();
-      }
-      var kb = file.size / 1024, meta = box.querySelector('.drop-meta');
-      meta.querySelector('b').textContent = file.name;
-      meta.querySelector('span').textContent = (kb < 1024 ? Math.max(1, Math.round(kb)) + ' KB' : (kb / 1024).toFixed(1) + ' MB') + ' · ' + ext.toUpperCase();
-      toast('Floor plan added.');
-    });
+
+  /* example values, so the form can be tried without typing everything */
+  var EXAMPLE = {
+    apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', cad:'01.10.13.002.045',
+      info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf', planInfo:'1.2 MB · PDF' },
+    land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', cad:'01.19.09.011.112',
+      info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
+    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', cad:'01.14.05.008.021', ceil:'4.5', front:'12.4',
+      info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf', planInfo:'1.4 MB · PDF' }
+  };
+  $('[data-fill-example]').addEventListener('click', function(){
+    var p = panelOf(curTab), ex = EXAMPLE[curTab], v = {}, q = p.querySelector('[name="ready"]');
+    Object.keys(ex).forEach(function(k){ v[k] = ex[k]; });
+    v.info = tr(ex.info); v.ready = q.options[Math.min(3, q.options.length - 1)].value;
+    setVals(p, v);
+    var box = p.querySelector('[data-plan]'); if (box) setPlan(box, { demo:true, name:ex.plan, info:ex.planInfo });
+    $$(':scope > .field', p).forEach(function(f){ mark(f, ''); });
   });
+
+  /* My offers card built from what was typed */
+  var TPL = { apartment:$('.preview-grid').children[0].cloneNode(true), land:$('.preview-grid').children[1].cloneNode(true), commercial:$('#tplCommercial').content.firstElementChild.cloneNode(true) };
+  function buildCard(type, v, p){
+    var c = TPL[type].cloneNode(true), price = +v.price.replace(/[^0-9]/g, ''), d = +v.disc, size = parseFloat(v.size);
+    var m = Math.round(price / (1 - d / 100) / 100) * 100;
+    c.classList.add('is-edited'); c.dataset.price = price; c.dataset.discount = d; c.dataset.size = size;
+    var st = c.querySelector('[data-status]'); st.textContent = 'In review'; st.className = 'status st-rev';
+    var ver = c.querySelector('.tag-verified'); if (ver) ver.remove();
+    c.querySelector('.loc').lastChild.nodeValue = v.district;
+    c.querySelector('.listing-price strong').textContent = money(price);
+    c.querySelector('.listing-price .was').textContent = money(m);
+    c.querySelector('.badge-disc b').textContent = d + '%';
+    c.querySelector('.price-pct').textContent = '−' + d + '%';
+    c.querySelector('.saving').lastChild.nodeValue = ' ' + money(m - price);
+    c.querySelector('.price-meta > span:last-child').textContent = money(price / size) + ' / m²';
+    var dd = c.querySelectorAll('.specs dd');
+    dd[0].textContent = size.toLocaleString('en-US') + ' m²';
+    if (type !== 'land') dd[1].textContent = v.floor + ' / ' + v.floors;
+    dd[2].textContent = v.ready;
+    var cc = c.querySelector('.chip-cond'); if (cc && v.cond){ cc.dataset.cond = v.cond; cc.textContent = COND[v.cond]; }
+    var ph = p.querySelector('.thumb-user img'); if (ph) c.querySelector('.photo').src = ph.src;
+    return c;
+  }
+  $$('[data-dev-action]').forEach(function(b){ b.addEventListener('click', function(){
+    var p = panelOf(curTab);
+    if (b.dataset.devAction === 'draft'){
+      try { localStorage.setItem(draftKey(curTab), JSON.stringify(getVals(p))); toast('Draft saved on this device. Files are not kept.'); }
+      catch(e){ toast('Couldn’t save the draft in this browser.'); }
+      return;
+    }
+    var bad = validate(p);
+    if (bad){
+      toast('Check the highlighted fields.');
+      bad.scrollIntoView({ behavior:'smooth', block:'center' });
+      var foc = bad.querySelector('input[name],select,textarea,button'); if (foc) foc.focus({ preventScroll:true });
+      return;
+    }
+    var grid = $('.preview-grid');
+    grid.insertBefore(buildCard(curTab, getVals(p), p), grid.firstChild);
+    $('#statRev').textContent = String(+$('#statRev').textContent + 1);
+    try { localStorage.removeItem(draftKey(curTab)); } catch(e){}
+    resetPanel(p); setTab(null);
+    $('#devWorkspace').scrollIntoView({ behavior:'smooth', block:'start' });
+    toast('Submitted for review (demo). It now appears in My offers.');
+  }); });
   /* listing form: add and remove photos */
   var MAX_PHOTOS = 10;
   $$('[data-photo-input]').forEach(function(inp){
@@ -2291,6 +2447,16 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Developer lists a property':'დეველოპერი ამატებს ქონებას','Investor filters by budget':'ინვესტორი ფილტრავს ბიუჯეტით','They connect directly':'ისინი პირდაპირ უკავშირდებიან',
     'How the platform works':'როგორ მუშაობს პლატფორმა','© 2026 ARI Development':'© 2026 ARI Development','Investment platform':'საინვესტიციო პლატფორმა','ARI home':'ARI მთავარი',
     'Full diagram':'სრული სქემა',
+    'No file chosen':'ფაილი არ არის არჩეული','PDF, DWG or JPG':'PDF, DWG ან JPG','Choose':'აირჩიე','Fill with example':'მაგალითით შევსება','Total floors':'სართულების რაოდენობა',
+    'Fill in this field.':'შეავსე ეს ველი.','Choose one.':'აირჩიე ერთ-ერთი.','Enter a number above 0.':'შეიყვანე 0-ზე მეტი რიცხვი.',
+    'Discount must be between 1% and 60%.':'ფასდაკლება უნდა იყოს 1%-დან 60%-მდე.','Floor can’t be higher than the total.':'სართული სართულების რაოდენობას ვერ გადააჭარბებს.',
+    'Use the format 01.10.13.002.045.':'გამოიყენე ფორმატი 01.10.13.002.045.','Upload a floor plan.':'ატვირთე გეგმა.','Check the highlighted fields.':'შეამოწმე მონიშნული ველები.',
+    'Draft saved on this device. Files are not kept.':'მონახაზი შეინახა ამ მოწყობილობაზე. ფაილები არ ინახება.','Couldn’t save the draft in this browser.':'ამ ბრაუზერში მონახაზი ვერ შეინახა.','Draft restored.':'მონახაზი აღდგა.',
+    'Didube, Tbilisi':'დიდუბე, თბილისი','Didi Dighomi, Tbilisi':'დიდი დიღომი, თბილისი','Gldani, Tbilisi':'გლდანი, თბილისი','Isani, Tbilisi':'ისანი, თბილისი','Samgori, Tbilisi':'სამგორი, თბილისი',
+    'Nadzaladevi, Tbilisi':'ნაძალადევი, თბილისი','Chughureti, Tbilisi':'ჩუღურეთი, თბილისი','Krtsanisi, Tbilisi':'კრწანისი, თბილისი','Mtatsminda, Tbilisi':'მთაწმინდა, თბილისი','Lisi, Tbilisi':'ლისი, თბილისი',
+    'Mountain view':'მთის ხედი','Park view':'პარკის ხედი','River view':'მდინარის ხედი','Office':'ოფისი','Restaurant / café':'რესტორანი / კაფე','Warehouse':'საწყობი','Other':'სხვა',
+    'Installment terms, parking, finishes…':'განვადების პირობები, პარკინგი, მოპირკეთება…','Utilities, access road, building coefficient…':'კომუნიკაციები, მისასვლელი გზა, განაშენიანების კოეფიციენტი…',
+    'Entrance, shopfront, power supply…':'შესასვლელი, ვიტრინა, ელექტრომომარაგება…',
     'Upload floor plan':'გეგმის ატვირთვა','Floor plan added.':'გეგმა დაემატა.','Use a PDF, DWG or image file.':'გამოიყენე PDF, DWG ან სურათის ფაილი.',
     'Remove photo':'ფოტოს წაშლა','You can add up to 10 photos.':'შეგიძლია დაამატო მაქსიმუმ 10 ფოტო.','Photo added.':'ფოტო დაემატა.',
     "Edit listing":"განცხადების რედაქტირება",
@@ -2634,7 +2800,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Search and filter':'ძიება და ფილტრები','Example lead':'მოთხოვნის მაგალითი','Breadcrumb':'ნავიგაცია','Listing form':'განცხადების ფორმა',
     'Illustrative apartment interior':'საილუსტრაციო ინტერიერი','Illustrative land plot':'საილუსტრაციო ნაკვეთი'
   };
-  var lang = 'en', orig = new WeakMap(), ATTRS = ['aria-label','alt','title'];
+  var lang = 'en', orig = new WeakMap(), ATTRS = ['aria-label','alt','title','placeholder'];
   try { if (localStorage.getItem('bm-lang') === 'ka') lang = 'ka'; } catch(e){}
   function norm(s){ return s.replace(/\s+/g, ' ').trim(); }
   function translatePage(){
@@ -2650,7 +2816,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (lang === 'ka' && k){ out = en.match(/^\s*/)[0] + k + en.match(/\s*$/)[0]; }
       if (n.nodeValue !== out) n.nodeValue = out;
     }
-    $$('[aria-label],[alt],[title]').forEach(function(el){
+    $$('[aria-label],[alt],[title],[placeholder]').forEach(function(el){
       if (el.closest('.lang')) return;
       ATTRS.forEach(function(a){
         if (!el.hasAttribute(a)) return;
