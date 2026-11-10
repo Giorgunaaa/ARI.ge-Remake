@@ -836,6 +836,9 @@ body[data-view="home"] .foot{display:none}
 .phone input{border:0;border-radius:0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);margin:14px 0 16px}
 .check input{margin-top:3px;accent-color:#1A3732;width:16px;height:16px;flex:none}
+.form-err{margin:12px 0 0;font-size:13.5px;font-weight:600;color:var(--bad)}
+.auth-done{display:grid;gap:6px}
+.auth-done .btn{margin-top:14px}
 .modal-note{font-size:12.5px;color:var(--ink-3);margin-top:12px;text-align:center}
 .demo-acc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-2)}
 .demo-acc span{width:100%;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink-3)}
@@ -1385,7 +1388,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </article>
       </div>
       <div class="empty" id="empty" hidden>No listings match these filters. Lower the discount, clear the handover condition or switch the property type.</div>
-      <p class="fine">Example listings with illustrative prices and photos.</p>
+      <p class="fine" data-demo-only>Example listings with illustrative prices and photos.</p>
     </div>
   </section>
 
@@ -1493,8 +1496,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="stats">
         <div class="stat"><span>Published</span><b id="statPub">2</b></div>
         <div class="stat"><span>In review</span><b id="statRev">0</b></div>
-        <div class="stat"><span>Leads this month</span><b>3</b></div>
-        <div class="stat"><span>Listing views</span><b>137</b></div>
+        <div class="stat" data-demo-only><span>Leads this month</span><b>3</b></div>
+        <div class="stat" data-demo-only><span>Listing views</span><b>137</b></div>
       </div>
 
       </div>
@@ -1538,6 +1541,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
               </div>
             </article>
         </div>
+        <p class="empty" id="mineEmpty" hidden>You have no listings yet. Add your first one.</p>
         <template id="tplCommercial">
           <article class="listing my-card" data-price="216000" data-discount="20" data-size="120">
               <div class="listing-media">
@@ -1560,7 +1564,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </div>
       </div>
 
-      <div class="dash-block">
+      <div class="dash-block" data-demo-only>
         <div class="dash-block-head"><h2>Leads from investors</h2><span class="pill pill-muted">Checked by ARI</span></div>
         <div class="lead-grid">
           <div class="lead-item">
@@ -1807,6 +1811,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="fg full"><label for="r-name">Full name</label><input id="r-name" required autocomplete="name"></div>
         <div class="fg"><label for="r-email">Email</label><input id="r-email" type="email" required autocomplete="email"></div>
         <div class="fg"><label for="r-phone">Phone</label><div class="phone"><span>+995</span><input id="r-phone" type="tel" inputmode="tel" required placeholder="5XX XX XX XX"></div></div>
+        <div class="fg full"><label for="r-pass">Password <small>(8+ characters)</small></label><input id="r-pass" type="password" required minlength="8" autocomplete="new-password"></div>
         <div class="fg" data-for-role="investor"><label for="r-budget">Available cash</label>
           <select id="r-budget"><option value="50000">Up to $50,000</option><option value="100000" selected>$50,000 – $100,000</option><option value="250000">$100,000 – $250,000</option><option value="250000+">$250,000+</option></select></div>
         <div class="fg" data-for-role="investor"><label for="r-interest">Interested in</label>
@@ -1816,19 +1821,26 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="fg" data-for-role="developer" hidden><label for="r-site">Website <small>(optional)</small></label><input id="r-site" type="url" placeholder="https://"></div>
       </div>
       <label class="check"><input type="checkbox" id="r-terms" required><span>I agree to the Terms of use and Privacy policy.</span></label>
+      <p class="form-err" id="regErr" role="alert" hidden></p>
       <button class="btn btn-primary btn-block" type="submit" id="regSubmit">Create investor account</button>
-      <p class="modal-note">Concept demo. Nothing is sent or stored outside this browser tab.</p>
+      <p class="modal-note">We’ll email you a link to confirm your address.</p>
     </form>
+    <div class="auth-done" id="regDone" hidden>
+      <h3>Check your email</h3>
+      <p class="modal-sub"><span>We sent a confirmation link to</span> <b id="regDoneEmail"></b><span>. Open it to finish creating your account.</span></p>
+      <button class="btn btn-primary btn-block" type="button" data-close>Got it</button>
+    </div>
 
     <form id="signForm" novalidate hidden>
       <h3>Welcome back</h3>
       <p class="modal-sub">Sign in to see listings and leads.</p>
       <div class="form-grid">
         <div class="fg full"><label for="s-email">Email</label><input id="s-email" type="email" required autocomplete="email"></div>
-        <div class="fg full"><label for="s-role">Account type <small>(demo)</small></label><select id="s-role"><option value="investor">Investor</option><option value="developer">Developer</option></select></div>
+        <div class="fg full"><label for="s-pass">Password</label><input id="s-pass" type="password" required autocomplete="current-password"></div>
       </div>
-      <button class="btn btn-primary btn-block" type="submit" style="margin-top:18px">Sign in</button>
-      <p class="modal-note">Demo sign-in: no password needed. New here? <button class="switch-link" type="button" data-mode="register">Create an account</button></p>
+      <p class="form-err" id="signErr" role="alert" hidden></p>
+      <button class="btn btn-primary btn-block" type="submit" id="signSubmit" style="margin-top:18px">Sign in</button>
+      <p class="modal-note">New here? <button class="switch-link" type="button" data-mode="register">Create an account</button></p>
       <div class="demo-acc">
         <span>Demo accounts</span>
         <button class="btn btn-outline btn-sm" type="button" data-demo="developer">Sign in as developer</button>
@@ -1863,6 +1875,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
 <div class="toast" id="toast" hidden role="status"><svg aria-hidden="true"><use href="#i-check"/></svg><span id="toastText"></span></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
+        integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous"></script>
 <script>
 (function(){
   var $ = function(s, r){ return (r || document).querySelector(s); };
@@ -1872,6 +1886,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   var state = { role:null, type:'all', disc:null, cond:[], budget:70000 };
   try { state.role = sessionStorage.getItem('bm-role'); } catch(e){}
   function saveRole(){ try { state.role ? sessionStorage.setItem('bm-role', state.role) : sessionStorage.removeItem('bm-role'); } catch(e){} }
+
+  /* ---------- Supabase: real accounts, listings and files. In demo sign-in, or if the library
+     can't load, the page keeps working on sample data and nothing is sent. The key below is the
+     public one; what each account may read or write is decided by the database rules. ---------- */
+  var SB_URL = 'https://jirqxouwxetighqvhzjh.supabase.co', SB_KEY = 'sb_publishable_K-MhgBEzBTzo4zNR1iK0Cw_UWnEcVJL', BUCKET = 'platform-listings', MAX_FILE = 10 * 1024 * 1024;
+  var sb = null, user = null, MINE = {};
+  try { if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){}
+  var fromEmail = /access_token=|type=signup/.test(location.hash);
 
   var toastTimer;
   function toast(msg){ $('#toastText').textContent = msg; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ $('#toast').hidden = true; }, 4200); }
@@ -1913,7 +1935,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   var modal = $('#authModal'), lastFocus = null, pick = 'investor', submitted = false;
   function setMode(m){
     $$('.auth-tabs [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
-    $('#regForm').hidden = m !== 'register';
+    $('#regForm').hidden = m !== 'register'; $('#regDone').hidden = true;
     $('#signForm').hidden = m !== 'signin';
   }
   function setPick(p){
@@ -1923,7 +1945,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     $('#r-company').required = p === 'developer';
     $('#r-code').required = p === 'developer';
     $('#regSubmit').textContent = p === 'developer' ? 'Create developer account' : 'Create investor account';
-    $('#s-role').value = p;
   }
   function openModal(mode, role){
     lastFocus = document.activeElement;
@@ -1957,36 +1978,98 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     state.role = role; saveRole(); applyAuth(); update(); closeModal(); toast(msg);
     if (role === 'investor') goTo('#investors', '#invSearch'); else goTo('#developers', '#devWorkspace');
   }
+  function authMsg(err){
+    var m = (err && err.message) || '';
+    if (/invalid login credentials/i.test(m)) return 'Wrong email or password.';
+    if (/email not confirmed/i.test(m)) return 'Confirm your email first. The link is in your inbox.';
+    if (/already registered|already been registered/i.test(m)) return 'This email is already registered. Sign in instead.';
+    if (/rate limit|too many|only request this after/i.test(m)) return 'Too many attempts. Try again in a few minutes.';
+    if (/password/i.test(m)) return 'Use a password with at least 8 characters.';
+    return 'Something went wrong. Try again.';
+  }
+  function showErr(sel, msg){ var el = $(sel); el.textContent = msg || ''; el.hidden = !msg; }
+  var OFFLINE = 'Couldn’t reach the server. Check your connection.';
+
   $('#regForm').addEventListener('submit', function(e){
     e.preventDefault();
-    if (!this.checkValidity()){ this.reportValidity(); return; }
-    if (pick === 'investor'){
-      var b = $('#r-budget').value;
-      state.budget = b === '250000+' ? 250000 : +b;
-      $('#budget').value = state.budget;
-      signIn('investor', 'Investor account created (demo). Listings are now unlocked.');
-    } else {
-      signIn('developer', 'Developer account created (demo). Your listing workspace is open.');
+    var form = this;
+    if (!form.checkValidity()){ form.reportValidity(); return; }
+    var b = $('#r-budget').value, budget = b === '250000+' ? 250000 : +b;
+    if (!sb){   /* library unavailable: fall back to the sample-data account */
+      if (pick === 'investor'){ state.budget = budget; $('#budget').value = budget; signIn('investor', 'Investor account created (demo). Listings are now unlocked.'); }
+      else signIn('developer', 'Developer account created (demo). Your listing workspace is open.');
+      form.reset(); setPick(pick); return;
     }
-    this.reset(); setPick(pick);
+    if ($('#r-pass').value.length < 8){ showErr('#regErr', 'Use a password with at least 8 characters.'); $('#r-pass').focus(); return; }
+    var btn = $('#regSubmit'), email = $('#r-email').value.trim();
+    var meta = { role:pick, full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim() };
+    if (pick === 'investor'){ meta.budget = String(budget); meta.interest = $('#r-interest').value; }
+    else { meta.company = $('#r-company').value.trim(); meta.company_code = $('#r-code').value.trim(); meta.website = $('#r-site').value.trim(); }
+    showErr('#regErr', ''); btn.disabled = true;
+    sb.auth.signUp({ email:email, password:$('#r-pass').value, options:{ data:meta, emailRedirectTo:location.origin + location.pathname.replace(/index\.html$/, '') } }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#regErr', authMsg(res.error)); return; }
+      var u = res.data.user;
+      if (u && u.identities && !u.identities.length){ showErr('#regErr', 'This email is already registered. Sign in instead.'); return; }
+      form.reset(); setPick(pick);
+      if (res.data.session) return;   /* confirmation switched off: the auth listener signs in */
+      $('#regDoneEmail').textContent = email; form.hidden = true; $('#regDone').hidden = false;
+    }, function(){ btn.disabled = false; showErr('#regErr', OFFLINE); });
   });
   $('#signForm').addEventListener('submit', function(e){
     e.preventDefault();
-    if (!this.checkValidity()){ this.reportValidity(); return; }
-    var r = $('#s-role').value;
-    signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
-    this.reset();
+    var form = this;
+    if (!form.checkValidity()){ form.reportValidity(); return; }
+    if (!sb){ showErr('#signErr', 'Sign-in is unavailable right now. Try a demo account.'); return; }
+    var btn = $('#signSubmit');
+    showErr('#signErr', ''); btn.disabled = true;
+    sb.auth.signInWithPassword({ email:$('#s-email').value.trim(), password:$('#s-pass').value }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#signErr', authMsg(res.error)); return; }
+      form.reset();   /* the auth listener below does the rest */
+    }, function(){ btn.disabled = false; showErr('#signErr', OFFLINE); });
   });
   $$('[data-demo]').forEach(function(b){ b.addEventListener('click', function(){
     var r = b.dataset.demo;
     signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
   }); });
-  $('#signOut').addEventListener('click', function(){
-    state.role = null; saveRole(); submitted = false; setTab(null);
-    var b = $('[data-dev-action="submit"]'); b.disabled = false; b.textContent = 'Submit for review';
-    $('#mockFootNote').textContent = 'Listings are reviewed before they go live.';
-    applyAuth(); toast('Signed out. Listings and tools are hidden again.');
+
+  /* leaving an account, real or demo: back to guest and to the sample data */
+  function leave(){
+    user = null; MINE = {}; state.role = null; saveRole(); setTab(null);
+    restoreDemo(); applyAuth(); update();
+    toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
+  }
+  $('#signOut').addEventListener('click', function(){
+    if (user && sb){ sb.auth.signOut().then(null, function(){ leave(); }); return; }
+    leave();
+  });
+
+  /* a real session: read the profile, switch the page to that role and load its data */
+  function enter(u, announce){
+    user = u;
+    sb.from('platform_profiles').select('role,budget').eq('id', u.id).maybeSingle().then(function(res){
+      if (!user || user.id !== u.id) return;
+      var prof = res.data || {}, role = prof.role || (u.user_metadata || {}).role;
+      if (role !== 'developer' && role !== 'investor'){ toast('This account isn’t set up for the platform yet.'); return; }
+      state.role = role; try { sessionStorage.removeItem('bm-role'); } catch(e){}
+      if (role === 'investor' && prof.budget){ state.budget = Math.min(250000, Math.max(20000, prof.budget)); $('#budget').value = state.budget; }
+      setDemoOnly(false); applyAuth(); update();
+      if (!modal.hidden) closeModal();
+      if (role === 'developer') loadMine(); else loadPublished();
+      if (announce){
+        toast(role === 'developer' ? 'Signed in as a developer.' : 'Signed in as an investor. Listings are unlocked.');
+        if (role === 'investor') goTo('#investors', '#invSearch'); else goTo('#developers', '#devWorkspace');
+      } else if (location.hash === '#offers') route();
+    }, function(){ toast(OFFLINE); });
+  }
+  if (sb) sb.auth.onAuthStateChange(function(ev, session){
+    setTimeout(function(){   /* never call the client from inside its own callback */
+      var u = session && session.user;
+      if (u && (!user || user.id !== u.id)){ var announce = !modal.hidden || fromEmail; fromEmail = false; enter(u, announce); }
+      else if (!u && user) leave();
+    }, 0);
   });
 
   /* ---------- Developer workspace ---------- */
@@ -2022,6 +2105,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   /* floor plan box: empty, a chosen file, or the example sketch */
   function setPlan(box, st){
     var prev = box.querySelector('.drop-prev'), meta = box.querySelector('.drop-meta'), demo = !!(st && st.demo);
+    box._file = (st && st.file) || null;
     if (prev.dataset.url){ URL.revokeObjectURL(prev.dataset.url); delete prev.dataset.url; }
     box.querySelector('svg.fp').style.display = demo ? '' : 'none';
     prev.hidden = demo;
@@ -2043,8 +2127,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (!file) return;
       var ext = (file.name.split('.').pop() || '').toLowerCase(), isImg = file.type.indexOf('image/') === 0;
       if (!isImg && ext !== 'pdf' && ext !== 'dwg'){ toast('Use a PDF, DWG or image file.'); return; }
+      if (file.size > MAX_FILE){ toast('Each file can be up to 10 MB.'); return; }
       var kb = file.size / 1024;
-      setPlan(box, { name:file.name, ext:ext.toUpperCase(), url:isImg ? URL.createObjectURL(file) : null,
+      setPlan(box, { file:file, name:file.name, ext:ext.toUpperCase(), url:isImg ? URL.createObjectURL(file) : null,
         info:(kb < 1024 ? Math.max(1, Math.round(kb)) + ' KB' : (kb / 1024).toFixed(1) + ' MB') + ' · ' + ext.toUpperCase() });
       mark(box.closest('.field'), '');
       toast('Floor plan added.');
@@ -2054,7 +2139,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   /* validation: one message per field, shown under it */
   function fieldMsg(f){
     var plan = f.querySelector('[data-plan]');
-    if (plan) return plan.dataset.has ? '' : 'Upload a floor plan.';
+    if (plan) return plan.dataset.has && (!user || plan._file) ? '' : 'Upload a floor plan.';   /* a real account needs a real file */
     var chips = f.querySelector('.cond-chips');
     if (chips) return chips.querySelector('[aria-pressed="true"]') ? '' : 'Choose one.';
     var els = ctrls(f), msg = '';
@@ -2153,33 +2238,134 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     Object.keys(ex).forEach(function(k){ v[k] = ex[k]; });
     v.info = tr(ex.info); v.ready = q.options[Math.min(3, q.options.length - 1)].value;
     setVals(p, v);
-    var box = p.querySelector('[data-plan]'); if (box) setPlan(box, { demo:true, name:ex.plan, info:ex.planInfo });
+    var box = p.querySelector('[data-plan]'); if (box && !user) setPlan(box, { demo:true, name:ex.plan, info:ex.planInfo });
     $$(':scope > .field', p).forEach(function(f){ mark(f, ''); });
   });
 
-  /* My offers card built from what was typed */
+  /* one listing card, filled from a plain object: used for sample submits, My offers and investor results */
   var TPL = { apartment:$('.preview-grid').children[0].cloneNode(true), land:$('.preview-grid').children[1].cloneNode(true), commercial:$('#tplCommercial').content.firstElementChild.cloneNode(true) };
-  function buildCard(type, v, p){
-    var c = TPL[type].cloneNode(true), price = +v.price.replace(/[^0-9]/g, ''), d = +v.disc, size = parseFloat(v.size);
-    var m = Math.round(price / (1 - d / 100) / 100) * 100;
-    c.classList.add('is-edited'); c.dataset.price = price; c.dataset.discount = d; c.dataset.size = size;
-    var st = c.querySelector('[data-status]'); st.textContent = 'In review'; st.className = 'status st-rev';
-    var ver = c.querySelector('.tag-verified'); if (ver) ver.remove();
-    c.querySelector('.loc').lastChild.nodeValue = v.district;
-    c.querySelector('.listing-price strong').textContent = money(price);
+  var TPLI = {}, DEMO_RES = $$('#results .listing'), DEMO_MINE = $$('.preview-grid .my-card');
+  DEMO_RES.forEach(function(c){ if (!TPLI[c.dataset.type]) TPLI[c.dataset.type] = c.cloneNode(true); });
+  var STATUS = { in_review:['In review', 'st-rev'], published:['Published', 'st-pub'], rejected:['Rejected', 'st-new'] };
+  function fillCard(c, L, mine){
+    var m = Math.round(L.price / (1 - L.disc / 100) / 100) * 100;
+    c.dataset.type = L.type; c.dataset.price = L.price; c.dataset.discount = L.disc; c.dataset.size = L.size;
+    if (L.id) c.dataset.id = L.id;
+    c.querySelector('.loc').lastChild.nodeValue = L.district;
+    c.querySelector('.listing-price strong').textContent = money(L.price);
     c.querySelector('.listing-price .was').textContent = money(m);
-    c.querySelector('.badge-disc b').textContent = d + '%';
-    c.querySelector('.price-pct').textContent = '−' + d + '%';
-    c.querySelector('.saving').lastChild.nodeValue = ' ' + money(m - price);
-    c.querySelector('.price-meta > span:last-child').textContent = money(price / size) + ' / m²';
+    c.querySelector('.badge-disc b').textContent = L.disc + '%';
+    c.querySelector('.price-pct').textContent = '−' + L.disc + '%';
+    c.querySelector('.saving').lastChild.nodeValue = ' ' + money(m - L.price);
+    c.querySelector('.price-meta > span:last-child').textContent = money(L.price / L.size) + ' / m²';
     var dd = c.querySelectorAll('.specs dd');
-    dd[0].textContent = size.toLocaleString('en-US') + ' m²';
-    if (type !== 'land') dd[1].textContent = v.floor + ' / ' + v.floors;
-    dd[2].textContent = v.ready;
-    var cc = c.querySelector('.chip-cond'); if (cc && v.cond){ cc.dataset.cond = v.cond; cc.textContent = COND[v.cond]; }
-    var ph = p.querySelector('.thumb-user img'); if (ph) c.querySelector('.photo').src = ph.src;
+    dd[0].textContent = L.size.toLocaleString('en-US') + ' m²';
+    if (L.type !== 'land') dd[1].textContent = L.floor + ' / ' + L.floors;
+    else if (L.id){ dd[1].parentNode.remove(); c.querySelector('.specs').style.gridTemplateColumns = 'repeat(2,minmax(0,1fr))'; }   /* stored plots carry no plot type */
+    dd[2].textContent = L.ready;
+    var cc = c.querySelector('.chip-cond');
+    if (cc){ if (L.cond){ cc.dataset.cond = L.cond; cc.textContent = COND[L.cond]; } else cc.remove(); }
+    var chip = c.querySelector('.listing-loc .chip:not(.chip-cond)'), extra = L.type === 'apartment' ? L.view : L.type === 'commercial' ? L.use : null;
+    if (chip){ if (extra) chip.textContent = extra; else chip.remove(); }
+    if (L.photo){ c.querySelector('.photo').src = L.photo; var note = c.querySelector('.photo-note'); if (note) note.remove(); }
+    if (mine){
+      var st = c.querySelector('[data-status]'), S = STATUS[L.status] || STATUS.in_review, ver = c.querySelector('.tag-verified');
+      st.textContent = S[0]; st.className = 'status ' + S[1];
+      if (L.note) st.title = L.note;
+      if (L.status !== 'published' && ver) ver.remove();
+    }
     return c;
   }
+  function setDemoOnly(on){ $$('[data-demo-only]').forEach(function(el){ el.hidden = !on; }); }
+  function restoreDemo(){
+    var res = $('#results'), grid = $('.preview-grid');
+    res.innerHTML = ''; DEMO_RES.forEach(function(c){ res.appendChild(c); });
+    grid.innerHTML = ''; DEMO_MINE.forEach(function(c){ grid.appendChild(c); });
+    $('#statPub').textContent = '2'; $('#statRev').textContent = '0'; $('#mineEmpty').hidden = true;
+    setDemoOnly(true);
+  }
+
+  /* ----- stored listings ----- */
+  function fileExt(f){ return ((f.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5)) || 'bin'; }
+  function newId(){
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    var b = crypto.getRandomValues(new Uint8Array(16)), h = '';
+    b[6] = b[6] & 15 | 64; b[8] = b[8] & 63 | 128;
+    for (var i = 0; i < 16; i++) h += (b[i] < 16 ? '0' : '') + b[i].toString(16) + (i === 3 || i === 5 || i === 7 || i === 9 ? '-' : '');
+    return h;
+  }
+  function signUrls(paths){   /* private files are shown through links that expire in an hour */
+    paths = paths.filter(Boolean);
+    if (!paths.length) return Promise.resolve({});
+    return sb.storage.from(BUCKET).createSignedUrls(paths, 3600).then(function(res){
+      var map = {}; (res.data || []).forEach(function(x){ if (x.signedUrl) map[x.path] = x.signedUrl; }); return map;
+    }, function(){ return {}; });
+  }
+  function rowToL(r, urls){
+    return { id:r.id, type:r.type, status:r.status, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type,
+      cond:r.handover, price:r.price_usd, disc:r.discount_pct, ready:r.ready, photo:urls[r.photos && r.photos[0]] || null, note:r.review_note };
+  }
+  function firstPhotos(rows){ return rows.map(function(r){ return r.photos && r.photos[0]; }); }
+  function loadMine(){
+    var uid = user && user.id; if (!uid) return;
+    sb.from('platform_listings').select('*').eq('owner', uid).order('created_at', { ascending:false }).then(function(res){
+      if (res.error){ toast('Couldn’t load your listings. Refresh the page.'); return; }
+      var rows = res.data || [];
+      signUrls(firstPhotos(rows)).then(function(urls){
+        if (!user || user.id !== uid) return;
+        var grid = $('.preview-grid'); grid.innerHTML = ''; MINE = {};
+        rows.forEach(function(r){ MINE[r.id] = r; grid.appendChild(fillCard(TPL[r.type].cloneNode(true), rowToL(r, urls), true)); });
+        $('#statPub').textContent = String(rows.filter(function(r){ return r.status === 'published'; }).length);
+        $('#statRev').textContent = String(rows.filter(function(r){ return r.status === 'in_review'; }).length);
+        $('#mineEmpty').hidden = rows.length > 0;
+      });
+    }, function(){ toast(OFFLINE); });
+  }
+  function loadPublished(){
+    var uid = user && user.id; if (!uid) return;
+    sb.from('platform_listings').select('id,type,status,district,size_m2,floor,floors,view_type,use_type,handover,price_usd,discount_pct,ready,photos')
+      .eq('status', 'published').order('created_at', { ascending:false }).then(function(res){
+      if (res.error){ toast('Couldn’t load listings. Refresh the page.'); return; }
+      var rows = res.data || [];
+      signUrls(firstPhotos(rows)).then(function(urls){
+        if (!user || user.id !== uid) return;
+        var box = $('#results'); box.innerHTML = '';
+        rows.forEach(function(r){ box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
+        update();
+      });
+    }, function(){ toast(OFFLINE); });
+  }
+  function sendListing(type, v, p, btn){
+    var id = newId(), base = user.id + '/' + id + '/', store = sb.storage.from(BUCKET), ups = [], planPath = null, photos = [];
+    var box = p.querySelector('[data-plan]');
+    if (box && box._file){ planPath = base + 'plan.' + fileExt(box._file); ups.push(store.upload(planPath, box._file)); }
+    $$('.thumb-user', p).forEach(function(t, i){
+      if (!t._file) return;
+      var path = base + 'photo-' + (i + 1) + '.' + fileExt(t._file); photos.push(path); ups.push(store.upload(path, t._file));
+    });
+    var done = function(){ btn.disabled = false; btn.textContent = 'Submit for review'; };
+    btn.disabled = true; btn.textContent = 'Sending…';
+    Promise.all(ups).then(function(rs){
+      var bad = rs.filter(function(r){ return r.error; })[0];
+      if (bad) throw bad.error;
+      return sb.from('platform_listings').insert({ id:id, type:type, district:v.district, size_m2:parseFloat(v.size),
+        floor:v.floor ? +v.floor : null, floors:v.floors ? +v.floors : null, view_type:v.view || null, use_type:v.use || null, handover:v.cond || null,
+        price_usd:+v.price.replace(/[^0-9]/g, ''), discount_pct:+v.disc, ready:v.ready, cadastral:v.cad,
+        ceiling_m:v.ceil ? parseFloat(v.ceil) : null, frontage_m:v.front ? parseFloat(v.front) : null, info:v.info || null, plan_path:planPath, photos:photos });
+    }).then(function(res){
+      if (res.error) throw res.error;
+      done();
+      try { localStorage.removeItem(draftKey(type)); } catch(e){}
+      resetPanel(p); setTab(null); loadMine();
+      $('#devWorkspace').scrollIntoView({ behavior:'smooth', block:'start' });
+      toast('Submitted for review. It now appears in My offers.');
+    }).catch(function(err){
+      done();
+      var paths = photos.concat(planPath ? [planPath] : []); if (paths.length) store.remove(paths);   /* don't leave orphan files */
+      toast(/row-level security|permission|policy/i.test((err && err.message) || '') ? 'Only developer accounts can add listings.' : 'Couldn’t send the listing. Try again.');
+    });
+  }
+
   $$('[data-dev-action]').forEach(function(b){ b.addEventListener('click', function(){
     var p = panelOf(curTab);
     if (b.dataset.devAction === 'draft'){
@@ -2194,8 +2380,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var foc = bad.querySelector('input[name],select,textarea,button'); if (foc) foc.focus({ preventScroll:true });
       return;
     }
-    var grid = $('.preview-grid');
-    grid.insertBefore(buildCard(curTab, getVals(p), p), grid.firstChild);
+    var v = getVals(p);
+    if (user){ sendListing(curTab, v, p, b); return; }
+    /* demo sign-in: the card lives only in this tab */
+    var ph = p.querySelector('.thumb-user img'), grid = $('.preview-grid');
+    var card = fillCard(TPL[curTab].cloneNode(true), { type:curTab, status:'in_review', district:v.district, size:parseFloat(v.size), floor:v.floor, floors:v.floors,
+      view:v.view, use:v.use, cond:v.cond, price:+v.price.replace(/[^0-9]/g, ''), disc:+v.disc, ready:v.ready, photo:ph ? ph.src : null }, true);
+    card.classList.add('is-edited');
+    grid.insertBefore(card, grid.firstChild);
     $('#statRev').textContent = String(+$('#statRev').textContent + 1);
     try { localStorage.removeItem(draftKey(curTab)); } catch(e){}
     resetPanel(p); setTab(null);
@@ -2209,6 +2401,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var addTile = inp.closest('.thumb-add'), box = addTile.parentNode;
       var have = box.querySelectorAll('.thumb:not(.thumb-add)').length;
       var files = Array.prototype.slice.call(inp.files || []).filter(function(file){ return file.type.indexOf("image/") === 0; });
+      if (files.some(function(file){ return file.size > MAX_FILE; })){ toast('Each file can be up to 10 MB.'); files = files.filter(function(file){ return file.size <= MAX_FILE; }); }
       if (have + files.length > MAX_PHOTOS){ toast('You can add up to 10 photos.'); files = files.slice(0, Math.max(0, MAX_PHOTOS - have)); }
       files.forEach(function(file){
         var url = URL.createObjectURL(file);
@@ -2216,7 +2409,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         t.className = 'thumb thumb-user';
         t.innerHTML = '<img alt=""><button class="thumb-x" type="button" aria-label="Remove photo">×</button>';
         t.querySelector('img').src = url;
-        t.dataset.url = url;
+        t.dataset.url = url; t._file = file;
         box.insertBefore(t, addTile);
       });
       if (files.length) toast(files.length === 1 ? 'Photo added.' : (lang === 'ka' ? 'დაემატა ' + files.length + ' ფოტო.' : files.length + ' photos added.'));
@@ -2241,7 +2434,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   document.addEventListener('click', function(e){
     var b = e.target.closest('[data-edit]');
     if (b){
-      editCard = b.closest('.my-card');
+      editCard = b.closest('.my-card'); $('#editFile').value = '';
       $('#editImg').src = editCard.querySelector('.photo').src;
       $('#editWhat').textContent = editCard.querySelector('.loc').textContent.trim() + ' · ' + editCard.querySelector('.specs dd').textContent.trim();
       $('#editPrice').value = (+editCard.dataset.price).toLocaleString('en-US');
@@ -2265,6 +2458,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     e.preventDefault();
     var v = calcEdit();
     if (!v.p || v.d < 1 || v.d > 60){ toast('Enter a price and a discount between 1% and 60%.'); return; }
+    if (user && MINE[editCard.dataset.id]){ saveEdit(MINE[editCard.dataset.id], v); return; }
     var c = editCard, size = +c.dataset.size || 1;
     c.dataset.price = v.p; c.dataset.discount = v.d;
     c.querySelector('.listing-price strong').textContent = money(v.p);
@@ -2284,6 +2478,28 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     closeEdit();
     toast('Changes sent to ARI for review (demo).');
   });
+
+  /* a stored listing: new price, discount and optionally a new first photo; any change goes back to review */
+  function saveEdit(row, v){
+    var f = $('#editFile').files && $('#editFile').files[0], store = sb.storage.from(BUCKET), photos = (row.photos || []).slice(), old = photos[0], fresh = null;
+    var btn = $('#editForm [type="submit"]');
+    if (f && f.size > MAX_FILE){ toast('Each file can be up to 10 MB.'); return; }
+    if (f) fresh = user.id + '/' + row.id + '/photo-' + Date.now() + '.' + fileExt(f);
+    btn.disabled = true;
+    (fresh ? store.upload(fresh, f) : Promise.resolve({})).then(function(r){
+      if (r.error) throw r.error;
+      if (fresh){ if (old) photos[0] = fresh; else photos.unshift(fresh); }
+      return sb.from('platform_listings').update({ price_usd:v.p, discount_pct:v.d, status:'in_review', photos:photos }).eq('id', row.id);
+    }).then(function(res){
+      if (res.error) throw res.error;
+      if (fresh && old) store.remove([old]);
+      btn.disabled = false; closeEdit(); loadMine();
+      toast('Changes sent to ARI for review.');
+    }).catch(function(){
+      btn.disabled = false; if (fresh) store.remove([fresh]);
+      toast('Couldn’t save the changes. Try again.');
+    });
+  }
 
   /* ---------- Investor search ---------- */
   var cards = $$('#results .listing');
@@ -2330,7 +2546,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   function update(){
     $('#budgetOut').textContent = fmt(state.budget);
     syncSizeMax();
-    var items = cards.map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond }; });
+    var items = $$('#results .listing').map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond }; });
     var shown = 0, fits = 0, ka = lang === 'ka';
     items.forEach(function(o){
       var vis = (state.type === 'all' || o.t === state.type) && (!state.disc || (o.d >= state.disc[0] && o.d <= state.disc[1]))
@@ -2347,8 +2563,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     items.sort(function(a,b){ return ((b.p <= state.budget) - (a.p <= state.budget)) || (b.d - a.d); })
          .forEach(function(o,i){ o.c.style.order = i; });
     $('#summary').innerHTML = ka
-      ? '<b>' + shown + ' სანიმუშო განცხადება</b> · ' + fits + ' ჯდება ' + fmt(state.budget) + '-იან ბიუჯეტში'
-      : '<b>' + shown + ' example listing' + (shown === 1 ? '' : 's') + '</b> · ' + fits + ' fit' + (fits === 1 ? 's' : '') + ' a ' + fmt(state.budget) + ' budget';
+      ? '<b>' + shown + (user ? ' განცხადება' : ' სანიმუშო განცხადება') + '</b> · ' + fits + ' ჯდება ' + fmt(state.budget) + '-იან ბიუჯეტში'
+      : '<b>' + shown + (user ? ' listing' : ' example listing') + (shown === 1 ? '' : 's') + '</b> · ' + fits + ' fit' + (fits === 1 ? 's' : '') + ' a ' + fmt(state.budget) + ' budget';
+    var none = user && !items.length ? 'No published listings yet. ARI reviews each listing before it appears here.' : 'No listings match these filters. Lower the discount, clear the handover condition or switch the property type.';
+    if ($('#empty').dataset.msg !== none){ $('#empty').dataset.msg = none; $('#empty').textContent = none; }
     $('#empty').hidden = shown > 0;
   }
   $('#budget').addEventListener('input', function(){ state.budget = +this.value; update(); });
@@ -2375,12 +2593,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     update();
   });
   paintDual('size'); paintDual('price');
-  $$('[data-details]').forEach(function(b){ b.addEventListener('click', function(){ toast('Details page with floor plan, cadastral code and developer contact (concept).'); }); });
-  $$('.save').forEach(function(b){ b.addEventListener('click', function(){
+  document.addEventListener('click', function(e){   /* delegated: the cards can be replaced by stored listings */
+    if (e.target.closest('[data-details]')){ toast('Details page with floor plan, cadastral code and developer contact (concept).'); return; }
+    var b = e.target.closest('.save'); if (!b) return;
     var on = b.getAttribute('aria-pressed') !== 'true';
     b.setAttribute('aria-pressed', String(on));
     b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
-  }); });
+  });
 
   /* ---------- Platform swimlane ---------- */
   var lanes = [['Developer','Supply side'],['Platform','Review & matching'],['Investor','Demand side']];
@@ -2447,6 +2666,20 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Developer lists a property':'დეველოპერი ამატებს ქონებას','Investor filters by budget':'ინვესტორი ფილტრავს ბიუჯეტით','They connect directly':'ისინი პირდაპირ უკავშირდებიან',
     'How the platform works':'როგორ მუშაობს პლატფორმა','© 2026 ARI Development':'© 2026 ARI Development','Investment platform':'საინვესტიციო პლატფორმა','ARI home':'ARI მთავარი',
     'Full diagram':'სრული სქემა',
+    'Password':'პაროლი','(8+ characters)':'(მინიმუმ 8 სიმბოლო)','We’ll email you a link to confirm your address.':'ელფოსტაზე გამოგიგზავნით ბმულს მისამართის დასადასტურებლად.',
+    'Check your email':'შეამოწმე ელფოსტა','We sent a confirmation link to':'დადასტურების ბმული გავგზავნეთ მისამართზე','. Open it to finish creating your account.':'. გახსენი ის, რომ ანგარიშის შექმნა დაასრულო.','Got it':'გასაგებია',
+    'New here?':'ახალი ხარ?','Wrong email or password.':'ელფოსტა ან პაროლი არასწორია.','Confirm your email first. The link is in your inbox.':'ჯერ დაადასტურე ელფოსტა. ბმული შენს საფოსტო ყუთშია.',
+    'This email is already registered. Sign in instead.':'ეს ელფოსტა უკვე დარეგისტრირებულია. შედი ანგარიშში.','Too many attempts. Try again in a few minutes.':'ზედმეტად ბევრი ცდა. სცადე რამდენიმე წუთში.',
+    'Use a password with at least 8 characters.':'გამოიყენე მინიმუმ 8-სიმბოლოიანი პაროლი.','Something went wrong. Try again.':'რაღაც შეცდომა მოხდა. სცადე თავიდან.',
+    'Couldn’t reach the server. Check your connection.':'სერვერთან დაკავშირება ვერ მოხერხდა. შეამოწმე ინტერნეტი.','Sign-in is unavailable right now. Try a demo account.':'შესვლა ახლა მიუწვდომელია. სცადე დემო ანგარიში.',
+    'Signed in as a developer.':'შეხვედი როგორც დეველოპერი.','Signed in as an investor. Listings are unlocked.':'შეხვედი როგორც ინვესტორი. განცხადებები გაიხსნა.',
+    'This account isn’t set up for the platform yet.':'ეს ანგარიში პლატფორმისთვის ჯერ არ არის გამართული.',
+    'Sending…':'იგზავნება…','Submitted for review. It now appears in My offers.':'განსახილველად გაიგზავნა. ის ახლა „ჩემი შეთავაზებები"-შია.',
+    'Couldn’t send the listing. Try again.':'განცხადება ვერ გაიგზავნა. სცადე თავიდან.','Only developer accounts can add listings.':'განცხადების დამატება მხოლოდ დეველოპერის ანგარიშს შეუძლია.',
+    'Couldn’t load your listings. Refresh the page.':'შენი განცხადებები ვერ ჩაიტვირთა. განაახლე გვერდი.','Couldn’t load listings. Refresh the page.':'განცხადებები ვერ ჩაიტვირთა. განაახლე გვერდი.',
+    'Changes sent to ARI for review.':'ცვლილებები გაეგზავნა ARI-ს განსახილველად.','Couldn’t save the changes. Try again.':'ცვლილებები ვერ შეინახა. სცადე თავიდან.','Rejected':'უარყოფილია',
+    'You have no listings yet. Add your first one.':'ჯერ განცხადება არ გაქვს. დაამატე პირველი.','Each file can be up to 10 MB.':'თითო ფაილი მაქსიმუმ 10 MB შეიძლება იყოს.',
+    'No published listings yet. ARI reviews each listing before it appears here.':'გამოქვეყნებული განცხადება ჯერ არ არის. ARI ყველა განცხადებას ამოწმებს, სანამ აქ გამოჩნდება.',
     'No file chosen':'ფაილი არ არის არჩეული','PDF, DWG or JPG':'PDF, DWG ან JPG','Choose':'აირჩიე','Fill with example':'მაგალითით შევსება','Total floors':'სართულების რაოდენობა',
     'Fill in this field.':'შეავსე ეს ველი.','Choose one.':'აირჩიე ერთ-ერთი.','Enter a number above 0.':'შეიყვანე 0-ზე მეტი რიცხვი.',
     'Discount must be between 1% and 60%.':'ფასდაკლება უნდა იყოს 1%-დან 60%-მდე.','Floor can’t be higher than the total.':'სართული სართულების რაოდენობას ვერ გადააჭარბებს.',
