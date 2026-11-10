@@ -228,6 +228,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn-white:hover{background:#EEF2F7}
 .door2:focus-visible{outline-offset:-6px}
 @media (prefers-reduced-motion:no-preference){.door2:hover img{transform:scale(1.04)}}
+/* Home doors: the chosen side sweeps across the screen, then its page fades in underneath */
+.door2.door-fx{position:fixed;z-index:40;margin:0;pointer-events:none;box-shadow:0 0 90px rgba(0,0,0,.55);will-change:left,top,width,height,opacity}
+.door2.door-fx img{transition:none}
+.home2-center,.mid2,.home2-foot{transition:opacity .3s ease}
+.home2.is-leaving .home2-center,.home2.is-leaving .mid2,.home2.is-leaving .home2-foot{opacity:0}
+@keyframes viewIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+body.fx-enter .view:not([hidden]) .page-hero-inner{animation:viewIn .75s .1s cubic-bezier(.2,.7,.2,1) both}
+body.fx-enter .view:not([hidden]) .page-hero~*{animation:viewIn .75s .2s cubic-bezier(.2,.7,.2,1) both}
 .home2-center{position:absolute;left:50%;top:clamp(18px,5vh,48px);transform:translateX(-50%);z-index:6;text-align:center;color:#fff;background:rgba(12,30,26,.58);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:18px 28px;width:min(620px,calc(100% - 32px))}
 .kicker2{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}
 .home2-center h1{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:6px}
@@ -3074,6 +3082,40 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     applyAuth(); update(); translatePage();
   }
   $$('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ setLang(b.dataset.lang); }); });
+
+  /* ---------- Home doors ----------
+     Clicking a side lifts a copy of it above the page and grows it from its half to the whole screen
+     (the investor side sweeps right-to-left, the developer side left-to-right; on phones, vertically).
+     When it covers everything the route changes underneath and the copy fades away over the new page.
+     Modified clicks, old browsers and reduced-motion users get the plain link. */
+  var fxBusy = false;
+  $$('.home2 .door2').forEach(function(door){
+    door.addEventListener('click', function(e){
+      if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (!door.animate || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      e.preventDefault();
+      if (fxBusy) return;
+      fxBusy = true;
+      var home = $('.home2'), from = door.getBoundingClientRect(), to = home.getBoundingClientRect();
+      var box = function(r){ return { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' }; };
+      var fx = door.cloneNode(true), a = box(from);
+      fx.removeAttribute('href'); fx.setAttribute('aria-hidden', 'true'); fx.classList.add('door-fx');
+      fx.style.left = a.left; fx.style.top = a.top; fx.style.width = a.width; fx.style.height = a.height;
+      document.body.appendChild(fx);
+      home.classList.add('is-leaving');
+      fx.querySelector('.in').animate([{ opacity:1, transform:'none' }, { opacity:0, transform:'translateY(16px)' }], { duration:340, easing:'ease-out', fill:'forwards' });
+      fx.querySelector('img').animate([{ transform:'scale(1.04)' }, { transform:'scale(1)' }], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
+      var grow = fx.animate([a, box(to)], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
+      var finish = function(){ fx.remove(); home.classList.remove('is-leaving'); fxBusy = false; setTimeout(function(){ document.body.classList.remove('fx-enter'); }, 1100); };
+      grow.onfinish = function(){
+        document.body.classList.add('fx-enter');
+        location.hash = door.getAttribute('href'); route();
+        var out = fx.animate([{ opacity:1 }, { opacity:0 }], { duration:560, delay:60, easing:'ease', fill:'forwards' });
+        out.onfinish = finish; out.oncancel = finish;
+      };
+      grow.oncancel = finish;
+    });
+  });
 
   /* ---------- Boot ---------- */
   route();
