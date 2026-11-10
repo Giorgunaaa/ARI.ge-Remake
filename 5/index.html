@@ -326,13 +326,6 @@ html[lang="ka"] .door2 .h2{font-size:clamp(1.45rem,2.4vw,2.1rem)}
 .after .step{grid-template-columns:56px minmax(0,1fr);column-gap:18px;row-gap:4px}
 .after .step-icon{grid-row:span 3}
 .after .step:not(:last-child)::after{top:64px;bottom:-22px;left:27px;right:auto;border-top:0;border-left:2px dashed var(--line-2)}
-.lead-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:20px;display:grid;gap:14px;max-width:420px;width:100%;justify-self:center}
-.lead-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.lead-top b{font-family:var(--f-display);font-size:17px;font-weight:600}
-.lead-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px}
-.lead-row span{color:var(--ink-3)}
-.lead-row b{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
-.lead-msg{padding:12px 14px;border-radius:12px;background:var(--band);font-size:14px;color:var(--ink-2)}
 @media (max-width:900px){.after{grid-template-columns:1fr}}
 
 /* Compact Developers page */
@@ -431,7 +424,7 @@ div.view .page-hero .page-hero-inner{height:100%;padding-block:clamp(40px,7vh,72
 .dash-head h1{font-size:clamp(2rem,4vw,3rem);margin:10px 0 6px}
 .dash-head p{color:var(--on-navy-2)}
 div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:32px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:4px}
 .stat span{font-size:13px;color:var(--ink-3)}
 .stat b{font-family:var(--f-display);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -457,30 +450,12 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .my-num{display:grid;text-align:center;font-variant-numeric:tabular-nums}
 .my-num b{font-weight:600;font-size:16px}
 .my-num span{font-size:12px;color:var(--ink-3)}
-.lead-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
-.lead-grid .lead-item{display:flex;flex-direction:column;gap:14px;padding:20px}
-.li-head{display:flex;align-items:center;gap:12px}
-.li-ico{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--navy);color:var(--on-navy)}
-.li-ico svg{width:20px;height:20px}
-.li-who{display:grid;gap:2px;min-width:0}
-.li-who b{font-weight:600;font-size:15px}
-.li-who span{font-size:13.5px;color:var(--ink-3)}
-.li-budget{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 12px;border-radius:10px;background:var(--band);font-size:13.5px}
-.li-budget span{color:var(--ink-3)}
-.li-budget b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-.lead-grid .lead-msg{flex:1;margin:0;padding:0 0 0 12px;background:none;border-left:2px solid var(--line-2);border-radius:0;font-size:14px;color:var(--ink-2);line-height:1.55}
-.li-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line)}
-.li-foot .status{white-space:normal;text-align:right;line-height:1.3}
-.lead-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;display:grid;gap:10px;align-content:start}
-.lead-item .lead-top b{font-family:var(--f-display);font-size:16px;font-weight:600}
-.lead-when{font-size:12.5px;color:var(--ink-3)}
-@media (max-width:1000px){.lead-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:1000px){.stats{grid-template-columns:1fr 1fr}}
 @media (max-width:760px){
   .my-row{grid-template-columns:64px minmax(0,1fr) auto;row-gap:8px}
   .my-thumb{width:64px;height:48px}
   .my-price{grid-column:2}.my-row .status{grid-column:3;grid-row:1}
   .my-num{display:none}.my-act{grid-column:3;grid-row:2}
-  .lead-grid{grid-template-columns:1fr}
 }
 
 .preview-wrap{display:block}
@@ -981,7 +956,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="trust">
           <span><svg aria-hidden="true"><use href="#i-check"/></svg>Company verification</span>
           <span><svg aria-hidden="true"><use href="#i-check"/></svg>Members-only visibility</span>
-          <span><svg aria-hidden="true"><use href="#i-check"/></svg>Qualified investor leads</span>
+          <span><svg aria-hidden="true"><use href="#i-check"/></svg>ARI support until signing</span>
         </div>
       </div>
     </div>
@@ -1149,7 +1124,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><h3>Finds the right investors</h3><p>ARI’s network of investors in Georgia and abroad, each with a stated cash budget.</p></div>
         <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-lock"/></svg></span><h3>Keeps your public price intact</h3><p>Discounts are visible only to registered investors, never on open listing sites.</p></div>
         <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span><h3>Checks and prepares your listing</h3><p>Architects, surveyors and lawyers review plans, cadastral data and documents.</p></div>
-        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-handshake"/></svg></span><h3>Brings qualified leads</h3><p>Sales managers confirm each investor’s budget, arrange viewings and follow the deal through.</p></div>
+        <div class="tile"><span class="tile-ico"><svg aria-hidden="true"><use href="#i-handshake"/></svg></span><h3>Works with investors for you</h3><p>Sales managers confirm each investor’s budget, arrange viewings and follow the deal through.</p></div>
       </div>
       <div class="creds">
         <span><svg aria-hidden="true"><use href="#i-check"/></svg>Georgia and Cyprus</span>
@@ -1164,7 +1139,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     <div class="wrap">
       <div class="sec-head">
           <span class="eyebrow">How it works</span>
-          <h2 id="dev-how-h">Three steps to your first lead.</h2>
+          <h2 id="dev-how-h">Three steps to selling early.</h2>
         </div>
       <div class="how-need">
         <div class="need-card steps-card">
@@ -1185,8 +1160,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <li class="step">
             <div class="step-icon"><svg aria-hidden="true"><use href="#i-chat"/></svg></div>
             <span class="step-n">Step 3</span>
-            <h3>ARI brings you leads</h3>
-            <p>ARI confirms each investor’s interest and budget, then passes the lead to you.</p>
+            <h3>ARI works with investors</h3>
+            <p>ARI checks each investor’s budget, arranges viewings and stays with the deal until signing.</p>
           </li>
         </ol>
       </div>
@@ -1235,7 +1210,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <button class="btn btn-light" type="button" data-auth="signin" data-role="investor">Sign in</button>
         </div>
         <div class="hero-note hero-ok" data-when="inv"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Signed in as an investor. Listings that match your budget are below.</span></div>
-        <div class="hero-note" data-when="dev"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>You’re signed in as a developer. Developers see their own listings and leads, not other developers’ offers.</span></div>
+        <div class="hero-note" data-when="dev"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>You’re signed in as a developer. Developers see only their own listings, not other developers’ offers.</span></div>
         <div class="trust">
           <span><svg aria-hidden="true"><use href="#i-check"/></svg>Members-only listings</span>
           <span><svg aria-hidden="true"><use href="#i-check"/></svg>Verified developers</span>
@@ -1482,7 +1457,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="dash-main">
         <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>My offers</span></nav>
         <h1 id="offers-h">My offers</h1>
-        <p>Your listings, their status and the leads ARI brings you.</p>
+        <p>Your listings and their status.</p>
         <a class="btn btn-primary" href="#developers">Add a listing<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
       <aside class="dash-note" aria-label="What investors see">
@@ -1502,7 +1477,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="stats">
         <div class="stat"><span>Published</span><b id="statPub">2</b></div>
         <div class="stat"><span>In review</span><b id="statRev">0</b></div>
-        <div class="stat" data-demo-only><span>Leads this month</span><b>3</b></div>
         <div class="stat" data-demo-only><span>Listing views</span><b>137</b></div>
       </div>
 
@@ -1570,29 +1544,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </div>
       </div>
 
-      <div class="dash-block" data-demo-only>
-        <div class="dash-block-head"><h2>Leads from investors</h2><span class="pill pill-muted">Checked by ARI</span></div>
-        <div class="lead-grid">
-          <div class="lead-item">
-            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Saburtalo · 65 m²</span></div></div>
-            <div class="li-budget"><span>Available cash</span><b>$60,000 – $80,000</b></div>
-            <p class="lead-msg">“Is the 24-month installment plan available for this unit? I’d like to arrange a site visit.”</p>
-            <div class="li-foot"><span class="lead-when">Today</span><span class="status st-new">New</span></div>
-          </div>
-          <div class="lead-item">
-            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Saburtalo · 65 m²</span></div></div>
-            <div class="li-budget"><span>Available cash</span><b>$70,000 – $90,000</b></div>
-            <p class="lead-msg">“Can I see the floor plans for other units on the 8th floor?”</p>
-            <div class="li-foot"><span class="lead-when">Yesterday</span><span class="status st-rev">ARI contacted the investor</span></div>
-          </div>
-          <div class="lead-item">
-            <div class="li-head"><span class="li-ico"><svg aria-hidden="true"><use href="#i-user"/></svg></span><div class="li-who"><b>Registered investor</b><span>Tskneti · 500 m²</span></div></div>
-            <div class="li-budget"><span>Available cash</span><b>$40,000 – $60,000</b></div>
-            <p class="lead-msg">“Is the road to the plot already built?”</p>
-            <div class="li-foot"><span class="lead-when">6 Nov</span><span class="status st-pub">Viewing on 12 Nov</span></div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </div>
@@ -1631,7 +1582,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <p class="lead">Both sides register before they see listings or tools. The lock marks each registration step.</p>
       </div>
       <div class="flow-card">
-        <svg class="flow-svg" id="flowSvg" viewBox="0 0 1360 384" role="img" aria-labelledby="flowTitle"><title id="flowTitle">Swimlane diagram of the nine-step flow from developer listing to investor lead</title></svg>
+        <svg class="flow-svg" id="flowSvg" viewBox="0 0 1360 384" role="img" aria-labelledby="flowTitle"><title id="flowTitle">Swimlane diagram of the nine-step flow from developer listing to signed deal</title></svg>
         <ol class="flow-list" id="flowList"></ol>
         <div class="flow-legend">
           <span><i style="background:var(--lane-dev)"></i>Developer</span>
@@ -1671,7 +1622,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <ol class="ph-steps">
             <li><span class="ph-n w1">7</span><div><span class="ph-who w1">ARI</span><h4>Matching</h4><p>The platform ranks listings by budget fit and discount. ARI’s sales managers suggest the best options.</p></div></li>
             <li><span class="ph-n w2">8</span><div><span class="ph-who w2">Investor</span><h4>Sends interest</h4><p>The investor requests contact or a site visit straight from the listing.</p></div></li>
-            <li><span class="ph-n w0">9</span><div><span class="ph-who w0">Developer</span><h4>Receives the lead</h4><p>ARI confirms the investor’s budget, passes the lead to the developer and supports both sides until signing.</p></div></li>
+            <li><span class="ph-n w1">9</span><div><span class="ph-who w1">ARI</span><h4>Connects both sides</h4><p>ARI checks the investor’s budget, arranges the viewing and supports both sides until signing.</p></div></li>
           </ol>
         </div>
       </div>
@@ -1696,7 +1647,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           </ul>
         </div>
         <div class="check-card">
-          <h3><svg aria-hidden="true"><use href="#i-user"/></svg>Before a lead reaches the developer</h3>
+          <h3><svg aria-hidden="true"><use href="#i-user"/></svg>Before ARI connects an investor</h3>
           <ul>
             <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Investor identity and contact details</li>
             <li><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg>Stated cash budget</li>
@@ -1721,7 +1672,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <tr><th scope="row">Listings, prices and discounts</th><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><span class="own">Own listings</span></td></tr>
             <tr><th scope="row">Search, filters and budget matching</th><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td><td><span class="no" aria-label="No">—</span></td></tr>
             <tr><th scope="row">Listing form</th><td><span class="no" aria-label="No">—</span></td><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td></tr>
-            <tr><th scope="row">Leads from investors</th><td><span class="no" aria-label="No">—</span></td><td><span class="no" aria-label="No">—</span></td><td><svg class="yes" aria-label="Yes"><use href="#i-check"/></svg></td></tr>
           </tbody>
         </table>
       </div>
@@ -1839,7 +1789,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
     <form id="signForm" novalidate hidden>
       <h3>Welcome back</h3>
-      <p class="modal-sub">Sign in to see listings and leads.</p>
+      <p class="modal-sub">Sign in to see listings.</p>
       <div class="form-grid">
         <div class="fg full"><label for="s-email">Email</label><input id="s-email" type="email" required autocomplete="email"></div>
         <div class="fg full"><label for="s-pass">Password</label><input id="s-pass" type="password" required autocomplete="current-password"></div>
@@ -2618,7 +2568,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     [2,'Enters available','cash budget'],
     [1,'Matches and ranks','relevant listings'],
     [2,'Requests contact','or shows interest'],
-    [0,'Receives','the lead']
+    [1,'Connects','both sides']
   ];
   var cy = [72,192,312], W = 124, H = 78, X0 = 150, DX = 134;
   var s = '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>';
@@ -2717,7 +2667,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     "Verified badge after ARI’s review":"„გადამოწმებულის“ ნიშანს ARI-ის შემოწმების შემდეგ",
     "Your contact details stay private. Investors reach you through ARI":"შენი საკონტაქტო მონაცემები დამალულია. ინვესტორი შენთან ARI-ის მეშვეობით მოდის",
     "My offers":"ჩემი შეთავაზებები",
-    "Your listings, their status and the leads ARI brings you.":"შენი განცხადებები, მათი სტატუსი და მოთხოვნები, რომლებსაც ARI მოგიტანს.",
+    "Your listings and their status.":"შენი განცხადებები და მათი სტატუსი.",
     "Add a listing":"განცხადების დამატება",
     "Overview":"მიმოხილვა",
     "Published":"გამოქვეყნებული",
@@ -2784,8 +2734,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     "Listings within the investor’s cash budget appear first. Others are flagged as over budget.":"ინვესტორის ბიუჯეტში ჯდომადი განცხადებები პირველი ჩანს. დანარჩენი მოინიშნება, როგორც ბიუჯეტზე ძვირი.",
     "The platform ranks listings by budget fit and discount. ARI’s sales managers suggest the best options.":"პლატფორმა განცხადებებს ბიუჯეტთან შესაბამისობით და ფასდაკლებით ალაგებს. ARI-ის გაყიდვების მენეჯერები საუკეთესო ვარიანტებს გთავაზობენ.",
     "The investor requests contact or a site visit straight from the listing.":"ინვესტორი კონტაქტს ან დათვალიერებას პირდაპირ განცხადებიდან ითხოვს.",
-    "Receives the lead":"იღებს მოთხოვნას",
-    "ARI confirms the investor’s budget, passes the lead to the developer and supports both sides until signing.":"ARI ადასტურებს ინვესტორის ბიუჯეტს, მოთხოვნას დეველოპერს გადასცემს და ორივე მხარეს ხელმოწერამდე ეხმარება.",
+    "Connects both sides":"აკავშირებს ორივე მხარეს",
+    "ARI checks the investor’s budget, arranges the viewing and supports both sides until signing.":"ARI ამოწმებს ინვესტორის ბიუჯეტს, აწყობს დათვალიერებას და ორივე მხარეს ხელმოწერამდე ეხმარება.",
     "What ARI checks":"რას ამოწმებს ARI",
     "Nothing reaches the other side unchecked.":"შემოწმების გარეშე მეორე მხარემდე არაფერი მიდის.",
     "Before a listing goes live":"განცხადების გამოქვეყნებამდე",
@@ -2794,7 +2744,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     "Floor plan and declared size":"გეგმა და მითითებული ფართი",
     "Price, discount and how it was calculated":"ფასი, ფასდაკლება და მისი გამოთვლის წესი",
     "Construction completion date":"მშენებლობის დასრულების თარიღი",
-    "Before a lead reaches the developer":"მოთხოვნის დეველოპერამდე მისვლამდე",
+    "Before ARI connects an investor":"სანამ ARI ინვესტორს დეველოპერთან დააკავშირებს",
     "Investor identity and contact details":"ინვესტორის ვინაობა და საკონტაქტო მონაცემები",
     "Stated cash budget":"მითითებული ბიუჯეტი",
     "Fit between the budget and the listing":"ბიუჯეტისა და განცხადების შესაბამისობა",
@@ -2841,7 +2791,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Keeps your public price intact':'საჯარო ფასი უცვლელი რჩება',
     'Checks and prepares your listing':'ამოწმებს და ამზადებს განცხადებას',
     'Architects, surveyors and lawyers review plans, cadastral data and documents.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო მონაცემებს და დოკუმენტებს.',
-    'Three steps to your first lead.':'სამი ნაბიჯი პირველ მოთხოვნამდე.',
+    'Three steps to selling early.':'სამი ნაბიჯი ადრეულ გაყიდვამდე.',
     'ARI connects developers and investors':'ARI აკავშირებს დეველოპერებს და ინვესტორებს',
     'Verified apartments and land plots before completion. Choose your side.':'შემოწმებული ბინები და მიწები მშენებლობამდე. აირჩიე შენი მხარე.',
     'Sell early, to the right investor.':'გაყიდე ადრე, სწორ ინვესტორზე.',
@@ -2859,7 +2809,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Architects and surveyors check plans, areas and cadastral data. Our marketing team presents the project well.':'არქიტექტორები და ამზომველები ამოწმებენ გეგმებს, ფართებს და საკადასტრო მონაცემებს. მარკეტინგის გუნდი პროექტს სწორად წარადგენს.',
     'Handles the legal side':'იურიდიულ მხარეს უძღვება',
     'ARI’s lawyers review the documents and help prepare the agreement with the investor.':'ARI-ის იურისტები ამოწმებენ დოკუმენტებს და გეხმარებიან ინვესტორთან ხელშეკრულების მომზადებაში.',
-    'Brings qualified leads':'მოაქვს რეალური მოთხოვნები',
+    'Works with investors for you':'ინვესტორებთან შენ ნაცვლად მუშაობს',
     'Sales managers confirm each investor’s budget, arrange viewings and follow the deal through.':'გაყიდვების მენეჯერები ადასტურებენ ინვესტორის ბიუჯეტს, აწყობენ დათვალიერებას და გარიგებას ბოლომდე მიჰყვებიან.',
     'Georgia and Cyprus':'საქართველო და კვიპროსი',
     'Architects, surveyors and lawyers in-house':'საკუთარი არქიტექტორები, ამზომველები და იურისტები',
@@ -2874,10 +2824,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Sales managers suggest units that fit your available cash and your goals.':'გაყიდვების მენეჯერები გთავაზობენ ბინებს, რომლებიც შენს თანხასა და მიზნებს შეესაბამება.',
     'Supports the deal':'გარიგებას თან ახლავს',
     'From the first viewing to the signed agreement, ARI stays involved.':'პირველი დათვალიერებიდან ხელშეკრულების ხელმოწერამდე ARI პროცესში რჩება.',
-    'Qualified investor leads':'შემოწმებული მოთხოვნები ინვესტორებისგან',
+    'ARI support until signing':'ARI-ის მხარდაჭერა ხელმოწერამდე',
     'ARI support at every step':'ARI-ის მხარდაჭერა ყველა ეტაპზე',
-    'ARI brings you leads':'ARI მოთხოვნებს მოგიტანს',
-    'ARI confirms each investor’s interest and budget, then passes the lead to you.':'ARI ადასტურებს ინვესტორის ინტერესსა და ბიუჯეტს და შემდეგ მოთხოვნას შენ გადმოგცემს.',
+    'ARI works with investors':'ARI მუშაობს ინვესტორებთან',
+    'ARI checks each investor’s budget, arranges viewings and stays with the deal until signing.':'ARI ამოწმებს თითოეული ინვესტორის ბიუჯეტს, აწყობს დათვალიერებას და გარიგებას ხელმოწერამდე მიჰყვება.',
     'Talk to developers through ARI':'დაუკავშირდი დეველოპერს ARI-ის მეშვეობით',
     'Ask questions or arrange a site visit. ARI sets up the conversation.':'დასვი კითხვები ან დანიშნე დათვალიერება. საუბარს ARI აწყობს.',
     'ARI connects you':'ARI გაკავშირებს',
@@ -2970,7 +2920,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Discounted apartments and land plots from verified developers, visible only to registered investors.':'ფასდაკლებული ბინები და მიწის ნაკვეთები გადამოწმებული დეველოპერებისგან, ხილული მხოლოდ დარეგისტრირებული ინვესტორებისთვის.',
     'Register as an investor':'დარეგისტრირდი ინვესტორად',
     'Signed in as an investor. Listings that match your budget are below.':'შესული ხარ როგორც ინვესტორი. შენს ბიუჯეტზე მორგებული განცხადებები ქვემოთაა.',
-    'You’re signed in as a developer. Developers see their own listings and leads, not other developers’ offers.':'შესული ხარ როგორც დეველოპერი. დეველოპერი ხედავს საკუთარ განცხადებებსა და მოთხოვნებს და არა სხვა დეველოპერების შეთავაზებებს.',
+    'You’re signed in as a developer. Developers see only their own listings, not other developers’ offers.':'შესული ხარ როგორც დეველოპერი. დეველოპერი ხედავს მხოლოდ საკუთარ განცხადებებს და არა სხვა დეველოპერების შეთავაზებებს.',
     'Members-only listings':'განცხადებები მხოლოდ წევრებისთვის','Verified developers':'გადამოწმებული დეველოპერები','Direct contact':'პირდაპირი კონტაქტი',
     'Search':'ძიება','Opportunities from verified developers.':'შეთავაზებები გადამოწმებული დეველოპერებისგან.',
     'Search listings':'განცხადებების ძიება','Try the filters':'სცადე ფილტრები','District / neighborhood':'რაიონი / უბანი','Saburtalo, Vake, Tskneti':'საბურთალო, ვაკე, წყნეთი',
@@ -3000,13 +2950,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     // platform
     'Platform':'პლატფორმა','Platform logic':'პლატფორმის ლოგიკა','How a listing becomes a lead.':'როგორ იქცევა განცხადება მოთხოვნად.',
     'Nine steps across three roles. Both sides register before they see listings or tools.':'ცხრა ნაბიჯი სამ როლს შორის. ორივე მხარე რეგისტრირდება, სანამ განცხადებებს ან ხელსაწყოებს ნახავს.',
-    'Swimlane diagram of the nine-step flow from developer listing to investor lead':'ცხრანაბიჯიანი სქემა: დეველოპერის განცხადებიდან ინვესტორის მოთხოვნამდე',
+    'Swimlane diagram of the nine-step flow from developer listing to signed deal':'ცხრა ნაბიჯის სქემა: დეველოპერის განცხადებიდან ხელმოწერამდე',
     'Registration gate':'რეგისტრაციის ეტაპი','Supply side':'მიწოდება','Review & matching':'შემოწმება და შერჩევა','Demand side':'მოთხოვნა',
     'Creates account,':'ქმნის ანგარიშს,','selects listing type':'ირჩევს ტიპს','Submits details':'ავსებს დეტალებს','+ optional media':'+ ფოტოები',
     'Reviews and':'ამოწმებს და','publishes listing':'აქვეყნებს','Registers to':'რეგისტრირდება','unlock listings':'წვდომისთვის',
     'Searches and':'ეძებს და','filters listings':'ფილტრავს','Enters available':'უთითებს','cash budget':'თავის ბიუჯეტს',
     'Matches and ranks':'არჩევს და','relevant listings':'ალაგებს','Requests contact':'ითხოვს კონტაქტს','or shows interest':'ან ინტერესდება',
-    'Receives':'იღებს','the lead':'მოთხოვნას','· registration':'· რეგისტრაცია',
+    'Connects':'აკავშირებს','both sides':'ორივე მხარეს','· registration':'· რეგისტრაცია',
     // footer
     'A members-only marketplace for Georgian apartments and land, from developers to investors.':'დახურული პლატფორმა ბინებისა და მიწებისთვის საქართველოში, დეველოპერებიდან ინვესტორებამდე.',
     'Pages':'გვერდები','Contact':'კონტაქტი','Copy':'კოპირება','Copied':'დაკოპირდა','Selected':'მონიშნულია','Tbilisi, Georgia':'თბილისი, საქართველო',
@@ -3023,7 +2973,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'I agree to the Terms of use and Privacy policy.':'ვეთანხმები გამოყენების პირობებსა და კონფიდენციალურობის პოლიტიკას.',
     'Create investor account':'ინვესტორის ანგარიშის შექმნა','Create developer account':'დეველოპერის ანგარიშის შექმნა',
     'Concept demo. Nothing is sent or stored outside this browser tab.':'საჩვენებელი ვერსია. ამ ტაბის გარეთ არაფერი იგზავნება და არაფერი ინახება.',
-    'Welcome back':'კეთილი იყოს შენი დაბრუნება','Sign in to see listings and leads.':'შედი, რომ ნახო განცხადებები და მოთხოვნები.',
+    'Welcome back':'კეთილი იყოს შენი დაბრუნება','Sign in to see listings.':'შედი, რომ ნახო განცხადებები.',
     'Account type':'ანგარიშის ტიპი','(demo)':'(დემო)','Demo sign-in: no password needed. New here?':'დემო შესვლა: პაროლი არ სჭირდება. ახალი ხარ?','Create an account':'ანგარიშის შექმნა',
     // toasts
     'Investor account created (demo). Listings are now unlocked.':'ინვესტორის ანგარიში შეიქმნა (დემო). განცხადებები გაიხსნა.',
