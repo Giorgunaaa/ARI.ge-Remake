@@ -3302,19 +3302,26 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (fxBusy) return;
       fxBusy = true;
       var home = $('.home2'), from = door.getBoundingClientRect(), to = home.getBoundingClientRect();
-      /* phones (photos stacked): same sweep as on desktop, turned vertical. The lower photo unrolls from the
-         bottom up over the whole screen; the upper one only downwards, from under the headline band. */
-      if (matchMedia('(max-width:820px)').matches && door.getAttribute('href') === '#developers')
-        to = { left:to.left, top:from.top, width:to.width, height:to.bottom - from.top };
+      /* phones (photos stacked): the tapped photo is pulled over the screen like a blind, at its final size,
+         so nothing stretches or zooms. The upper one comes down from under the header, the lower one rises
+         from the bottom edge. Wider screens keep the sideways sweep. */
+      var phone = matchMedia('(max-width:820px)').matches;
       var box = function(r){ return { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' }; };
-      var fx = door.cloneNode(true), a = box(from);
+      var fx = door.cloneNode(true), a = box(phone ? to : from), grow;
       fx.removeAttribute('href'); fx.setAttribute('aria-hidden', 'true'); fx.classList.add('door-fx');
       fx.style.left = a.left; fx.style.top = a.top; fx.style.width = a.width; fx.style.height = a.height;
-      document.body.appendChild(fx);
-      home.classList.add('is-leaving');
-      fx.querySelector('.in').animate([{ opacity:1, transform:'none' }, { opacity:0, transform:'translateY(16px)' }], { duration:340, easing:'ease-out', fill:'forwards' });
-      fx.querySelector('img').animate([{ transform:'scale(1.04)' }, { transform:'scale(1)' }], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
-      var grow = fx.animate([a, box(to)], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
+      if (phone){
+        fx.querySelector('.in').remove();
+        fx.style.transform = 'translateY(' + (door.getAttribute('href') === '#investors' ? '' : '-') + '100%)';
+        document.body.appendChild(fx);
+        grow = fx.animate([{ transform:fx.style.transform }, { transform:'none' }], { duration:700, easing:'cubic-bezier(.3,.7,.2,1)', fill:'forwards' });
+      } else {
+        document.body.appendChild(fx);
+        home.classList.add('is-leaving');
+        fx.querySelector('.in').animate([{ opacity:1, transform:'none' }, { opacity:0, transform:'translateY(16px)' }], { duration:340, easing:'ease-out', fill:'forwards' });
+        fx.querySelector('img').animate([{ transform:'scale(1.04)' }, { transform:'scale(1)' }], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
+        grow = fx.animate([a, box(to)], { duration:820, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards' });
+      }
       var finish = function(){ fx.remove(); home.classList.remove('is-leaving'); fxBusy = false; setTimeout(function(){ document.body.classList.remove('fx-enter'); }, 1100); };
       grow.onfinish = function(){
         document.body.classList.add('fx-enter');
