@@ -136,6 +136,25 @@ button,input,select,textarea{font:inherit;color:inherit}
 .acct-btn svg{width:20px;height:20px}
 .acct-menu{position:absolute;right:0;top:calc(100% + 10px);z-index:60;min-width:190px;display:grid;gap:10px;justify-items:start;padding:14px;border-radius:14px;background:var(--navy-2);border:1px solid var(--navy-line);box-shadow:0 22px 44px rgba(0,0,0,.45)}
 .acct-menu .btn{width:100%}
+/* Inbox: messages from ARI about your listings (developer) or your requests (investor) */
+.acct-btn{position:relative}
+.inbox-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:99px;display:grid;place-items:center;background:#E3B860;color:#1A3732;font:700 11px/1 var(--f-body);box-shadow:0 0 0 2px var(--navy)}
+.inbox-menu{position:absolute;right:0;top:calc(100% + 10px);z-index:60;width:min(380px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;border-radius:14px;background:var(--navy-2);border:1px solid var(--navy-line);box-shadow:0 22px 44px rgba(0,0,0,.45);color:var(--on-navy)}
+.inbox-head{position:sticky;top:0;padding:13px 16px;font-size:15px;background:var(--navy-2);border-bottom:1px solid var(--navy-line)}
+.inbox-list{list-style:none;margin:0;padding:0}
+.inbox-list li+li{border-top:1px solid var(--navy-line)}
+.note{display:flex;gap:12px;width:100%;padding:13px 16px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.note:hover{background:rgba(255,255,255,.05)}
+.note-ico{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(241,226,191,.14);color:var(--mint)}
+.note-ico svg{width:16px;height:16px}
+.note-no .note-ico{background:rgba(224,122,95,.18);color:#F0A48E}
+.note-txt{display:grid;gap:3px;min-width:0}
+.note-txt b{font-size:14.5px;font-weight:600}
+.note-txt span{font-size:13.5px;line-height:1.45;color:var(--on-navy-2)}
+.note-txt small{font-size:12.5px;color:var(--mint)}
+.note-txt time{font-size:12px;color:var(--on-navy-2);opacity:.75}
+.note.is-new b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:8px;border-radius:50%;background:#E3B860;vertical-align:middle}
+.inbox-empty{margin:0;padding:22px 16px;font-size:14px;color:var(--on-navy-2);text-align:center}
 .lang{display:flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line)}
 .lang button{border:0;background:none;color:var(--on-navy-2);font-size:12.5px;font-weight:700;letter-spacing:.04em;min-height:30px;padding:0 9px;border-radius:7px;cursor:pointer}
 .lang button:hover{color:var(--on-navy)}
@@ -166,7 +185,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   .head-row{flex-wrap:nowrap;padding-bottom:6px}
   .logo-text span{display:none}   /* leave the room to the page button */
   #authGuest [data-auth="signin"]{display:none}
-  html[lang="ka"] .head-right .auth{display:none}   /* Georgian labels are long: account buttons live in the list */
+  html[lang="ka"] #authGuest{display:none}   /* Georgian labels are long: Register lives in the list */
+  #acctBtn{display:none}   /* role and Sign out are at the bottom of the list; the inbox stays in the header */
   .menu-btn{display:flex;flex:1;min-width:0;align-items:center;justify-content:space-between;gap:6px;height:36px;padding:0 10px 0 12px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid var(--navy-line);color:var(--on-navy);font:600 13.5px var(--f-body);cursor:pointer}
   .menu-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .menu-btn svg{flex:none;width:14px;height:14px;opacity:.8;transition:transform .2s ease}
@@ -1018,6 +1038,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <button class="btn btn-primary btn-sm" type="button" data-auth="register">Register</button>
       </div>
       <div class="auth" id="authUser" hidden>
+        <button class="acct-btn" type="button" id="inboxBtn" aria-haspopup="true" aria-expanded="false" aria-controls="inboxMenu" aria-label="Inbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l2.500-7h11L20 13v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 13h4.500a3.500 3.500 0 0 0 7 0H20"/></svg><b class="inbox-badge" id="inboxBadge" hidden></b></button>
+        <div class="inbox-menu" id="inboxMenu" hidden>
+          <div class="inbox-head"><b>Inbox</b></div>
+          <ul class="inbox-list" id="inboxList"></ul>
+          <p class="inbox-empty" id="inboxEmpty">No messages yet.</p>
+        </div>
         <button class="acct-btn" type="button" id="acctBtn" aria-haspopup="true" aria-expanded="false" aria-controls="acctMenu" aria-label="Account"><svg aria-hidden="true"><use href="#i-user"/></svg></button>
         <div class="acct-menu" id="acctMenu" hidden>
           <span class="role-chip"><i></i><span id="roleName">Investor</span></span>
@@ -1368,7 +1394,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <button class="btn btn-primary" type="button" data-auth="register" data-role="investor">Register as an investor<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
           <button class="btn btn-light" type="button" data-auth="signin" data-role="investor">Sign in</button>
         </div>
-        <div class="hero-note hero-ok" data-when="inv"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Signed in as an investor. Listings that match your budget are below.</span></div>
+        <div class="hero-note hero-ok" data-when="inv"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Signed in as an investor. Verified listings are below.</span></div>
         <div class="hero-note" data-when="dev"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>You’re signed in as a developer. Developers see only their own listings, not other developers’ offers.</span></div>
         <div class="trust">
           <span><svg aria-hidden="true"><use href="#i-check"/></svg>Members-only listings</span>
@@ -2067,12 +2093,113 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* ---------- Account button: role and Sign out open under it ---------- */
   function closeAcct(){ $('#acctMenu').hidden = true; $('#acctBtn').setAttribute('aria-expanded', 'false'); }
+  function closeInbox(){ $('#inboxMenu').hidden = true; $('#inboxBtn').setAttribute('aria-expanded', 'false'); }
   $('#acctBtn').addEventListener('click', function(){
     var open = $('#acctMenu').hidden;
-    $('#acctMenu').hidden = !open; this.setAttribute('aria-expanded', String(open));
+    closeInbox(); $('#acctMenu').hidden = !open; this.setAttribute('aria-expanded', String(open));
   });
-  document.addEventListener('click', function(e){ if (!e.target.closest('#authUser') || e.target.closest('#signOut')) closeAcct(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#acctMenu').hidden){ closeAcct(); $('#acctBtn').focus(); } });
+  document.addEventListener('click', function(e){ if (!e.target.closest('#authUser') || e.target.closest('#signOut')){ closeAcct(); closeInbox(); } });
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if (!$('#acctMenu').hidden){ closeAcct(); $('#acctBtn').focus(); }
+    if (!$('#inboxMenu').hidden){ closeInbox(); $('#inboxBtn').focus(); }
+  });
+
+  /* ---------- Inbox ----------
+     Messages are worked out from what the account already has, so nothing extra is stored:
+     a developer gets one per listing from its review status (received / approved / not approved, with ARI's note);
+     an investor gets one per request from its status (received / accepted / closed), with the property it is about.
+     Which ones were already seen is remembered on this device. Demo sign-in shows example messages. */
+  var INBOX = [], INTS = [], TYPE_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' };
+  var DEMO_L = [
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, price:68250, disc:20 },
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30 }
+  ];
+  function demoNotes(){ return {
+    developer:[ { key:'d-s2', kind:'ok', what:'dev-ok', L:DEMO_L[1] }, { key:'d-s1', kind:'ok', what:'dev-ok', L:DEMO_L[0] } ],
+    investor:[ { key:'i-s1', kind:'ok', what:'inv-ok', L:DEMO_L[1], demo:2 } ]
+  }; }
+  var DEMO_NOTES = demoNotes();
+  var NOTE_TEXT = {
+    'dev-wait':['Listing received for review', 'ARI is checking the details. You’ll get a message here when it’s decided.'],
+    'dev-ok':['Your listing was approved', 'ARI checked it and published it. Investors can see it now.'],
+    'dev-no':['Your listing was not approved', 'Open it, correct the details and send it again.'],
+    'inv-wait':['Request received', 'ARI got your request and will call you about this property.'],
+    'inv-ok':['Your request was accepted', 'ARI confirmed your interest and will arrange the viewing and next steps with you.'],
+    'inv-closed':['Request closed', 'This request is finished. You can send a new one from any listing.']
+  };
+  function seenKey(){ return 'ari-inbox-seen-' + (user ? user.id : 'demo-' + state.role); }
+  function getSeen(){ try { return JSON.parse(localStorage.getItem(seenKey()) || '[]'); } catch(e){ return []; } }
+  function buildInbox(){
+    var list = [];
+    if (user && state.role === 'developer'){
+      Object.keys(MINE).forEach(function(id){
+        var r = MINE[id], w = r.status === 'published' ? 'dev-ok' : r.status === 'rejected' ? 'dev-no' : 'dev-wait';
+        list.push({ key:id + ':' + r.status, kind:w === 'dev-no' ? 'no' : w === 'dev-ok' ? 'ok' : 'wait', what:w, note:w === 'dev-no' ? r.review_note : null, at:r.updated_at || r.created_at, id:id,
+          L:{ type:r.type, district:r.district, size:+r.size_m2, price:r.price_usd, disc:r.discount_pct } });
+      });
+    } else if (user && state.role === 'investor'){
+      INTS.forEach(function(x){
+        var r = PUB[x.listing_id], w = x.status === 'contacted' ? 'inv-ok' : x.status === 'closed' ? 'inv-closed' : 'inv-wait';
+        list.push({ key:x.id + ':' + x.status, kind:w === 'inv-wait' ? 'wait' : 'ok', what:w, at:x.created_at, id:x.listing_id, raw:x.listing_summary,
+          L:r ? { type:r.type, district:r.district, size:+r.size_m2, price:r.price_usd, disc:r.discount_pct } : null });
+      });
+    } else if (!user && state.role) list = DEMO_NOTES[state.role].slice();
+    list.sort(function(a, b){ return (b.at || '') < (a.at || '') ? -1 : (b.at || '') > (a.at || '') ? 1 : 0; });
+    INBOX = list; renderInbox();
+  }
+  function renderInbox(){
+    var seen = getSeen(), ul = $('#inboxList'), fresh = 0;
+    ul.innerHTML = '';
+    INBOX.forEach(function(n, i){
+      var isNew = seen.indexOf(n.key) < 0, li = document.createElement('li'), T = NOTE_TEXT[n.what];
+      if (isNew) fresh++;
+      li.innerHTML = '<button type="button" class="note note-' + n.kind + (isNew ? ' is-new' : '') + '" data-note="' + i + '"><span class="note-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        + (n.kind === 'ok' ? '<path d="M3 8.500l3.200 3.200L13 4.800"/>' : n.kind === 'no' ? '<path d="M4 4l8 8M12 4l-8 8"/>' : '<circle cx="8" cy="8" r="5.500"/><path d="M8 5v3.200l2 1.300"/>')
+        + '</svg></span><span class="note-txt"><b></b><span></span><small></small><time></time></span></button>';
+      var t = li.querySelector('.note-txt');
+      t.children[0].textContent = T[0];
+      if (n.note){ t.children[1].innerHTML = '<span>ARI’s note:</span> <span></span>'; t.children[1].lastChild.textContent = n.note; }
+      else t.children[1].textContent = T[1];
+      if (n.L){
+        t.children[2].innerHTML = '<span></span> · <span></span> · ' + n.L.size.toLocaleString('en-US') + ' m² · ' + money(n.L.price) + ' (−' + n.L.disc + '%)';
+        t.children[2].children[0].textContent = TYPE_NAME[n.L.type] || n.L.type; t.children[2].children[1].textContent = n.L.district;
+      } else if (n.raw) t.children[2].textContent = n.raw; else t.children[2].remove();
+      var tm = li.querySelector('time');
+      if (n.at) tm.textContent = new Date(n.at).toLocaleDateString(lang === 'ka' ? 'ka-GE' : 'en-GB', { day:'numeric', month:'short', year:'numeric' }); else tm.remove();
+      ul.appendChild(li);
+    });
+    $('#inboxEmpty').hidden = INBOX.length > 0;
+    $('#inboxBadge').hidden = !fresh; $('#inboxBadge').textContent = fresh > 9 ? '9+' : String(fresh);
+  }
+  function pushDemoNote(role, what, L, demo){
+    DEMO_NOTES[role].unshift({ key:role.charAt(0) + '-' + Date.now(), kind:'wait', what:what, L:L, demo:demo });
+    buildInbox();
+  }
+  $('#inboxBtn').addEventListener('click', function(){
+    var open = $('#inboxMenu').hidden;
+    closeAcct(); $('#inboxMenu').hidden = !open; this.setAttribute('aria-expanded', String(open));
+    if (open){   /* opening it counts as reading: the dots stay for this view, the badge clears */
+      try { localStorage.setItem(seenKey(), JSON.stringify(INBOX.map(function(n){ return n.key; }))); } catch(e){}
+      $('#inboxBadge').hidden = true;
+    } else renderInbox();
+  });
+  $('#inboxList').addEventListener('click', function(e){
+    var b = e.target.closest('[data-note]'); if (!b) return;
+    var n = INBOX[+b.dataset.note]; closeInbox(); renderInbox();
+    if (state.role === 'developer'){
+      if (location.hash !== '#offers') location.hash = '#offers';
+      setTimeout(function(){
+        var c = n.id && $('.preview-grid .my-card[data-id="' + n.id + '"]');
+        if (c){ c.scrollIntoView({ behavior:'smooth', block:'center' }); c.classList.add('is-edited'); }
+      }, 150);
+      return;
+    }
+    var card = n.id ? $('#results .listing[data-id="' + n.id + '"]') : $('#results .listing[data-demo="' + n.demo + '"]');
+    if (location.hash !== '#investors') location.hash = '#investors';
+    if (card) setTimeout(function(){ openDetail(card); }, 150);
+    else toast('This listing is no longer published.');
+  });
 
   /* ---------- Auth-dependent visibility ---------- */
   function applyAuth(){
@@ -2089,6 +2216,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       'not-inv': r !== 'investor'
     };
     $$('[data-when]').forEach(function(el){ el.hidden = !rules[el.dataset.when]; });
+    buildInbox();
   }
 
   /* ---------- Modal ---------- */
@@ -2196,7 +2324,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* leaving an account, real or demo: back to guest and to the sample data */
   function leave(){
-    user = null; MINE = {}; PUB = {}; SENT = {}; state.role = null; saveRole(); setTab(null);
+    user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; DEMO_NOTES = demoNotes(); state.role = null; saveRole(); setTab(null);
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
@@ -2478,6 +2606,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         $('#statPub').textContent = String(rows.filter(function(r){ return r.status === 'published'; }).length);
         $('#statRev').textContent = String(rows.filter(function(r){ return r.status === 'in_review'; }).length);
         $('#mineEmpty').hidden = rows.length > 0;
+        buildInbox();
       });
     }, function(){ toast(OFFLINE); });
   }
@@ -2491,13 +2620,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         if (!user || user.id !== uid) return;
         var box = $('#results'); box.innerHTML = ''; PUB = {};
         rows.forEach(function(r){ PUB[r.id] = r; box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
-        update();
+        update(); buildInbox();
       });
     }, function(){ toast(OFFLINE); });
     /* which listings this investor already asked about (fails quietly until interests.sql has been run) */
-    sb.from('platform_interests').select('listing_id').then(function(res){
+    sb.from('platform_interests').select('id,listing_id,status,listing_summary,created_at').then(function(res){
       if (!user || user.id !== uid || res.error) return;
-      SENT = {}; (res.data || []).forEach(function(x){ SENT[x.listing_id] = 1; });
+      SENT = {}; INTS = res.data || []; INTS.forEach(function(x){ SENT[x.listing_id] = 1; });
+      buildInbox();
     }, function(){});
   }
   function sendListing(type, v, p, btn){
@@ -2555,6 +2685,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     grid.insertBefore(card, grid.firstChild);
     $('#statRev').textContent = String(+$('#statRev').textContent + 1);
     try { localStorage.removeItem(draftKey(curTab)); } catch(e){}
+    pushDemoNote('developer', 'dev-wait', { type:curTab, district:v.district, size:parseFloat(v.size), price:+v.price.replace(/[^0-9]/g, ''), disc:+v.disc });
     resetPanel(p); setTab(null);
     $('#devWorkspace').scrollIntoView({ behavior:'smooth', block:'start' });
     toast('Submitted for review (demo). It now appears in My offers.');
@@ -2795,12 +2926,17 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     e.preventDefault();
     if (!dCur) return;
     var done = function(){ $('#dMsg').hidden = true; $('#dSend').hidden = true; $('#dSent').hidden = false; };
-    if (dCur.demo != null){ DEMO_SENT[dCur.demo] = 1; done(); toast('Request sent to ARI (demo). Nothing was sent.'); return; }
+    if (dCur.demo != null){
+      var X = DEMO_DETAIL[dCur.demo]; DEMO_SENT[dCur.demo] = 1; done();
+      pushDemoNote('investor', 'inv-wait', { type:X.type, district:X.district, size:X.size, price:X.price, disc:X.disc }, dCur.demo);
+      toast('Request sent to ARI (demo). Nothing was sent.'); return;
+    }
     var id = dCur.id, btn = $('#dSend'); btn.disabled = true;
     sb.from('platform_interests').insert({ listing_id:id, message:$('#dMsg').value.trim() || null }).then(function(res){
       btn.disabled = false;
       if (res.error && res.error.code !== '23505'){ toast('Couldn’t send the request. Try again.'); return; }
       SENT[id] = 1;
+      if (!res.error){ INTS.unshift({ id:'new-' + id, listing_id:id, status:'new', created_at:new Date().toISOString() }); buildInbox(); }
       if (dCur && dCur.id === id) done();
       toast(res.error ? 'You already sent a request for this listing.' : 'Request sent. ARI will contact you soon.');
     }, function(){ btn.disabled = false; toast(OFFLINE); });
@@ -3154,6 +3290,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'ARI connects developers and investors':'ARI აკავშირებს დეველოპერებს და ინვესტორებს',
     'Site master plan':'გენგეგმა','Upload master plan':'გენგეგმის ატვირთვა','Upload the master plan.':'ატვირთე გენგეგმა.','Master plan added.':'გენგეგმა დაემატა.',
     'Plot 1':'ნაკვეთი 1','Plot 2':'ნაკვეთი 2','Plot 3':'ნაკვეთი 3','Plot 4':'ნაკვეთი 4','Road':'გზა',
+    'Signed in as an investor. Verified listings are below.':'შესული ხარ როგორც ინვესტორი. შემოწმებული განცხადებები ქვემოთაა.',
+    'Inbox':'შეტყობინებები','No messages yet.':'შეტყობინებები ჯერ არ არის.','ARI’s note:':'ARI-ის შენიშვნა:','This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
+    'Listing received for review':'განცხადება მიღებულია განსახილველად','ARI is checking the details. You’ll get a message here when it’s decided.':'ARI ამოწმებს მონაცემებს. გადაწყვეტილებას აქვე შეიტყობ.',
+    'Your listing was approved':'შენი განცხადება დამტკიცდა','ARI checked it and published it. Investors can see it now.':'ARI-მ შეამოწმა და გამოაქვეყნა. ინვესტორები მას უკვე ხედავენ.',
+    'Your listing was not approved':'შენი განცხადება არ დამტკიცდა','Open it, correct the details and send it again.':'გახსენი, შეასწორე მონაცემები და გაგზავნე თავიდან.',
+    'Request received':'მოთხოვნა მიღებულია','ARI got your request and will call you about this property.':'ARI-მ მიიღო შენი მოთხოვნა და ამ ქონებაზე დაგირეკავს.',
+    'Your request was accepted':'შენი მოთხოვნა დადასტურდა','ARI confirmed your interest and will arrange the viewing and next steps with you.':'ARI-მ დაადასტურა შენი ინტერესი და შენთან ერთად დაგეგმავს დათვალიერებას და შემდეგ ნაბიჯებს.',
+    'Request closed':'მოთხოვნა დახურულია','This request is finished. You can send a new one from any listing.':'ეს მოთხოვნა დასრულებულია. ახალი შეგიძლია ნებისმიერი განცხადებიდან გაგზავნო.',
     'Account':'ანგარიში','What this number means':'რას ნიშნავს ეს რიცხვი',
     'Listings ARI has checked. Investors can see them now.':'განცხადებები, რომლებიც ARI-მ შეამოწმა. ინვესტორები მათ უკვე ხედავენ.',
     'Listings waiting for ARI’s check. Investors don’t see them yet.':'განცხადებები, რომლებიც ARI-ის შემოწმებას ელოდება. ინვესტორები მათ ჯერ ვერ ხედავენ.',
