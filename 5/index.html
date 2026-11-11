@@ -138,8 +138,21 @@ button,input,select,textarea{font:inherit;color:inherit}
   .nav{order:3;width:100%;overflow-x:auto;margin:0 -8px;padding-bottom:8px}
   .nav a{white-space:nowrap}
 }
-@media (max-width:540px){#authGuest [data-auth="signin"]{display:none}.head-right{gap:8px}}
 @media (max-width:420px){.logo-text{display:none}.auth .btn-sm{padding:0 .8em}}
+/* Phones: a short header. One row for logo, language and account, one slim row for the pages. */
+@media (max-width:540px){
+  .head-row{min-height:0;padding-top:6px;gap:4px 8px}
+  .head-right{gap:6px}
+  .auth{gap:6px}
+  .logo-mark{width:30px;height:30px}
+  .lang button{min-height:28px;padding:0 8px}
+  .auth .btn-sm{min-height:36px;font-size:13.5px}
+  #authUser .role-chip{display:none}
+  .nav{gap:0;margin:0 -16px;width:calc(100% + 32px);padding:0 8px 6px;justify-content:space-between;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a,html[lang="ka"] .nav a{font-size:13px;padding:7px 6px}
+}
+@media (max-width:359px){#authGuest [data-auth="signin"]{display:none}}
 
 /* Home: one screen */
 .home{position:relative;isolation:isolate;overflow:hidden;background:var(--navy);color:var(--on-navy);min-height:calc(100svh - var(--head-h) - env(safe-area-inset-top,0px));display:grid;grid-template-rows:1fr auto}
@@ -696,8 +709,10 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
   .drop{grid-template-columns:1fr}
   .drop svg.fp,.drop-prev{width:100%;max-width:240px}
   .drop-add{justify-self:start}
-  .mock-foot .btns{width:100%}
+  .mock-foot .btns{width:100%;flex-direction:column-reverse}
   .mock-foot .btns .btn{flex:1}
+  .thumbs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .thumb-add span{white-space:nowrap;font-size:12.5px}
 }
 
 /* Listing cards */
