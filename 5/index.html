@@ -3305,7 +3305,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       /* phones (photos stacked): the same move as on desktop, turned vertical. The tapped photo opens out from
          its own place until it fills both photos (the upper one downwards, the lower one upwards). The picture
          inside is already at its final size and only gets uncovered, so nothing stretches or zooms; a short
-         dissolve hides the change of crop. The headline band stays put. Wider screens sweep sideways. */
+         dissolve hides the change of crop. The headline band stays as it is until the page changes. Wider screens sweep sideways. */
       var phone = matchMedia('(max-width:820px)').matches, beforeSwitch = null;
       var box = function(r){ return { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' }; };
       var fx = phone ? document.createElement('div') : door.cloneNode(true), a = box(phone ? to : from), grow;
@@ -3314,15 +3314,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (phone){
         var band = Math.max(0, $('.home2 .door2').getBoundingClientRect().top - to.top), areaTop = to.top + band;
         var open = 'inset(' + Math.max(0, from.top - areaTop) + 'px 0 ' + Math.max(0, to.bottom - from.bottom) + 'px 0)', ease = 'cubic-bezier(.7,0,.2,1)';
-        var strip = document.createElement('div'), clip = document.createElement('div'), panel = door.cloneNode(true);
+        var strip = $('.home2-center').cloneNode(true), clip = document.createElement('div'), panel = door.cloneNode(true);   /* strip: a copy of the headline band, shown at the switch so it fades out with the photo */
+        $$('[id]', strip).forEach(function(n){ n.removeAttribute('id'); });
         fx.style.cssText += ';position:fixed;z-index:40;pointer-events:none';
-        strip.style.cssText = 'position:absolute;left:0;right:0;top:0;height:' + band + 'px;background:var(--navy);opacity:0';
+        strip.style.cssText = 'position:absolute;left:0;right:0;top:0;margin:0;width:auto;transform:none;box-sizing:border-box;height:' + band + 'px;background:var(--navy);opacity:0;transition:none';
         clip.style.cssText = 'position:absolute;left:0;right:0;bottom:0;top:' + band + 'px;will-change:clip-path,opacity;-webkit-clip-path:' + open + ';clip-path:' + open;
         panel.removeAttribute('href'); panel.querySelector('.in').remove();
         panel.style.cssText = 'position:absolute;inset:0;padding:0;border:0';
         clip.appendChild(panel); fx.appendChild(strip); fx.appendChild(clip);
         document.body.appendChild(fx);
-        home.classList.add('is-leaving');
         beforeSwitch = function(){ strip.style.opacity = '1'; };
         clip.animate([{ opacity:0 }, { opacity:1 }], { duration:260, easing:'ease-out', fill:'both' });
         panel.querySelector('img').animate([{ transform:'scale(1.04)' }, { transform:'scale(1)' }], { duration:820, easing:ease, fill:'forwards' });
