@@ -836,6 +836,8 @@ div.view[data-view="saved"] .sec{padding-block:clamp(28px,4vw,48px)}
 #featured .listing-body>.tag-day{display:none}   /* the band already says it */
 .listing[data-featured]{border-color:#E3B860;box-shadow:0 0 0 1px #E3B860,var(--shadow-sm)}
 #results .listing-foot{justify-content:flex-end}
+.more{display:flex;justify-content:center;margin-top:22px}
+.more .btn{min-width:200px}
 .filters-main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 20px;padding:22px}
 .filters-title{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .filters-title b{font-family:var(--f-display);font-size:18px;font-weight:600}
@@ -1563,6 +1565,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           </div>
         </article>
       </div>
+      <div class="more"><button class="btn btn-outline" type="button" id="moreBtn" hidden>Show more</button></div>
       <div class="empty" id="empty" hidden>No listings match these filters. Lower the discount, clear the handover condition or switch the property type.</div>
       <p class="fine" data-demo-only>Example listings with illustrative prices and photos.</p>
     </div>
@@ -2236,8 +2239,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     }
     var card = n.id ? $('#results .listing[data-id="' + n.id + '"]') : $('#results .listing[data-demo="' + n.demo + '"]');
     if (location.hash !== '#investors') location.hash = '#investors';
-    if (card) setTimeout(function(){ openDetail(card); }, 150);
-    else toast('This listing is no longer published.');
+    if (card){ setTimeout(function(){ openDetail(card); }, 150); return; }
+    if (!user || !n.id){ toast('This listing is no longer published.'); return; }
+    var uid = user.id, lid = n.id;
+    sb.from('platform_listings').select('*').eq('id', lid).eq('status', 'published').maybeSingle().then(function(res){
+      if (!user || user.id !== uid) return;
+      if (res.error || !res.data){ toast('This listing is no longer published.'); return; }
+      PUB[lid] = res.data;
+      var tmp = document.createElement('div'); tmp.dataset.id = lid; openDetail(tmp);
+    }, function(){ toast(OFFLINE); });
   });
 
   /* ---------- Auth-dependent visibility ---------- */
@@ -2363,7 +2373,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* leaving an account, real or demo: back to guest and to the sample data */
   function leave(){
-    user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; DEMO_NOTES = demoNotes(); state.role = null; saveRole(); setTab(null);
+    user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; DEMO_NOTES = demoNotes(); daySig = null; pg.seq++; noFeat = false; state.role = null; saveRole(); setTab(null);
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
@@ -2651,19 +2661,78 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       });
     }, function(){ toast(OFFLINE); });
   }
-  function loadPublished(){
-    var uid = user && user.id; if (!uid) return;
-    sb.from('platform_listings').select('*')   /* '*' so the page works before and after the "featured" column is added */
-      .eq('status', 'published').order('created_at', { ascending:false }).then(function(res){
-      if (res.error){ toast('Couldn’t load listings. Refresh the page.'); return; }
+  /* ----- an investor's listings: filtered and sorted by the database, loaded PAGE at a time ----- */
+  var PAGE = 12, pg = { n:0, total:0, seq:0 }, pageTimer = null, noFeat = false;
+  function filtersOn(){
+    return state.type !== 'all' || !!state.district || !!state.disc || state.cond.length > 0 || !!state.ready
+      || ranges.size.lo > 0 || ranges.size.hi < ranges.size.max || ranges.price.lo > 0 || ranges.price.hi < ranges.price.max;
+  }
+  function listQuery(){
+    var x = sb.from('platform_listings').select('*', { count:'exact' }).eq('status', 'published');
+    if (state.type !== 'all') x = x.eq('type', state.type);
+    if (state.district) x = x.eq('district', state.district);
+    if (state.disc) x = x.gte('discount_pct', state.disc[0]).lte('discount_pct', state.disc[1]);
+    if (state.cond.length) x = x.in('handover', state.cond);
+    if (ranges.size.lo > 0) x = x.gte('size_m2', ranges.size.lo);
+    if (ranges.size.hi < ranges.size.max) x = x.lte('size_m2', ranges.size.hi);   /* the slider's end means "no upper limit" */
+    if (ranges.price.lo > 0) x = x.gte('price_usd', ranges.price.lo);
+    if (ranges.price.hi < ranges.price.max) x = x.lte('price_usd', ranges.price.hi);
+    if (state.ready){   /* 'Q3 2027' is text, so "by the end of 2028" is a list of years */
+      var ys = []; for (var y = 2024; y <= +state.ready; y++) ys.push('ready.like.*' + y);
+      x = x.or(ys.join(','));
+    }
+    return x;
+  }
+  function fetchPage(reset){
+    var uid = user && user.id; if (!uid || state.role !== 'investor') return;
+    if (reset) pg.n = 0;
+    var my = ++pg.seq, from = pg.n * PAGE, x = listQuery();
+    if (!noFeat) x = x.order('featured', { ascending:false });
+    x = x.order('discount_pct', { ascending:false }).order('created_at', { ascending:false }).range(from, from + PAGE - 1);
+    $('#moreBtn').disabled = true;
+    x.then(function(res){
+      if (my !== pg.seq || !user || user.id !== uid) return;
+      if (res.error){
+        if (!noFeat && /featured/i.test(res.error.message || '')){ noFeat = true; fetchPage(reset); return; }   /* admin.sql not run yet */
+        $('#moreBtn').disabled = false; toast('Couldn’t load listings. Refresh the page.'); return;
+      }
       var rows = res.data || [];
       signUrls(firstPhotos(rows)).then(function(urls){
-        if (!user || user.id !== uid) return;
-        var box = $('#results'); box.innerHTML = ''; PUB = {};
+        if (my !== pg.seq || !user || user.id !== uid) return;
+        var box = $('#results'); if (reset) box.innerHTML = '';
         rows.forEach(function(r){ PUB[r.id] = r; box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
-        update(); buildInbox();
+        pg.total = res.count == null ? box.children.length : res.count; pg.n++;
+        paintResults(); buildInbox();
       });
-    }, function(){ toast(OFFLINE); });
+    }, function(){ $('#moreBtn').disabled = false; toast(OFFLINE); });
+  }
+  function paintResults(){
+    var n = $('#results').children.length, ka = lang === 'ka';
+    $$('#results .listing').forEach(function(c){ c.hidden = false; c.style.order = ''; var f = c.querySelector('[data-fit]'); if (f) f.hidden = true; });
+    $('#summary').innerHTML = ka ? '<b>' + pg.total + ' განცხადება</b>' : '<b>' + pg.total + ' listing' + (pg.total === 1 ? '' : 's') + '</b>';
+    var none = filtersOn() ? 'No listings match these filters. Lower the discount, clear the handover condition or switch the property type.' : 'No published listings yet. ARI reviews each listing before it appears here.';
+    if ($('#empty').dataset.msg !== none){ $('#empty').dataset.msg = none; $('#empty').textContent = none; }
+    $('#empty').hidden = n > 0;
+    $('#moreBtn').hidden = n >= pg.total; $('#moreBtn').disabled = false;
+    tagDayCards(); syncHearts();
+  }
+  function fetchDay(){   /* the listings ARI marked as the offer of the day, at most three */
+    var uid = user && user.id; if (!uid) return;
+    sb.from('platform_listings').select('*').eq('status', 'published').eq('featured', true).order('updated_at', { ascending:false }).limit(3).then(function(res){
+      if (!user || user.id !== uid) return;
+      var rows = res.error ? [] : (res.data || []);
+      signUrls(firstPhotos(rows)).then(function(urls){
+        if (!user || user.id !== uid) return;
+        var box = $('#featured'); box.innerHTML = ''; daySig = null;
+        rows.forEach(function(r){ PUB[r.id] = r; box.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
+        $('#daySec').hidden = !rows.length; syncHearts();
+      });
+    }, function(){});
+  }
+  function loadPublished(){
+    var uid = user && user.id; if (!uid) return;
+    PUB = {}; $('#results').innerHTML = ''; pg.total = 0;
+    fetchPage(true); fetchDay();
     /* which listings this investor already asked about (fails quietly until interests.sql has been run) */
     sb.from('platform_interests').select('id,listing_id,status,listing_summary,created_at').then(function(res){
       if (!user || user.id !== uid || res.error) return;
@@ -2878,18 +2947,37 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   function renderSaved(){
     var saved = getSaved(), grid = $('#savedGrid'), n = 0;
     grid.innerHTML = '';
+    if (user){   /* real account: saved listings may not be on the loaded pages, so ask for them by id */
+      var uid = user.id, ids = saved.filter(function(k){ return k.indexOf('demo-') !== 0; });
+      $('#savedEmpty').hidden = ids.length > 0;
+      if (!ids.length) return;
+      sb.from('platform_listings').select('*').eq('status', 'published').in('id', ids).then(function(res){
+        if (!user || user.id !== uid) return;
+        var rows = res.error ? [] : (res.data || []);
+        signUrls(firstPhotos(rows)).then(function(urls){
+          if (!user || user.id !== uid) return;
+          grid.innerHTML = '';
+          rows.forEach(function(r){ PUB[r.id] = r; grid.appendChild(fillCard(TPLI[r.type].cloneNode(true), rowToL(r, urls), false)); });
+          $('#savedEmpty').hidden = rows.length > 0; tagDayCards(); syncHearts();
+        });
+      }, function(){ toast(OFFLINE); });
+      return;
+    }
     $$('#results .listing').forEach(function(c){ if (saved.indexOf(cardKey(c)) > -1){ grid.appendChild(copyCard(c)); n++; } });
     $('#savedEmpty').hidden = n > 0;
     syncHearts();
   }
-  var daySig = null;
-  function renderDay(){
-    var picks = $$('#results .listing[data-featured]'), sig = picks.map(cardKey).join('|');
-    $$('#results .listing').forEach(function(c){   /* the small gold label on the card itself */
+  function tagDayCards(){   /* the small gold label on a card that is an offer of the day */
+    $$('#results .listing, #savedGrid .listing').forEach(function(c){
       var tag = c.querySelector('.listing-body > .tag-day');
       if (c.dataset.featured && !tag){ tag = document.createElement('span'); tag.className = 'tag-day'; tag.textContent = 'Offer of the day'; c.querySelector('.listing-body').insertBefore(tag, c.querySelector('.listing-body').firstChild); }
       else if (!c.dataset.featured && tag) tag.remove();
     });
+  }
+  var daySig = null;
+  function renderDay(){   /* sample data: the band is a copy of the marked sample card (a real account fills it in fetchDay) */
+    tagDayCards();
+    var picks = $$('#results .listing[data-featured]'), sig = picks.map(cardKey).join('|');
     if (sig === daySig) return;
     daySig = sig;
     var box = $('#featured'); box.innerHTML = '';
@@ -3045,13 +3133,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     lo = Math.max(0, Math.min(isNaN(lo) ? r.lo : lo, r.max));
     hi = Math.max(0, Math.min(isNaN(hi) ? r.hi : hi, r.max));
     if (lo > hi){ var t = lo; lo = hi; hi = t; }
-    r.lo = lo; r.hi = hi; paintDual(name); update();
+    r.lo = lo; r.hi = hi; paintDual(name); update(true);
   }
   ['size','price'].forEach(function(name){
     var box = $('[data-dual="' + name + '"]'), f = box.parentNode;
     var lo = box.querySelector('.lo'), hi = box.querySelector('.hi');
-    lo.addEventListener('input', function(){ var v = Math.min(+lo.value, ranges[name].hi); ranges[name].lo = v; paintDual(name); update(); });
-    hi.addEventListener('input', function(){ var v = Math.max(+hi.value, ranges[name].lo); ranges[name].hi = v; paintDual(name); update(); });
+    lo.addEventListener('input', function(){ var v = Math.min(+lo.value, ranges[name].hi); ranges[name].lo = v; paintDual(name); update(true); });
+    hi.addEventListener('input', function(){ var v = Math.max(+hi.value, ranges[name].lo); ranges[name].hi = v; paintDual(name); update(true); });
     ['in-lo','in-hi'].forEach(function(cls){
       var inp = f.querySelector('.' + cls);
       var commit = function(){ var v = parseInt(inp.value.replace(/[^0-9]/g, ''), 10); if (cls === 'in-lo') setRange(name, v, ranges[name].hi); else setRange(name, ranges[name].lo, v); };
@@ -3068,8 +3156,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     paintDual('size');
   }
   var fmt = function(n){ return '$' + n.toLocaleString('en-US'); };
-  function update(){
+  function update(changed){
     syncSizeMax();
+    if (user && state.role === 'investor'){   /* real account: the database filters and pages; here we only repaint */
+      if (changed){ clearTimeout(pageTimer); pageTimer = setTimeout(function(){ fetchPage(true); }, 280); }
+      paintResults(); return;
+    }
+    $('#moreBtn').hidden = true;
     var items = $$('#results .listing').map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond,
       w:c.dataset.district || '', y:+((c.dataset.ready || '').match(/\d{4}/) || [0])[0] }; });
     var shown = 0, ka = lang === 'ka';
@@ -3091,13 +3184,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if ($('#empty').dataset.msg !== none){ $('#empty').dataset.msg = none; $('#empty').textContent = none; }
     $('#empty').hidden = shown > 0;
   }
-  $('#fDistrict').addEventListener('change', function(){ state.district = this.value; update(); });
-  $('#fReady').addEventListener('change', function(){ state.ready = this.value; update(); });
+  $('#moreBtn').addEventListener('click', function(){ fetchPage(false); });
+  $('#fDistrict').addEventListener('change', function(){ state.district = this.value; update(true); });
+  $('#fReady').addEventListener('change', function(){ state.ready = this.value; update(true); });
   function group(sel, key, parse){
     var btns = $$(sel);
     btns.forEach(function(b){ b.addEventListener('click', function(){
       btns.forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
-      state[key] = parse(b); update();
+      state[key] = parse(b); update(true);
     }); });
   }
   group('[data-ptype]', 'type', function(b){ return b.dataset.ptype; });
@@ -3106,14 +3200,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var on = b.getAttribute('aria-pressed') !== 'true';
     $$('[data-disc]').forEach(function(x){ x.setAttribute('aria-pressed', String(on && x === b)); });
     state.disc = on ? b.dataset.disc.split('-').map(Number) : null;
-    update();
+    update(true);
   }); });
   /* handover condition: pick any number, none means all */
   $('#condFilter').addEventListener('click', function(e){
     var b = e.target.closest('[data-cond]'); if (!b) return;
     b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
     state.cond = $$('[data-cond][aria-pressed="true"]', this).map(function(x){ return x.dataset.cond; });
-    update();
+    update(true);
   });
   paintDual('size'); paintDual('price');
   document.addEventListener('click', function(e){   /* delegated: the cards can be replaced by stored listings */
@@ -3384,6 +3478,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Listings you saved with the heart. Open one to see the details or send a request.':'განცხადებები, რომლებიც გულით შეინახე. გახსენი დეტალების სანახავად ან მოთხოვნის გასაგზავნად.',
     'Browse listings':'განცხადებების ნახვა','Nothing saved yet. Tap the heart on a listing and it will appear here.':'ჯერ არაფერი შეგინახავს. დააჭირე გულს განცხადებაზე და ის აქ გამოჩნდება.',
     'Saved to My offers.':'შეინახა „ჩემს შეთავაზებებში“.','Removed from My offers.':'წაიშალა „ჩემი შეთავაზებებიდან“.',
+    'Show more':'მეტის ჩვენება',
     'Inbox':'შეტყობინებები','No messages yet.':'შეტყობინებები ჯერ არ არის.','ARI’s note:':'ARI-ის შენიშვნა:','This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
     'Listing received for review':'განცხადება მიღებულია განსახილველად','ARI is checking the details. You’ll get a message here when it’s decided.':'ARI ამოწმებს მონაცემებს. გადაწყვეტილებას აქვე შეიტყობ.',
     'Your listing was approved':'შენი განცხადება დამტკიცდა','ARI checked it and published it. Investors can see it now.':'ARI-მ შეამოწმა და გამოაქვეყნა. ინვესტორები მას უკვე ხედავენ.',

@@ -115,6 +115,8 @@ main{padding:26px 0 70px}
 .row.req{grid-template-columns:minmax(0,1.2fr) minmax(0,1.4fr) minmax(0,1fr) auto}
 .row.usr{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,.8fr) auto}
 .acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.more{display:flex;justify-content:center;margin-top:16px}
+.more i{font-style:normal;font-weight:500;color:var(--ink-3)}
 .r-col span.pill,.r-main span.pill{display:inline-flex;margin-top:4px}
 /* inside the two overview panels the rows are narrow: keep the essentials */
 .panel .row{grid-template-columns:64px minmax(0,1fr) auto}
@@ -235,7 +237,7 @@ main{padding:26px 0 70px}
       reqConfirmed:'Confirmed. The investor sees it in their inbox.', reqClosed:'Request closed.', reqReopened:'Request reopened.',
       usSub:'Everyone registered on the platform.', registered:'Registered', listingsN:'Listings', requestsN:'Requests', access:'Access', accessOn:'Has access', accessOff:'Blocked', block:'Block access', allow:'Allow access', noUsers:'No users here.',
       dayOffer:'Offer of the day', makeDay:'Make it the offer of the day', removeDay:'Remove from offers of the day', dayOn:'Marked. Investors see it first on their page.', dayOff:'Removed from offers of the day.',
-      accessChanged:'Access updated.', needSql:'Run supabase/admin.sql once in Supabase to turn this on.', interest:'Interested in' },
+      showMore:'Show more', loading:'Loading…', accessChanged:'Access updated.', needSql:'Run supabase/admin.sql once in Supabase to turn this on.', interest:'Interested in' },
     ka:{ adminPanel:'ადმინის პანელი', signInTitle:'შესვლა ადმინის პანელში', email:'ელფოსტა', password:'პაროლი', signIn:'შესვლა', or:'ან', openDemo:'დემოს გახსნა სანიმუშო მონაცემებით',
       demoHint:'დემო ყველა ეკრანს სანიმუშო განცხადებებსა და მოთხოვნებზე აჩვენებს. არაფერი ინახება და არ იგზავნება.', signOut:'გასვლა',
       demoBar:'დემო: სანიმუშო მონაცემები. გვერდის განახლებისას ცვლილებები ქრება.',
@@ -257,7 +259,7 @@ main{padding:26px 0 70px}
       reqConfirmed:'დადასტურდა. ინვესტორი ამას თავის შეტყობინებებში ხედავს.', reqClosed:'მოთხოვნა დაიხურა.', reqReopened:'მოთხოვნა ხელახლა გაიხსნა.',
       usSub:'ყველა, ვინც პლატფორმაზე დარეგისტრირდა.', registered:'რეგისტრაცია', listingsN:'განცხადება', requestsN:'მოთხოვნა', access:'წვდომა', accessOn:'წვდომა აქვს', accessOff:'დაბლოკილია', block:'წვდომის დაბლოკვა', allow:'წვდომის მიცემა', noUsers:'აქ მომხმარებელი არ არის.',
       dayOffer:'დღის შეთავაზება', makeDay:'დღის შეთავაზებად მონიშვნა', removeDay:'დღის შეთავაზებიდან მოხსნა', dayOn:'მოინიშნა. ინვესტორები მას თავის გვერდზე პირველს ხედავენ.', dayOff:'მოიხსნა დღის შეთავაზებიდან.',
-      accessChanged:'წვდომა შეიცვალა.', needSql:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს' }
+      showMore:'მეტის ჩვენება', loading:'იტვირთება…', accessChanged:'წვდომა შეიცვალა.', needSql:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს' }
   };
   var KA_PLACE = { 'Saburtalo, Tbilisi':'საბურთალო, თბილისი','Vake, Tbilisi':'ვაკე, თბილისი','Tskneti, Tbilisi':'წყნეთი, თბილისი','Didube, Tbilisi':'დიდუბე, თბილისი','Didi Dighomi, Tbilisi':'დიდი დიღომი, თბილისი','Gldani, Tbilisi':'გლდანი, თბილისი','Isani, Tbilisi':'ისანი, თბილისი','Samgori, Tbilisi':'სამგორი, თბილისი','Nadzaladevi, Tbilisi':'ნაძალადევი, თბილისი','Chughureti, Tbilisi':'ჩუღურეთი, თბილისი','Krtsanisi, Tbilisi':'კრწანისი, თბილისი','Mtatsminda, Tbilisi':'მთაწმინდა, თბილისი','Lisi, Tbilisi':'ლისი, თბილისი' };
   var lang = 'en';
@@ -303,18 +305,137 @@ main{padding:26px 0 70px}
     ];
     return { listings:L, profiles:P, interests:I };
   }
-  var S = { tab:'overview', demo:false, email:'', lf:'in_review', lq:'', rf:'new', uf:'developer', data:{ listings:[], profiles:[], interests:[] } };
+  /* The panel never downloads whole tables. Each screen asks the database for the numbers on the tabs and for
+     one page of its list (filtered and searched there), then for the few related rows that page mentions.
+     S.data only caches rows that were already fetched, so a listing or a profile can be looked up by id. */
+  var S = { tab:'overview', demo:false, email:'', lf:'in_review', lq:'', rf:'new', uf:'developer', seq:0,
+    more:{ listings:20, requests:20, users:30 }, counts:{}, list:null, data:{ listings:[], profiles:[], interests:[] } };
+  var DEMO = null, STEP = 20;
 
-  function load(){
-    if (S.demo){ S.data = demoData(); return Promise.resolve(); }
-    return Promise.all([
-      sb.from('platform_listings').select('*').order('created_at', { ascending:false }),
-      sb.from('platform_profiles').select('*').order('created_at', { ascending:false }),
-      sb.from('platform_interests').select('*').order('created_at', { ascending:false })
-    ]).then(function(r){
-      if (r[0].error) throw r[0].error;
-      S.data = { listings:r[0].data || [], profiles:(r[1].data || []), interests:r[2].error ? [] : (r[2].data || []) };
+  function byId(list, id){ for (var i = 0; i < list.length; i++) if (String(list[i].id) === String(id)) return list[i]; return null; }
+  function who(id){ return byId(S.data.profiles, id) || {}; }
+  function uniq(a){ var seen = {}, r = []; a.forEach(function(x){ if (x != null && !seen[x]){ seen[x] = 1; r.push(x); } }); return r; }
+  function upsert(cache, rows){
+    return rows.map(function(r){
+      var o = byId(cache, r.id);
+      if (!o){ cache.push(r); return r; }
+      if (o !== r) Object.keys(r).forEach(function(k){ o[k] = r[k]; });
+      return o;
     });
+  }
+  function need(table, cache, ids){   /* fetch the rows with these ids that we don't hold yet */
+    ids = uniq(ids).filter(function(id){ return !byId(cache, id); });
+    if (!ids.length) return Promise.resolve();
+    if (S.demo){ upsert(cache, DEMO[table === 'platform_profiles' ? 'profiles' : 'listings'].filter(function(r){ return ids.indexOf(r.id) > -1; })); return Promise.resolve(); }
+    return sb.from(table).select('*').in('id', ids).then(function(res){ upsert(cache, res.data || []); }, function(){});
+  }
+  function cnt(table, fn){
+    var x = sb.from(table).select('id', { count:'exact', head:true });
+    if (fn) x = fn(x);
+    return x.then(function(r){ return r.error ? 0 : (r.count || 0); }, function(){ return 0; });
+  }
+  function isDay(x){ return !!x.featured && x.status === 'published'; }
+  function tally(rows, key){ var m = {}; rows.forEach(function(r){ m[r[key]] = (m[r[key]] || 0) + 1; }); return m; }
+
+  function getCounts(){
+    if (S.demo){
+      var L = DEMO.listings, I = DEMO.interests, P = DEMO.profiles, n = function(a, k, v){ return a.filter(function(x){ return x[k] === v; }).length; };
+      return Promise.resolve({ in_review:n(L, 'status', 'in_review'), published:n(L, 'status', 'published'), rejected:n(L, 'status', 'rejected'), day:L.filter(isDay).length, all:L.length,
+        r_new:n(I, 'status', 'new'), r_contacted:n(I, 'status', 'contacted'), r_closed:n(I, 'status', 'closed'), r_all:I.length, developers:n(P, 'role', 'developer'), investors:n(P, 'role', 'investor') });
+    }
+    var st = function(v){ return function(x){ return x.eq('status', v); }; }, ro = function(v){ return function(x){ return x.eq('role', v); }; };
+    return Promise.all([
+      cnt('platform_listings', st('in_review')), cnt('platform_listings', st('published')), cnt('platform_listings', st('rejected')),
+      cnt('platform_listings', function(x){ return x.eq('status', 'published').eq('featured', true); }), cnt('platform_listings'),
+      cnt('platform_interests', st('new')), cnt('platform_interests', st('contacted')), cnt('platform_interests', st('closed')), cnt('platform_interests'),
+      cnt('platform_profiles', ro('developer')), cnt('platform_profiles', ro('investor'))
+    ]).then(function(a){
+      return { in_review:a[0], published:a[1], rejected:a[2], day:a[3], all:a[4], r_new:a[5], r_contacted:a[6], r_closed:a[7], r_all:a[8], developers:a[9], investors:a[10] };
+    });
+  }
+  function withOwners(tab, rows, total){
+    rows = upsert(S.data.listings, rows);
+    return need('platform_profiles', S.data.profiles, rows.map(function(l){ return l.owner; })).then(function(){ return { tab:tab, rows:rows, total:total }; });
+  }
+  function getListings(){
+    var lf = S.lf, lim = S.more.listings, q = S.lq.trim();
+    if (S.demo){
+      var ql = q.toLowerCase(), all = DEMO.listings.filter(function(x){
+        if (lf === 'day'){ if (!isDay(x)) return false; } else if (lf !== 'all' && x.status !== lf) return false;
+        if (!ql) return true;
+        var d = byId(DEMO.profiles, x.owner) || {};
+        return [x.district, place(x.district), x.cadastral, d.full_name, d.company, t(x.type)].join(' ').toLowerCase().indexOf(ql) > -1;
+      });
+      return withOwners('listings', all.slice(0, lim), all.length);
+    }
+    var qq = q.replace(/[,()*%"\\]/g, ' ').trim();   /* the search goes into a filter string: keep it plain */
+    var go = function(devs){
+      var x = sb.from('platform_listings').select('*', { count:'exact' });
+      if (lf === 'day') x = x.eq('status', 'published').eq('featured', true); else if (lf !== 'all') x = x.eq('status', lf);
+      if (qq){
+        var parts = ['district.ilike."*' + qq + '*"', 'cadastral.ilike."*' + qq + '*"'];
+        if (devs.length) parts.push('owner.in.(' + devs.join(',') + ')');
+        x = x.or(parts.join(','));
+      }
+      return x.order('created_at', { ascending:false }).range(0, lim - 1).then(function(res){
+        if (res.error){ if (lf === 'day') return withOwners('listings', [], 0); throw res.error; }
+        return withOwners('listings', res.data || [], res.count || 0);
+      });
+    };
+    if (!qq) return go([]);
+    return sb.from('platform_profiles').select('id').eq('role', 'developer').or('full_name.ilike."*' + qq + '*",company.ilike."*' + qq + '*"').limit(20)
+      .then(function(r){ return go((r.data || []).map(function(d){ return d.id; })); }, function(){ return go([]); });
+  }
+  function withListings(tab, rows, total, extra){
+    rows = upsert(S.data.interests, rows);
+    return need('platform_listings', S.data.listings, rows.map(function(x){ return x.listing_id; })).then(function(){
+      return need('platform_profiles', S.data.profiles, rows.map(function(x){ var l = byId(S.data.listings, x.listing_id); return l && l.owner; }));
+    }).then(function(){ var out = extra || {}; out.tab = tab; out.rows = rows; out.total = total; return out; });
+  }
+  function getRequests(){
+    var rf = S.rf, lim = S.more.requests;
+    if (S.demo){ var all = DEMO.interests.filter(function(x){ return rf === 'all' || x.status === rf; }); return withListings('requests', all.slice(0, lim), all.length); }
+    var x = sb.from('platform_interests').select('*', { count:'exact' });
+    if (rf !== 'all') x = x.eq('status', rf);
+    return x.order('created_at', { ascending:false }).range(0, lim - 1).then(function(res){
+      if (res.error) return withListings('requests', [], 0);   /* interests.sql not run yet */
+      return withListings('requests', res.data || [], res.count || 0);
+    });
+  }
+  function getUsers(){
+    var uf = S.uf, lim = S.more.users, dev = uf === 'developer';
+    var done = function(rows, total, n){ return { tab:'users', rows:upsert(S.data.profiles, rows), total:total, n:n }; };
+    if (S.demo){
+      var all = DEMO.profiles.filter(function(p){ return p.role === uf; });
+      return Promise.resolve(done(all.slice(0, lim), all.length, dev ? tally(DEMO.listings, 'owner') : tally(DEMO.interests, 'investor')));
+    }
+    return sb.from('platform_profiles').select('*', { count:'exact' }).eq('role', uf).order('created_at', { ascending:false }).range(0, lim - 1).then(function(res){
+      if (res.error) throw res.error;
+      var rows = res.data || [], ids = rows.map(function(p){ return p.id; });
+      if (!ids.length) return done(rows, res.count || 0, {});
+      var key = dev ? 'owner' : 'investor';
+      return sb.from(dev ? 'platform_listings' : 'platform_interests').select(key).in(key, ids).then(function(r){ return done(rows, res.count || 0, tally(r.data || [], key)); }, function(){ return done(rows, res.count || 0, {}); });
+    });
+  }
+  function getOverview(){
+    var wait, fresh;
+    if (S.demo){
+      wait = Promise.resolve(DEMO.listings.filter(function(x){ return x.status === 'in_review'; }).slice(0, 5));
+      fresh = Promise.resolve(DEMO.interests.filter(function(x){ return x.status === 'new'; }).slice(0, 5));
+    } else {
+      wait = sb.from('platform_listings').select('*').eq('status', 'in_review').order('created_at', { ascending:false }).limit(5).then(function(r){ return r.data || []; });
+      fresh = sb.from('platform_interests').select('*').eq('status', 'new').order('created_at', { ascending:false }).limit(5).then(function(r){ return r.data || []; }, function(){ return []; });
+    }
+    return Promise.all([wait, fresh]).then(function(r){
+      return withOwners('overview', r[0], r[0].length).then(function(a){ return withListings('overview', r[1], r[1].length, { wait:a.rows }); });
+    }).then(function(o){ o.fresh = o.rows; return o; });
+  }
+  function refresh(){   /* ask for what the open screen needs, then draw it; a newer call wins over an older one */
+    var my = ++S.seq, job = S.tab === 'listings' ? getListings() : S.tab === 'requests' ? getRequests() : S.tab === 'users' ? getUsers() : getOverview();
+    return Promise.all([getCounts(), job]).then(function(r){
+      if (my !== S.seq) return;
+      S.counts = r[0]; S.list = r[1]; render();
+    }, function(){ if (my === S.seq){ toast(t('offline')); } });
   }
   function fileUrls(paths){   /* private files open through links that expire in an hour */
     paths = paths.filter(Boolean);
@@ -344,8 +465,6 @@ main{padding:26px 0 70px}
     if (S.demo){ row.approved = ok; return Promise.resolve(); }
     return sb.rpc('platform_set_approved', { target:id, ok:ok }).then(function(res){ if (res.error) throw res.error; row.approved = ok; });
   }
-  function byId(list, id){ for (var i = 0; i < list.length; i++) if (String(list[i].id) === String(id)) return list[i]; return null; }
-  function who(id){ return byId(S.data.profiles, id) || {}; }
 
   /* ---------- Pieces ---------- */
   function typeName(x){ return t(x.type) || x.type; }
@@ -376,56 +495,50 @@ main{padding:26px 0 70px}
       + '<div class="r-col"><span>' + esc(day(x.created_at)) + '</span>' + pill(x.status) + '</div>'
       + '<div class="acts">' + acts + '</div></div>';
   }
-  function countBy(list, key, val){ return list.filter(function(x){ return x[key] === val; }).length; }
 
   /* ---------- Screens ---------- */
+  function waiting(){ return '<p class="empty panel">' + esc(t('loading')) + '</p>'; }
+  function moreBtn(have, total){ return have < total ? '<div class="more"><button class="btn btn-line" type="button" data-act="more">' + esc(t('showMore')) + ' <i>' + have + ' / ' + total + '</i></button></div>' : ''; }
   function screenOverview(){
-    var L = S.data.listings, I = S.data.interests, wait = L.filter(function(x){ return x.status === 'in_review'; }), fresh = I.filter(function(x){ return x.status === 'new'; });
+    var c = S.counts, D = S.list && S.list.tab === 'overview' ? S.list : null, wait = D ? D.wait : [], fresh = D ? D.fresh : [];
     return '<div class="page-head"><div><h1>' + esc(t('overview')) + '</h1><p>' + esc(t('ovSub')) + '</p></div></div>'
       + '<div class="stats">'
-      + '<button type="button" class="stat' + (wait.length ? ' hot' : '') + '" data-act="go" data-tab="listings" data-lf="in_review"><span>' + esc(t('inReview')) + '</span><b>' + wait.length + '</b></button>'
-      + '<button type="button" class="stat" data-act="go" data-tab="listings" data-lf="published"><span>' + esc(t('published')) + '</span><b>' + countBy(L, 'status', 'published') + '</b></button>'
-      + '<button type="button" class="stat' + (fresh.length ? ' hot' : '') + '" data-act="go" data-tab="requests" data-rf="new"><span>' + esc(t('newReq')) + '</span><b>' + fresh.length + '</b></button>'
-      + '<button type="button" class="stat" data-act="go" data-tab="users"><span>' + esc(t('usersAll')) + '</span><b>' + S.data.profiles.length + '</b></button></div>'
+      + '<button type="button" class="stat' + (c.in_review ? ' hot' : '') + '" data-act="go" data-tab="listings" data-lf="in_review"><span>' + esc(t('inReview')) + '</span><b>' + (c.in_review || 0) + '</b></button>'
+      + '<button type="button" class="stat" data-act="go" data-tab="listings" data-lf="published"><span>' + esc(t('published')) + '</span><b>' + (c.published || 0) + '</b></button>'
+      + '<button type="button" class="stat' + (c.r_new ? ' hot' : '') + '" data-act="go" data-tab="requests" data-rf="new"><span>' + esc(t('newReq')) + '</span><b>' + (c.r_new || 0) + '</b></button>'
+      + '<button type="button" class="stat" data-act="go" data-tab="users"><span>' + esc(t('usersAll')) + '</span><b>' + ((c.developers || 0) + (c.investors || 0)) + '</b></button></div>'
       + '<div class="two"><section class="panel"><div class="panel-head"><h2>' + esc(t('waitingListings')) + '</h2><button class="btn btn-line btn-sm" data-act="go" data-tab="listings" data-lf="in_review">' + esc(t('seeAll')) + '</button></div>'
-      + (wait.length ? '<div class="rows" style="padding:12px">' + wait.slice(0, 5).map(listingRow).join('') + '</div>' : '<p class="empty">' + esc(t('nothingWaiting')) + '</p>') + '</section>'
+      + (!D ? '<p class="empty">' + esc(t('loading')) + '</p>' : wait.length ? '<div class="rows" style="padding:12px">' + wait.map(listingRow).join('') + '</div>' : '<p class="empty">' + esc(t('nothingWaiting')) + '</p>') + '</section>'
       + '<section class="panel"><div class="panel-head"><h2>' + esc(t('waitingRequests')) + '</h2><button class="btn btn-line btn-sm" data-act="go" data-tab="requests" data-rf="new">' + esc(t('seeAll')) + '</button></div>'
-      + (fresh.length ? '<div class="rows" style="padding:12px">' + fresh.slice(0, 5).map(function(x){ return requestRow(x, true); }).join('') + '</div>' : '<p class="empty">' + esc(t('noRequestsNew')) + '</p>') + '</section></div>';
+      + (!D ? '<p class="empty">' + esc(t('loading')) + '</p>' : fresh.length ? '<div class="rows" style="padding:12px">' + fresh.map(function(x){ return requestRow(x, true); }).join('') + '</div>' : '<p class="empty">' + esc(t('noRequestsNew')) + '</p>') + '</section></div>';
   }
   function seg(name, cur, opts){
     return '<div class="seg" role="group">' + opts.map(function(o){ return '<button type="button" data-act="filter" data-name="' + name + '" data-val="' + o[0] + '" aria-pressed="' + (cur === o[0]) + '">' + esc(t(o[1])) + (o[2] != null ? ' <i>' + o[2] + '</i>' : '') + '</button>'; }).join('') + '</div>';
   }
   function screenListings(){
-    var L = S.data.listings, q = S.lq.trim().toLowerCase();
-    var rows = L.filter(function(x){
-      if (S.lf === 'day'){ if (!(x.featured && x.status === 'published')) return false; }
-      else if (S.lf !== 'all' && x.status !== S.lf) return false;
-      if (!q) return true;
-      var d = who(x.owner);
-      return [x.district, place(x.district), x.cadastral, d.full_name, d.company, typeName(x)].join(' ').toLowerCase().indexOf(q) > -1;
-    });
+    var c = S.counts, D = S.list && S.list.tab === 'listings' ? S.list : null;
     return '<div class="page-head"><div><h1>' + esc(t('listings')) + '</h1><p>' + esc(t('lsSub')) + '</p></div></div>'
-      + '<div class="bar">' + seg('lf', S.lf, [['in_review', 'inReview', countBy(L, 'status', 'in_review')], ['published', 'published', countBy(L, 'status', 'published')], ['rejected', 'rejected', countBy(L, 'status', 'rejected')], ['day', 'dayOffer', L.filter(function(x){ return x.featured && x.status === 'published'; }).length], ['all', 'all', L.length]])
+      + '<div class="bar">' + seg('lf', S.lf, [['in_review', 'inReview', c.in_review || 0], ['published', 'published', c.published || 0], ['rejected', 'rejected', c.rejected || 0], ['day', 'dayOffer', c.day || 0], ['all', 'all', c.all || 0]])
       + '<input class="field search" id="lq" type="search" placeholder="' + esc(t('search')) + '" value="' + esc(S.lq) + '" aria-label="' + esc(t('search')) + '"></div>'
-      + (rows.length ? '<div class="rows">' + rows.map(listingRow).join('') + '</div>' : '<p class="empty panel">' + esc(t('noListings')) + '</p>');
+      + (!D ? waiting() : D.rows.length ? '<div class="rows">' + D.rows.map(listingRow).join('') + '</div>' + moreBtn(D.rows.length, D.total) : '<p class="empty panel">' + esc(t('noListings')) + '</p>');
   }
   function screenRequests(){
-    var I = S.data.interests, rows = I.filter(function(x){ return S.rf === 'all' || x.status === S.rf; });
+    var c = S.counts, D = S.list && S.list.tab === 'requests' ? S.list : null;
     return '<div class="page-head"><div><h1>' + esc(t('requests')) + '</h1><p>' + esc(t('rqSub')) + '</p></div></div>'
-      + '<div class="bar">' + seg('rf', S.rf, [['new', 'stNew', countBy(I, 'status', 'new')], ['contacted', 'stContacted', countBy(I, 'status', 'contacted')], ['closed', 'stClosed', countBy(I, 'status', 'closed')], ['all', 'all', I.length]]) + '</div>'
-      + (rows.length ? '<div class="rows">' + rows.map(function(x){ return requestRow(x); }).join('') + '</div>' : '<p class="empty panel">' + esc(t('noRequests')) + '</p>');
+      + '<div class="bar">' + seg('rf', S.rf, [['new', 'stNew', c.r_new || 0], ['contacted', 'stContacted', c.r_contacted || 0], ['closed', 'stClosed', c.r_closed || 0], ['all', 'all', c.r_all || 0]]) + '</div>'
+      + (!D ? waiting() : D.rows.length ? '<div class="rows">' + D.rows.map(function(x){ return requestRow(x); }).join('') + '</div>' + moreBtn(D.rows.length, D.total) : '<p class="empty panel">' + esc(t('noRequests')) + '</p>');
   }
   function screenUsers(){
-    var P = S.data.profiles, rows = P.filter(function(p){ return p.role === S.uf; });
+    var c = S.counts, D = S.list && S.list.tab === 'users' ? S.list : null;
     return '<div class="page-head"><div><h1>' + esc(t('users')) + '</h1><p>' + esc(t('usSub')) + '</p></div></div>'
-      + '<div class="bar">' + seg('uf', S.uf, [['developer', 'developers', countBy(P, 'role', 'developer')], ['investor', 'investors', countBy(P, 'role', 'investor')]]) + '</div>'
-      + (rows.length ? '<div class="rows">' + rows.map(function(p){
-          var dev = p.role === 'developer', n = dev ? countBy(S.data.listings, 'owner', p.id) : countBy(S.data.interests, 'investor', p.id);
+      + '<div class="bar">' + seg('uf', S.uf, [['developer', 'developers', c.developers || 0], ['investor', 'investors', c.investors || 0]]) + '</div>'
+      + (!D ? waiting() : D.rows.length ? '<div class="rows">' + D.rows.map(function(p){
+          var dev = p.role === 'developer', n = (D.n && D.n[p.id]) || 0;
           return '<div class="row flat usr"><div class="r-main"><b>' + esc(p.full_name || t('unknown')) + '</b><span>' + esc(dev ? (p.company || '') : (p.interest ? t('interest') + ': ' + p.interest : '')) + '</span></div>'
             + '<div class="r-col"><b>' + esc(p.phone || '') + '</b><span>' + esc(t('registered')) + ': ' + esc(day(p.created_at)) + '</span></div>'
             + '<div class="r-col"><b>' + n + ' ' + esc(t(dev ? 'listingsN' : 'requestsN')) + '</b>' + (dev ? '' : '<span>' + esc(t('budget')) + ': ' + (p.budget ? money(p.budget) : '—') + '</span>') + '</div>'
             + '<div class="acts">' + (dev ? '' : '<span class="pill ' + (p.approved ? 'p-ok' : 'p-no') + '">' + esc(t(p.approved ? 'accessOn' : 'accessOff')) + '</span><button class="btn btn-line btn-sm" data-act="access" data-id="' + esc(p.id) + '" data-ok="' + (!p.approved) + '">' + esc(t(p.approved ? 'block' : 'allow')) + '</button>') + '</div></div>';
-        }).join('') + '</div>' : '<p class="empty panel">' + esc(t('noUsers')) + '</p>');
+        }).join('') + '</div>' + moreBtn(D.rows.length, D.total) : '<p class="empty panel">' + esc(t('noUsers')) + '</p>');
   }
 
   function render(){
@@ -434,7 +547,7 @@ main{padding:26px 0 70px}
     $$('[data-lang]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
     if ($('#loginErr').dataset.k) $('#loginErr').textContent = t($('#loginErr').dataset.k);
     if ($('#app').hidden) return;
-    var wait = countBy(S.data.listings, 'status', 'in_review'), fresh = countBy(S.data.interests, 'status', 'new');
+    var wait = S.counts.in_review || 0, fresh = S.counts.r_new || 0;
     $('#tabs').innerHTML = [['overview', 0], ['listings', wait], ['requests', fresh], ['users', 0]].map(function(x){
       return '<button type="button" data-act="tab" data-tab="' + x[0] + '"' + (S.tab === x[0] ? ' aria-current="page"' : '') + '>' + esc(t(x[0])) + (x[1] ? '<span class="count">' + x[1] + '</span>' : '') + '</button>';
     }).join('');
@@ -489,8 +602,11 @@ main{padding:26px 0 70px}
   function redrawOpen(){ var l = byId(S.data.listings, openId); if (!l) return; var paths = (l.photos || []).concat(l.plan_path ? [l.plan_path] : []); fileUrls(paths).then(function(u){ if (openId === l.id) drawListing(l, u); }); }
   function decide(patch, msg){
     var id = openId, btns = $$('#modalCard .m-foot button'); btns.forEach(function(b){ b.disabled = true; });
-    saveListing(id, patch).then(function(){ closeModal(); render(); toast(t(msg)); }, function(){ btns.forEach(function(b){ b.disabled = false; }); toast(t('saveFail')); });
+    saveListing(id, patch).then(function(){ closeModal(); refresh(); toast(t(msg)); }, function(){ btns.forEach(function(b){ b.disabled = false; }); toast(t('saveFail')); });
   }
+
+  /* a new tab or filter: start from the first page, show "Loading" until the rows arrive */
+  function show(){ S.more = { listings:STEP, requests:STEP, users:30 }; S.list = null; render(); refresh(); }
 
   /* ---------- Clicks ---------- */
   document.addEventListener('click', function(e){
@@ -498,16 +614,17 @@ main{padding:26px 0 70px}
     if (lg){ lang = lg.dataset.lang; try { localStorage.setItem('bm-lang', lang); } catch(x){} render(); if (openId) redrawOpen(); return; }
     var a = e.target.closest('[data-act]'); if (!a) return;
     var act = a.dataset.act;
-    if (act === 'tab'){ S.tab = a.dataset.tab; render(); window.scrollTo(0, 0); }
-    else if (act === 'go'){ S.tab = a.dataset.tab; if (a.dataset.lf) S.lf = a.dataset.lf; if (a.dataset.rf) S.rf = a.dataset.rf; render(); window.scrollTo(0, 0); }
-    else if (act === 'filter'){ S[a.dataset.name] = a.dataset.val; render(); }
+    if (act === 'tab'){ S.tab = a.dataset.tab; show(); window.scrollTo(0, 0); }
+    else if (act === 'go'){ S.tab = a.dataset.tab; if (a.dataset.lf) S.lf = a.dataset.lf; if (a.dataset.rf) S.rf = a.dataset.rf; show(); window.scrollTo(0, 0); }
+    else if (act === 'filter'){ S[a.dataset.name] = a.dataset.val; show(); }
+    else if (act === 'more'){ S.more[S.tab] += STEP; a.disabled = true; refresh(); }
     else if (act === 'open') openListing(a.dataset.id);
     else if (act === 'close') closeModal();
     else if (act === 'approve') decide({ status:'published', review_note:null }, 'approved');
     else if (act === 'review') decide({ status:'in_review' }, 'returned');
     else if (act === 'day'){
       var on = a.dataset.on === 'true'; a.disabled = true;
-      saveListing(openId, { featured:on }).then(function(){ render(); redrawOpen(); toast(t(on ? 'dayOn' : 'dayOff')); },
+      saveListing(openId, { featured:on }).then(function(){ refresh(); redrawOpen(); toast(t(on ? 'dayOn' : 'dayOff')); },
         function(err){ a.disabled = false; toast(t(/featured|column|schema cache/i.test((err && err.message) || '') ? 'needSql' : 'saveFail')); });
     }
     else if (act === 'reject'){ rejecting = true; redrawOpen(); }
@@ -519,25 +636,28 @@ main{padding:26px 0 70px}
     }
     else if (act === 'req'){
       a.disabled = true;
-      saveInterest(a.dataset.id, a.dataset.to).then(function(){ render(); toast(t(a.dataset.to === 'contacted' ? 'reqConfirmed' : a.dataset.to === 'closed' ? 'reqClosed' : 'reqReopened')); }, function(){ a.disabled = false; toast(t('saveFail')); });
+      saveInterest(a.dataset.id, a.dataset.to).then(function(){ refresh(); toast(t(a.dataset.to === 'contacted' ? 'reqConfirmed' : a.dataset.to === 'closed' ? 'reqClosed' : 'reqReopened')); }, function(){ a.disabled = false; toast(t('saveFail')); });
     }
     else if (act === 'access'){
       a.disabled = true;
-      saveAccess(a.dataset.id, a.dataset.ok === 'true').then(function(){ render(); toast(t('accessChanged')); }, function(err){ a.disabled = false; toast(t(/function|schema cache|not find/i.test((err && err.message) || '') ? 'needSql' : 'saveFail')); });
+      saveAccess(a.dataset.id, a.dataset.ok === 'true').then(function(){ refresh(); toast(t('accessChanged')); }, function(err){ a.disabled = false; toast(t(/function|schema cache|not find/i.test((err && err.message) || '') ? 'needSql' : 'saveFail')); });
     }
   });
-  document.addEventListener('input', function(e){ if (e.target.id === 'lq'){ S.lq = e.target.value; render(); } });
+  var searchTimer;
+  document.addEventListener('input', function(e){
+    if (e.target.id !== 'lq') return;
+    S.lq = e.target.value; S.more.listings = STEP; clearTimeout(searchTimer); searchTimer = setTimeout(refresh, 300);   /* wait until typing pauses */
+  });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
 
   /* ---------- Sign in ---------- */
   function showErr(k){ var el = $('#loginErr'); el.textContent = k ? t(k) : ''; el.dataset.k = k || ''; el.hidden = !k; }
-  function enter(){ $('#login').hidden = true; $('#app').hidden = false; S.tab = 'overview'; render(); window.scrollTo(0, 0); }
-  function leave(){ S.demo = false; S.email = ''; S.data = { listings:[], profiles:[], interests:[] }; closeModal(); $('#app').hidden = true; $('#login').hidden = false; $('#pass').value = ''; render(); }
+  function enter(){ $('#login').hidden = true; $('#app').hidden = false; S.tab = 'overview'; S.counts = {}; S.data = { listings:[], profiles:[], interests:[] }; window.scrollTo(0, 0); show(); }
+  function leave(){ S.demo = false; S.email = ''; S.seq++; S.list = null; S.counts = {}; DEMO = null; S.data = { listings:[], profiles:[], interests:[] }; closeModal(); $('#app').hidden = true; $('#login').hidden = false; $('#pass').value = ''; render(); }
   function startReal(email){
     return sb.rpc('is_admin').then(function(res){
       if (res.error || res.data !== true){ return sb.auth.signOut().then(function(){ throw new Error('notAdmin'); }, function(){ throw new Error('notAdmin'); }); }
-      S.demo = false; S.email = email;
-      return load().then(enter);
+      S.demo = false; S.email = email; enter();
     });
   }
   $('#loginForm').addEventListener('submit', function(e){
@@ -551,7 +671,7 @@ main{padding:26px 0 70px}
       return startReal(email);
     }).then(function(){ btn.disabled = false; }, function(err){ btn.disabled = false; showErr(T.en[err && err.message] ? err.message : 'offline'); });
   });
-  $('#demoBtn').addEventListener('click', function(){ S.demo = true; S.email = ''; showErr(''); load().then(enter); });
+  $('#demoBtn').addEventListener('click', function(){ S.demo = true; S.email = ''; DEMO = demoData(); showErr(''); enter(); });
   $('#outBtn').addEventListener('click', function(){
     if (S.demo || !sb){ leave(); return; }
     sb.auth.signOut().then(leave, leave);
@@ -560,7 +680,7 @@ main{padding:26px 0 70px}
   /* ---------- Boot: come back signed in if the browser still has the session ---------- */
   render();
   var want = /^#demo(?:\/(listings|requests|users))?$/.exec(location.hash);   /* admin/#demo opens the sample panel straight away */
-  if (want){ S.demo = true; load().then(function(){ enter(); if (want[1]){ S.tab = want[1]; if (want[1] !== 'users'){ S.lf = 'all'; S.rf = 'all'; } render(); } }); }
+  if (want){ S.demo = true; DEMO = demoData(); enter(); if (want[1]){ S.tab = want[1]; if (want[1] !== 'users'){ S.lf = 'all'; S.rf = 'all'; } show(); } }
   else if (sb) sb.auth.getSession().then(function(res){
     var u = res.data && res.data.session && res.data.session.user;
     if (u) startReal(u.email).then(null, function(){ render(); });
