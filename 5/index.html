@@ -823,7 +823,18 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
 
 /* Investor search */
 .filters{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden}
-#results .listing{cursor:pointer}
+#results .listing,#featured .listing,#savedGrid .listing{cursor:pointer}
+#featured .listing-foot,#savedGrid .listing-foot{justify-content:flex-end}
+div.view[data-view="saved"] .sec{padding-block:clamp(28px,4vw,48px)}
+/* Offer of the day: listings ARI picked, shown first on the investor's page */
+.day{margin-bottom:clamp(28px,4vw,44px);padding:clamp(16px,2.4vw,24px);border-radius:var(--r-lg);border:1px solid var(--gold-line,#E3B860);background:linear-gradient(180deg,rgba(227,184,96,.14),rgba(227,184,96,.04))}
+.day-head{display:grid;gap:8px;justify-items:start;margin-bottom:16px}
+.day-head h2{font-size:clamp(1.25rem,2.2vw,1.6rem)}
+.tag-day{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:#E3B860;color:#1A3732;font-size:12.5px;font-weight:700;letter-spacing:.02em}
+.tag-day svg{width:13px;height:13px}
+.listing-body>.tag-day{align-self:flex-start;margin-bottom:-4px}
+#featured .listing-body>.tag-day{display:none}   /* the band already says it */
+.listing[data-featured]{border-color:#E3B860;box-shadow:0 0 0 1px #E3B860,var(--shadow-sm)}
 #results .listing-foot{justify-content:flex-end}
 .filters-main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 20px;padding:22px}
 .filters-title{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
@@ -1026,6 +1037,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <a href="#developers" data-nav="developers" data-when="not-inv">For developers</a>
       <a href="#investors" data-nav="investors" data-when="not-dev">For investors</a>
       <a href="#offers" data-nav="offers" data-when="dev" hidden>My offers</a>
+      <a href="#saved" data-nav="saved" data-when="inv" hidden>My offers</a>
     </nav>
     <button class="menu-btn" type="button" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menuPanel"><span id="menuLabel">Home</span><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l4 4 4-4"/></svg></button>
     <div class="head-right">
@@ -1058,6 +1070,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     <a href="#developers" data-nav="developers" data-when="not-inv">For developers</a>
     <a href="#investors" data-nav="investors" data-when="not-dev">For investors</a>
     <a href="#offers" data-nav="offers" data-when="dev" hidden>My offers</a>
+    <a href="#saved" data-nav="saved" data-when="inv" hidden>My offers</a>
     <a href="#platform" data-nav="platform">How the platform works</a>
     <div class="menu-foot" data-when="guest">
       <button class="btn btn-light" type="button" data-auth="signin">Sign in</button>
@@ -1408,6 +1421,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   <!-- Signed-in investor search -->
   <section class="sec" id="invSearch" data-when="inv" aria-labelledby="search-h">
     <div class="wrap">
+      <div class="day" id="daySec" hidden>
+        <div class="day-head"><span class="tag-day"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.200l2 4.300 4.700.6-3.500 3.200.9 4.700L8 11.700 3.900 14l.9-4.700L1.300 6.100l4.700-.6z"/></svg>Offer of the day</span><h2>Picked by ARI for today.</h2></div>
+        <div class="results" id="featured"></div>
+      </div>
       <div class="sec-head">
         <span class="eyebrow">Search</span>
         <h2 id="search-h">Opportunities from verified developers.</h2>
@@ -1628,7 +1645,27 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   </section>
 </div>
 
-<!-- ============ PLATFORM ============ -->
+<!-- ============ INVESTOR: SAVED LISTINGS ============ -->
+<div class="view" data-view="saved" hidden>
+  <section class="dash-head" aria-labelledby="saved-h">
+    <div class="wrap dash-row">
+      <div class="dash-main">
+        <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>My offers</span></nav>
+        <h1 id="saved-h">My offers</h1>
+        <p>Listings you saved with the heart. Open one to see the details or send a request.</p>
+        <a class="btn btn-primary" href="#investors">Browse listings<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+  <section class="sec" aria-label="Saved listings">
+    <div class="wrap">
+      <div class="results" id="savedGrid"></div>
+      <p class="empty" id="savedEmpty" hidden>Nothing saved yet. Tap the heart on a listing and it will appear here.</p>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DEVELOPER: MY OFFERS ============ -->
 <div class="view" data-view="offers" hidden>
   <section class="dash-head" aria-labelledby="offers-h">
     <div class="wrap dash-row">
@@ -2066,11 +2103,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   window.addEventListener('resize', measure);
 
   /* ---------- Routing ---------- */
-  var views = ['home','developers','investors','platform','offers'];
+  var views = ['home','developers','investors','platform','offers','saved'];
   function route(){
     var v = (location.hash || '#home').slice(1);
     if (views.indexOf(v) < 0) v = 'home';
     if (v === 'offers' && state.role !== 'developer') v = 'developers';
+    if (v === 'saved' && state.role !== 'investor') v = 'investors';
+    if (v === 'saved') renderSaved();
     document.body.setAttribute('data-view', v);
     $$('.view').forEach(function(el){ el.hidden = el.dataset.view !== v; });
     $$('[data-nav]').forEach(function(a){ a.dataset.nav === v ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'); });
@@ -2080,7 +2119,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   window.addEventListener('hashchange', route);
 
   /* ---------- Phone menu: the header button names the current page and opens the list of pages ---------- */
-  var PAGE_NAME = { home:'Home', developers:'For developers', investors:'For investors', offers:'My offers', platform:'How the platform works' };
+  var PAGE_NAME = { home:'Home', developers:'For developers', investors:'For investors', offers:'My offers', saved:'My offers', platform:'How the platform works' };
   function closeMenu(){ $('#menuPanel').hidden = true; $('#menuBack').hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); }
   $('#menuBtn').addEventListener('click', function(){
     var open = $('#menuPanel').hidden;
@@ -2328,6 +2367,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
+    if (location.hash === '#saved') location.hash = '#investors';
   }
   $('#signOut').addEventListener('click', function(){
     if (user && sb){ sb.auth.signOut().then(null, function(){ leave(); }); return; }
@@ -2538,6 +2578,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var m = Math.round(L.price / (1 - L.disc / 100) / 100) * 100;
     c.dataset.type = L.type; c.dataset.price = L.price; c.dataset.discount = L.disc; c.dataset.size = L.size;
     c.dataset.district = L.district || ''; c.dataset.ready = L.ready || '';
+    if (L.featured && !mine) c.dataset.featured = '1';
     if (L.id) c.dataset.id = L.id;
     c.querySelector('.loc').lastChild.nodeValue = L.district;
     c.querySelector('.listing-price strong').textContent = money(L.price);
@@ -2591,7 +2632,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   function rowToL(r, urls){
     return { id:r.id, type:r.type, status:r.status, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type,
-      cond:r.handover, price:r.price_usd, disc:r.discount_pct, ready:r.ready, photo:urls[r.photos && r.photos[0]] || null, note:r.review_note };
+      cond:r.handover, price:r.price_usd, disc:r.discount_pct, ready:r.ready, photo:urls[r.photos && r.photos[0]] || null, note:r.review_note, featured:!!r.featured };
   }
   function firstPhotos(rows){ return rows.map(function(r){ return r.photos && r.photos[0]; }); }
   function loadMine(){
@@ -2612,7 +2653,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   function loadPublished(){
     var uid = user && user.id; if (!uid) return;
-    sb.from('platform_listings').select('id,type,status,district,size_m2,floor,floors,view_type,use_type,handover,price_usd,discount_pct,ready,cadastral,info,plan_path,photos')
+    sb.from('platform_listings').select('*')   /* '*' so the page works before and after the "featured" column is added */
       .eq('status', 'published').order('created_at', { ascending:false }).then(function(res){
       if (res.error){ toast('Couldn’t load listings. Refresh the page.'); return; }
       var rows = res.data || [];
@@ -2813,6 +2854,49 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf' }
   ];
   DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; c.dataset.district = DEMO_DETAIL[i].district; c.dataset.ready = DEMO_DETAIL[i].ready; });
+  if (DEMO_RES[2]) DEMO_RES[2].dataset.featured = '1';   /* the sample land plot plays the offer of the day */
+
+  /* ---------- Saved listings and the offer of the day ----------
+     The heart keeps a listing in "My offers" (remembered on this device, per account).
+     Listings ARI marked as the offer of the day are copied into the band above the search. */
+  function savedKey(){ return 'ari-saved-' + (user ? user.id : 'demo'); }
+  function getSaved(){ try { return JSON.parse(localStorage.getItem(savedKey()) || '[]'); } catch(e){ return []; } }
+  function cardKey(c){ return c.dataset.id || ('demo-' + c.dataset.demo); }
+  function copyCard(c){
+    var k = c.cloneNode(true), a = document.createTreeWalker(c, NodeFilter.SHOW_TEXT), b = document.createTreeWalker(k, NodeFilter.SHOW_TEXT), x, y;
+    while ((x = a.nextNode()) && (y = b.nextNode())) if (orig.has(x)) y.nodeValue = orig.get(x);   /* copy the English source text; the page translator then handles the copy like any other card */
+    k.hidden = false; k.style.order = ''; k.removeAttribute('id');
+    return k;
+  }
+  function syncHearts(){
+    var saved = getSaved();
+    $$('#results .listing, #featured .listing, #savedGrid .listing').forEach(function(c){
+      var b = c.querySelector('.save'), on = saved.indexOf(cardKey(c)) > -1; if (!b) return;
+      b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
+    });
+  }
+  function renderSaved(){
+    var saved = getSaved(), grid = $('#savedGrid'), n = 0;
+    grid.innerHTML = '';
+    $$('#results .listing').forEach(function(c){ if (saved.indexOf(cardKey(c)) > -1){ grid.appendChild(copyCard(c)); n++; } });
+    $('#savedEmpty').hidden = n > 0;
+    syncHearts();
+  }
+  var daySig = null;
+  function renderDay(){
+    var picks = $$('#results .listing[data-featured]'), sig = picks.map(cardKey).join('|');
+    $$('#results .listing').forEach(function(c){   /* the small gold label on the card itself */
+      var tag = c.querySelector('.listing-body > .tag-day');
+      if (c.dataset.featured && !tag){ tag = document.createElement('span'); tag.className = 'tag-day'; tag.textContent = 'Offer of the day'; c.querySelector('.listing-body').insertBefore(tag, c.querySelector('.listing-body').firstChild); }
+      else if (!c.dataset.featured && tag) tag.remove();
+    });
+    if (sig === daySig) return;
+    daySig = sig;
+    var box = $('#featured'); box.innerHTML = '';
+    picks.slice(0, 3).forEach(function(c){ box.appendChild(copyCard(c)); });
+    $('#daySec').hidden = !picks.length;
+    syncHearts();
+  }
   var dCur = null, dPhotos = [], dIdx = 0;
   function closeDetail(){ $('#detailModal').hidden = true; document.body.classList.remove('modal-open'); dCur = null; }
   function fileName(u, i){ var n = (u.split('?')[0].split('/').pop() || 'photo'); return n.indexOf('.') > 0 ? n : 'photo-' + (i + 1) + '.jpg'; }
@@ -2998,7 +3082,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var f = o.c.querySelector('[data-fit]'); if (f) f.hidden = true;   /* the cash-budget match is gone */
       if (vis) shown++;
     });
-    items.sort(function(a,b){ return b.d - a.d; }).forEach(function(o,i){ o.c.style.order = i; });
+    items.sort(function(a,b){ return (!!b.c.dataset.featured - !!a.c.dataset.featured) || (b.d - a.d); }).forEach(function(o,i){ o.c.style.order = i; });
+    renderDay(); syncHearts();
     $('#summary').innerHTML = ka
       ? '<b>' + shown + (user ? ' განცხადება' : ' სანიმუშო განცხადება') + '</b>'
       : '<b>' + shown + (user ? ' listing' : ' example listing') + (shown === 1 ? '' : 's') + '</b>';
@@ -3036,13 +3121,17 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (dt){ openDetail(dt.closest('.listing')); return; }
     var b = e.target.closest('.save');
     if (!b){   /* anywhere else on a result card opens it, same as its Details button */
-      var card = !e.target.closest('button,a') && e.target.closest('#results .listing');
+      var card = !e.target.closest('button,a') && e.target.closest('#results .listing, #featured .listing, #savedGrid .listing');
       if (card) openDetail(card);
       return;
     }
-    var on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', String(on));
-    b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
+    var own = b.closest('.listing'); if (!own || own.classList.contains('my-card')) return;
+    var key = cardKey(own), saved = getSaved(), at = saved.indexOf(key), on = at < 0;
+    if (on) saved.push(key); else saved.splice(at, 1);
+    try { localStorage.setItem(savedKey(), JSON.stringify(saved)); } catch(x){}
+    syncHearts();
+    if (document.body.getAttribute('data-view') === 'saved') renderSaved();
+    toast(on ? 'Saved to My offers.' : 'Removed from My offers.');
   });
 
   /* ---------- Platform swimlane ---------- */
@@ -3291,6 +3380,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Site master plan':'გენგეგმა','Upload master plan':'გენგეგმის ატვირთვა','Upload the master plan.':'ატვირთე გენგეგმა.','Master plan added.':'გენგეგმა დაემატა.',
     'Plot 1':'ნაკვეთი 1','Plot 2':'ნაკვეთი 2','Plot 3':'ნაკვეთი 3','Plot 4':'ნაკვეთი 4','Road':'გზა',
     'Signed in as an investor. Verified listings are below.':'შესული ხარ როგორც ინვესტორი. შემოწმებული განცხადებები ქვემოთაა.',
+    'Offer of the day':'დღის შეთავაზება','Picked by ARI for today.':'ARI-ის დღევანდელი რჩეული.',
+    'Listings you saved with the heart. Open one to see the details or send a request.':'განცხადებები, რომლებიც გულით შეინახე. გახსენი დეტალების სანახავად ან მოთხოვნის გასაგზავნად.',
+    'Browse listings':'განცხადებების ნახვა','Nothing saved yet. Tap the heart on a listing and it will appear here.':'ჯერ არაფერი შეგინახავს. დააჭირე გულს განცხადებაზე და ის აქ გამოჩნდება.',
+    'Saved to My offers.':'შეინახა „ჩემს შეთავაზებებში“.','Removed from My offers.':'წაიშალა „ჩემი შეთავაზებებიდან“.',
     'Inbox':'შეტყობინებები','No messages yet.':'შეტყობინებები ჯერ არ არის.','ARI’s note:':'ARI-ის შენიშვნა:','This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
     'Listing received for review':'განცხადება მიღებულია განსახილველად','ARI is checking the details. You’ll get a message here when it’s decided.':'ARI ამოწმებს მონაცემებს. გადაწყვეტილებას აქვე შეიტყობ.',
     'Your listing was approved':'შენი განცხადება დამტკიცდა','ARI checked it and published it. Investors can see it now.':'ARI-მ შეამოწმა და გამოაქვეყნა. ინვესტორები მას უკვე ხედავენ.',

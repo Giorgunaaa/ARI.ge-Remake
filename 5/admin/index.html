@@ -126,7 +126,7 @@ main{padding:26px 0 70px}
 .msg{margin-top:6px;padding:8px 10px;border-radius:9px;background:var(--band);font-size:13.5px;color:var(--ink-2)}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap}
 .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
-.p-wait{background:var(--wait-bg);color:var(--wait)}.p-ok{background:var(--ok-bg);color:var(--ok)}.p-no{background:var(--no-bg);color:var(--no)}.p-off{background:var(--band);color:var(--ink-3)}
+.p-wait{background:var(--wait-bg);color:var(--wait)}.p-ok{background:var(--ok-bg);color:var(--ok)}.p-no{background:var(--no-bg);color:var(--no)}.p-off{background:var(--band);color:var(--ink-3)}.p-day{background:var(--gold);color:var(--navy)}
 
 /* listing window */
 .modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px}
@@ -234,7 +234,8 @@ main{padding:26px 0 70px}
       budget:'Budget', question:'Question', noQuestion:'No question written.', property:'Property', confirm:'Confirm', close:'Close', reopen:'Reopen',
       reqConfirmed:'Confirmed. The investor sees it in their inbox.', reqClosed:'Request closed.', reqReopened:'Request reopened.',
       usSub:'Everyone registered on the platform.', registered:'Registered', listingsN:'Listings', requestsN:'Requests', access:'Access', accessOn:'Has access', accessOff:'Blocked', block:'Block access', allow:'Allow access', noUsers:'No users here.',
-      accessChanged:'Access updated.', needSql:'To change access, run supabase/admin.sql once in Supabase.', interest:'Interested in' },
+      dayOffer:'Offer of the day', makeDay:'Make it the offer of the day', removeDay:'Remove from offers of the day', dayOn:'Marked. Investors see it first on their page.', dayOff:'Removed from offers of the day.',
+      accessChanged:'Access updated.', needSql:'Run supabase/admin.sql once in Supabase to turn this on.', interest:'Interested in' },
     ka:{ adminPanel:'ადმინის პანელი', signInTitle:'შესვლა ადმინის პანელში', email:'ელფოსტა', password:'პაროლი', signIn:'შესვლა', or:'ან', openDemo:'დემოს გახსნა სანიმუშო მონაცემებით',
       demoHint:'დემო ყველა ეკრანს სანიმუშო განცხადებებსა და მოთხოვნებზე აჩვენებს. არაფერი ინახება და არ იგზავნება.', signOut:'გასვლა',
       demoBar:'დემო: სანიმუშო მონაცემები. გვერდის განახლებისას ცვლილებები ქრება.',
@@ -255,7 +256,8 @@ main{padding:26px 0 70px}
       budget:'ბიუჯეტი', question:'კითხვა', noQuestion:'კითხვა არ დაუწერია.', property:'ქონება', confirm:'დადასტურება', close:'დახურვა', reopen:'ხელახლა გახსნა',
       reqConfirmed:'დადასტურდა. ინვესტორი ამას თავის შეტყობინებებში ხედავს.', reqClosed:'მოთხოვნა დაიხურა.', reqReopened:'მოთხოვნა ხელახლა გაიხსნა.',
       usSub:'ყველა, ვინც პლატფორმაზე დარეგისტრირდა.', registered:'რეგისტრაცია', listingsN:'განცხადება', requestsN:'მოთხოვნა', access:'წვდომა', accessOn:'წვდომა აქვს', accessOff:'დაბლოკილია', block:'წვდომის დაბლოკვა', allow:'წვდომის მიცემა', noUsers:'აქ მომხმარებელი არ არის.',
-      accessChanged:'წვდომა შეიცვალა.', needSql:'წვდომის შესაცვლელად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს' }
+      dayOffer:'დღის შეთავაზება', makeDay:'დღის შეთავაზებად მონიშვნა', removeDay:'დღის შეთავაზებიდან მოხსნა', dayOn:'მოინიშნა. ინვესტორები მას თავის გვერდზე პირველს ხედავენ.', dayOff:'მოიხსნა დღის შეთავაზებიდან.',
+      accessChanged:'წვდომა შეიცვალა.', needSql:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს' }
   };
   var KA_PLACE = { 'Saburtalo, Tbilisi':'საბურთალო, თბილისი','Vake, Tbilisi':'ვაკე, თბილისი','Tskneti, Tbilisi':'წყნეთი, თბილისი','Didube, Tbilisi':'დიდუბე, თბილისი','Didi Dighomi, Tbilisi':'დიდი დიღომი, თბილისი','Gldani, Tbilisi':'გლდანი, თბილისი','Isani, Tbilisi':'ისანი, თბილისი','Samgori, Tbilisi':'სამგორი, თბილისი','Nadzaladevi, Tbilisi':'ნაძალადევი, თბილისი','Chughureti, Tbilisi':'ჩუღურეთი, თბილისი','Krtsanisi, Tbilisi':'კრწანისი, თბილისი','Mtatsminda, Tbilisi':'მთაწმინდა, თბილისი','Lisi, Tbilisi':'ლისი, თბილისი' };
   var lang = 'en';
@@ -290,7 +292,7 @@ main{padding:26px 0 70px}
       { id:'l2', owner:'d2', type:'land', status:'in_review', district:'Tskneti, Tbilisi', size_m2:620, price_usd:58000, discount_pct:28, ready:'Q1 2028', cadastral:'01.19.09.011.140', info:'Second phase of the cottage development. Road and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], created_at:ago(2), updated_at:ago(2) },
       { id:'l3', owner:'d1', type:'commercial', status:'in_review', district:'Saburtalo, Tbilisi', size_m2:140, floor:1, floors:16, use_type:'Retail / showroom', handover:'white', price_usd:238000, discount_pct:20, ready:'Q4 2027', cadastral:'01.10.13.002.210', info:'', plan_path:null, photos:[], created_at:ago(3), updated_at:ago(3) },
       { id:'l4', owner:'d1', type:'apartment', status:'published', district:'Saburtalo, Tbilisi', size_m2:65, floor:8, floors:14, view_type:'City view', handover:'black', price_usd:68250, discount_pct:20, ready:'Q3 2027', cadastral:'01.10.13.002.045', info:'Developer installment plan available up to 24 months. Underground parking on request.', plan_path:'../img/interior.jpg', photos:['../img/interior.jpg', '../img/room.jpg', '../img/home-inv.jpg'], created_at:ago(20), updated_at:ago(19) },
-      { id:'l5', owner:'d2', type:'land', status:'published', district:'Tskneti, Tbilisi', size_m2:500, price_usd:45000, discount_pct:30, ready:'Q4 2027', cadastral:'01.19.09.011.112', info:'Part of a gated cottage development. Road, water and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], created_at:ago(15), updated_at:ago(14) },
+      { id:'l5', owner:'d2', type:'land', status:'published', district:'Tskneti, Tbilisi', size_m2:500, price_usd:45000, discount_pct:30, ready:'Q4 2027', cadastral:'01.19.09.011.112', info:'Part of a gated cottage development. Road, water and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], featured:true, created_at:ago(15), updated_at:ago(14) },
       { id:'l6', owner:'d3', type:'apartment', status:'rejected', district:'Vake, Tbilisi', size_m2:48, floor:2, floors:9, view_type:'Courtyard', handover:'white', price_usd:92000, discount_pct:22, ready:'Q2 2027', cadastral:'01.14.05.011.031', info:'', plan_path:null, photos:['../img/room.jpg'], review_note:'The cadastral code belongs to a different unit. Please check it and send again.', created_at:ago(8), updated_at:ago(7) }
     ];
     var I = [
@@ -359,7 +361,7 @@ main{padding:26px 0 70px}
       + '<span class="r-main"><b>' + esc(typeName(l)) + ' · ' + esc(place(l.district)) + '</b><span>' + (+l.size_m2).toLocaleString('en-US') + ' m² · ' + esc(l.cadastral) + '</span></span>'
       + '<span class="r-col"><b>' + money(l.price_usd) + '</b><span>−' + l.discount_pct + '% · ' + esc(quarter(l.ready)) + '</span></span>'
       + '<span class="r-col"><b>' + esc(d.company || d.full_name || t('unknown')) + '</b><span>' + esc(day(l.created_at)) + '</span></span>'
-      + pill(l.status) + '</button>';
+      + '<span>' + pill(l.status) + (l.featured && l.status === 'published' ? '<br><span class="pill p-day" style="margin-top:6px">' + esc(t('dayOffer')) + '</span>' : '') + '</span></button>';
   }
   function requestRow(x, compact){
     var l = byId(S.data.listings, x.listing_id), d = l ? who(l.owner) : {};
@@ -396,13 +398,14 @@ main{padding:26px 0 70px}
   function screenListings(){
     var L = S.data.listings, q = S.lq.trim().toLowerCase();
     var rows = L.filter(function(x){
-      if (S.lf !== 'all' && x.status !== S.lf) return false;
+      if (S.lf === 'day'){ if (!(x.featured && x.status === 'published')) return false; }
+      else if (S.lf !== 'all' && x.status !== S.lf) return false;
       if (!q) return true;
       var d = who(x.owner);
       return [x.district, place(x.district), x.cadastral, d.full_name, d.company, typeName(x)].join(' ').toLowerCase().indexOf(q) > -1;
     });
     return '<div class="page-head"><div><h1>' + esc(t('listings')) + '</h1><p>' + esc(t('lsSub')) + '</p></div></div>'
-      + '<div class="bar">' + seg('lf', S.lf, [['in_review', 'inReview', countBy(L, 'status', 'in_review')], ['published', 'published', countBy(L, 'status', 'published')], ['rejected', 'rejected', countBy(L, 'status', 'rejected')], ['all', 'all', L.length]])
+      + '<div class="bar">' + seg('lf', S.lf, [['in_review', 'inReview', countBy(L, 'status', 'in_review')], ['published', 'published', countBy(L, 'status', 'published')], ['rejected', 'rejected', countBy(L, 'status', 'rejected')], ['day', 'dayOffer', L.filter(function(x){ return x.featured && x.status === 'published'; }).length], ['all', 'all', L.length]])
       + '<input class="field search" id="lq" type="search" placeholder="' + esc(t('search')) + '" value="' + esc(S.lq) + '" aria-label="' + esc(t('search')) + '"></div>'
       + (rows.length ? '<div class="rows">' + rows.map(listingRow).join('') + '</div>' : '<p class="empty panel">' + esc(t('noListings')) + '</p>');
   }
@@ -469,7 +472,7 @@ main{padding:26px 0 70px}
         + '<div class="acts"><button class="btn btn-line" data-act="reject-cancel">' + esc(t('cancel')) + '</button><button class="btn btn-no" data-act="reject-send">' + esc(t('sendReject')) + '</button></div></div>'
       : '<span class="grow">' + pill(l.status) + '</span>'
         + (l.status === 'in_review' ? '<button class="btn btn-no" data-act="reject">' + esc(t('reject')) + '</button><button class="btn btn-primary" data-act="approve">' + esc(t('approve')) + '</button>'
-          : l.status === 'published' ? '<button class="btn btn-line" data-act="review">' + esc(t('unpublish')) + '</button>'
+          : l.status === 'published' ? '<button class="btn btn-line" data-act="review">' + esc(t('unpublish')) + '</button><button class="btn ' + (l.featured ? 'btn-line' : 'btn-gold') + '" data-act="day" data-on="' + (!l.featured) + '">' + esc(t(l.featured ? 'removeDay' : 'makeDay')) + '</button>'
           : '<button class="btn btn-line" data-act="review">' + esc(t('backToReview')) + '</button><button class="btn btn-primary" data-act="approve">' + esc(t('approve')) + '</button>');
     $('#modalCard').innerHTML = '<div class="m-head"><h2>' + esc(typeName(l)) + ' · ' + esc(place(l.district)) + '</h2><button class="x" type="button" data-act="close" aria-label="' + esc(t('close')) + '">×</button></div>'
       + '<div class="m-body">'
@@ -502,6 +505,11 @@ main{padding:26px 0 70px}
     else if (act === 'close') closeModal();
     else if (act === 'approve') decide({ status:'published', review_note:null }, 'approved');
     else if (act === 'review') decide({ status:'in_review' }, 'returned');
+    else if (act === 'day'){
+      var on = a.dataset.on === 'true'; a.disabled = true;
+      saveListing(openId, { featured:on }).then(function(){ render(); redrawOpen(); toast(t(on ? 'dayOn' : 'dayOff')); },
+        function(err){ a.disabled = false; toast(t(/featured|column|schema cache/i.test((err && err.message) || '') ? 'needSql' : 'saveFail')); });
+    }
     else if (act === 'reject'){ rejecting = true; redrawOpen(); }
     else if (act === 'reject-cancel'){ rejecting = false; redrawOpen(); }
     else if (act === 'reject-send'){
