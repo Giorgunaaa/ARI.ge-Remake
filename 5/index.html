@@ -539,7 +539,7 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
 .d-plan .d-nopreview svg{width:34px;height:34px}
 .d-plan-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
 .d-plan-bar .d-file{min-width:0;overflow-wrap:anywhere}
-@media (max-width:620px){.d-plan iframe{height:340px}.d-strip{flex-wrap:wrap}.d-dlall{margin-left:0}}
+@media (max-width:620px){.d-plan iframe{height:340px}.d-strip{flex-wrap:wrap}.d-dlall{margin-left:0}.d-thumbs{flex:1 0 100%}.d-gallery.one .d-thumbs{display:none}}
 .d-file{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--accent-ink)}
 .d-file svg{width:18px;height:18px}
 .d-muted{color:var(--ink-3);font-size:14px}
@@ -885,7 +885,7 @@ body[data-view="home"] .foot{display:none}
 @media (max-width:480px){.form-grid{grid-template-columns:1fr}.modal-card{padding:22px 18px}}
 
 /* Toast */
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:120;max-width:min(92vw,520px);background:var(--navy);color:var(--on-navy);padding:12px 18px;border-radius:12px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5);font-size:14.5px;display:flex;gap:10px;align-items:center}
+.toast{position:fixed;left:0;right:0;margin-inline:auto;width:fit-content;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:120;max-width:min(92vw,520px);background:var(--navy);color:var(--on-navy);padding:12px 18px;border-radius:12px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5);font-size:14.5px;display:flex;gap:10px;align-items:center}
 .toast svg{width:18px;height:18px;color:var(--mint);flex:none}
 
 /* Georgian typography: no uppercase transforms (Mtavruli), calmer tracking, slightly smaller display sizes */
@@ -2288,7 +2288,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* one listing card, filled from a plain object: used for sample submits, My offers and investor results */
   var TPL = { apartment:$('.preview-grid').children[0].cloneNode(true), land:$('.preview-grid').children[1].cloneNode(true), commercial:$('#tplCommercial').content.firstElementChild.cloneNode(true) };
-  var TPLI = {}, DEMO_RES = $$('#results .listing'), DEMO_MINE = $$('.preview-grid .my-card');
+  var TPLI = {}, DEMO_RES = $$('#results .listing'), DEMO_MINE = $$('.preview-grid .my-card').map(function(c){ return c.cloneNode(true); });   /* untouched copies: demo edits never outlive a sign-out */
   DEMO_RES.forEach(function(c){ if (!TPLI[c.dataset.type]) TPLI[c.dataset.type] = c.cloneNode(true); });
   var STATUS = { in_review:['In review', 'st-rev'], published:['Published', 'st-pub'], rejected:['Rejected', 'st-new'] };
   function fillCard(c, L, mine){
@@ -2324,7 +2324,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   function restoreDemo(){
     var res = $('#results'), grid = $('.preview-grid');
     res.innerHTML = ''; DEMO_RES.forEach(function(c){ res.appendChild(c); });
-    grid.innerHTML = ''; DEMO_MINE.forEach(function(c){ grid.appendChild(c); });
+    grid.innerHTML = ''; DEMO_MINE.forEach(function(c){ grid.appendChild(c.cloneNode(true)); });
     $('#statPub').textContent = '2'; $('#statRev').textContent = '0'; $('#mineEmpty').hidden = true;
     setDemoOnly(true);
   }
