@@ -157,6 +157,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 @media (max-width:540px){
   .nav{display:none}
   .head-row{flex-wrap:nowrap;padding-bottom:6px}
+  .logo-text span{display:none}   /* leave the room to the page button */
   #authGuest [data-auth="signin"]{display:none}
   html[lang="ka"] .head-right .auth{display:none}   /* Georgian labels are long: account buttons live in the list */
   .menu-btn{display:flex;flex:1;min-width:0;align-items:center;justify-content:space-between;gap:6px;height:36px;padding:0 10px 0 12px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid var(--navy-line);color:var(--on-navy);font:600 13.5px var(--f-body);cursor:pointer}
@@ -290,9 +291,9 @@ html[lang="ka"] .door2 .h2{font-size:clamp(1.45rem,2.4vw,2.1rem)}
   .home2{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr auto;min-height:0}
   .home2-center{position:relative;left:auto;top:auto;transform:none;width:auto;margin:0;padding:14px 16px;grid-row:1;border-bottom:1px solid rgba(241,226,191,.28);text-shadow:none}
   .home2::before{display:none}
-  .home2-center h1{margin-bottom:10px}
-  .home2-chips{gap:6px}
-  .home2-chips span{font-size:12px;padding:4px 10px}
+  .home2-center{padding:14px 16px 16px}
+  .home2-center h1{margin:0}
+  .kicker2,.home2-chips{display:none}   /* phones: the headline alone, so the photos get the room */
   .door2{padding:16px 18px 18px}
   .door2+.door2{border-left:0;border-top:1px solid rgba(255,255,255,.18)}
   .door2 .in{gap:8px}
