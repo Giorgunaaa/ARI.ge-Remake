@@ -129,6 +129,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .auth{display:flex;align-items:center;gap:8px}
 .role-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line);font-size:13.5px;font-weight:600}
 .role-chip i{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+/* Signed in: a round account button; the role and Sign out open under it */
+#authUser{position:relative}
+.acct-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid var(--navy-line);color:var(--on-navy);transition:background .15s,border-color .15s}
+.acct-btn:hover,.acct-btn[aria-expanded="true"]{background:rgba(255,255,255,.14);border-color:var(--champ)}
+.acct-btn svg{width:20px;height:20px}
+.acct-menu{position:absolute;right:0;top:calc(100% + 10px);z-index:60;min-width:190px;display:grid;gap:10px;justify-items:start;padding:14px;border-radius:14px;background:var(--navy-2);border:1px solid var(--navy-line);box-shadow:0 22px 44px rgba(0,0,0,.45)}
+.acct-menu .btn{width:100%}
 .lang{display:flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line)}
 .lang button{border:0;background:none;color:var(--on-navy-2);font-size:12.5px;font-weight:700;letter-spacing:.04em;min-height:30px;padding:0 9px;border-radius:7px;cursor:pointer}
 .lang button:hover{color:var(--on-navy)}
@@ -147,7 +154,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .logo-mark{width:30px;height:30px}
   .lang button{min-height:28px;padding:0 8px}
   .auth .btn-sm{min-height:36px;font-size:13.5px}
-  #authUser .role-chip{display:none}
+  .acct-btn{width:36px;height:36px}
   .nav{gap:0;margin:0 -16px;width:calc(100% + 32px);padding:0 8px 6px;justify-content:space-between;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
   .nav a,html[lang="ka"] .nav a{font-size:13px;padding:7px 6px}
@@ -470,8 +477,14 @@ div.view .page-hero .page-hero-inner{height:100%;padding-block:clamp(40px,7vh,72
 .dash-head p{color:var(--on-navy-2)}
 div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:4px}
-.stat span{font-size:13px;color:var(--ink-3)}
+.stat{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:4px}
+.stat>span{font-size:13px;color:var(--ink-3)}
+/* a small "i" in the corner: hover, focus or tap shows what the number means */
+.info{position:absolute;right:10px;top:10px;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ink-3);display:grid;place-items:center;cursor:help}
+.info:hover,.info:focus-visible{color:var(--ink);background:var(--band)}
+.info svg{width:18px;height:18px}
+.info em{position:absolute;right:0;top:calc(100% + 6px);z-index:5;width:230px;padding:10px 12px;border-radius:10px;background:var(--navy);color:var(--on-navy);font:400 13px/1.45 var(--f-body);text-align:left;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none}
+.info:hover em,.info:focus em{opacity:1;visibility:visible;transform:none}
 .stat b{font-family:var(--f-display);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
 .dash-block{margin-bottom:34px}
 .dash-block-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -504,7 +517,15 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 }
 
 .preview-wrap{display:block}
-.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;align-items:start}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;align-items:stretch}
+.my-card{cursor:pointer}
+/* same height in a row: details as full-width rows that never cut off, status and Edit pinned to the bottom */
+.my-card .specs{grid-template-columns:1fr}
+.my-card .specs div{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.my-card .specs div+div{border-left:0;border-top:1px solid var(--line)}
+.my-card .specs dd{margin:0;white-space:normal;text-align:right}
+.my-card .card-owner{margin-top:auto;flex-wrap:wrap}
+.my-card .card-owner .btn{flex:none}
 .my-card .listing-media{aspect-ratio:16/10}
 .my-card .save,.my-card .photo-note{display:none}
 .my-card .tag-type{font-size:11px;padding:4px 8px;left:10px;top:10px}
@@ -781,7 +802,9 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
 @media (prefers-reduced-motion:no-preference){.listing:hover{transform:translateY(-4px)}.listing:hover .photo{transform:scale(1.06)}.save:hover{transform:scale(1.08)}}
 
 /* Investor search */
-.filters{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);overflow:hidden}
+.filters{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden}
+#results .listing{cursor:pointer}
+#results .listing-foot{justify-content:flex-end}
 .filters-main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 20px;padding:22px}
 .filters-title{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .filters-title b{font-family:var(--f-display);font-size:18px;font-weight:600}
@@ -995,8 +1018,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <button class="btn btn-primary btn-sm" type="button" data-auth="register">Register</button>
       </div>
       <div class="auth" id="authUser" hidden>
-        <span class="role-chip"><i></i><span id="roleName">Investor</span></span>
-        <button class="btn btn-light btn-sm" type="button" id="signOut">Sign out</button>
+        <button class="acct-btn" type="button" id="acctBtn" aria-haspopup="true" aria-expanded="false" aria-controls="acctMenu" aria-label="Account"><svg aria-hidden="true"><use href="#i-user"/></svg></button>
+        <div class="acct-menu" id="acctMenu" hidden>
+          <span class="role-chip"><i></i><span id="roleName">Investor</span></span>
+          <button class="btn btn-light btn-sm" type="button" id="signOut">Sign out</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1160,6 +1186,26 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             </div>
           </div>
           <div class="fields" data-panel="land" hidden>
+            <div class="field full"><div class="field-label"><span>Site master plan</span><span class="req">Required</span></div>
+              <div class="drop" data-plan data-need="Upload the master plan." data-added="Master plan added.">
+                <svg class="fp" style="display:none" viewBox="0 0 200 130" aria-hidden="true">
+                  <rect class="fp-wall" x="14" y="16" width="172" height="100" stroke-width="3"/>
+                  <path class="fp-wall" d="M14 62h172M72 16v100M130 16v46M130 78v38" stroke-width="2"/>
+                  <path class="fp-thin" d="M14 8h172M14 4v8M186 4v8" stroke-width="1"/>
+                  <text class="fp-text" x="100" y="11" text-anchor="middle">62.0 m</text>
+                  <text class="fp-text" x="43" y="42" text-anchor="middle">Plot 1</text>
+                  <text class="fp-text" x="101" y="42" text-anchor="middle">Plot 2</text>
+                  <text class="fp-text" x="158" y="42" text-anchor="middle">Plot 3</text>
+                  <text class="fp-text" x="43" y="94" text-anchor="middle">Plot 4</text>
+                  <text class="fp-big" x="101" y="94" text-anchor="middle">500 m²</text>
+                  <text class="fp-text" x="158" y="74" text-anchor="middle">Road</text>
+                </svg>
+                <div class="drop-prev"><span class="drop-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span></span></span></div>
+                <div class="drop-meta"><b>No file chosen</b><span>PDF, DWG or JPG</span><span class="file-ok" hidden><svg aria-hidden="true"><use href="#i-check"/></svg>Uploaded</span></div>
+                <button class="btn btn-outline btn-sm drop-add" type="button" data-plan-add aria-label="Upload master plan">+ Add</button>
+                <input type="file" accept=".pdf,.dwg,image/*" hidden data-plan-input>
+              </div>
+            </div>
             <div class="field"><div class="field-label"><span>Land size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="500" data-rule="num" aria-label="Land size" data-req><span class="unit">m²</span></div></div>
             <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="45,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
@@ -1290,7 +1336,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </div>
         <div class="need-group">
           <span class="need-label"><svg aria-hidden="true"><use href="#i-land"/></svg>Land plot in a development</span>
-          <ul class="need"><li>Land size in m²</li><li>Location / district</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Photos</li></ul>
+          <ul class="need"><li>Site master plan</li><li>Land size in m²</li><li>Location / district</li><li>Price</li><li>Discount vs market price</li><li>Completion date</li><li>Cadastral code</li><li class="o">Photos</li></ul>
         </div>
         <p class="fine" style="margin-top:0">Dashed items are optional.</p>
         </div>
@@ -1343,7 +1389,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="filters" role="search" aria-label="Search and filter">
         <div class="filters-main">
           <div class="filters-title"><b>Search listings</b><span class="pill pill-muted">Try the filters</span></div>
-          <div class="f"><span class="f-label">District / neighborhood</span><div class="input select"><svg aria-hidden="true"><use href="#i-pin"/></svg>Saburtalo, Vake, Tskneti</div></div>
+          <div class="f"><span class="f-label">District / neighborhood</span><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select id="fDistrict" aria-label="District / neighborhood"><option value="">All districts</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
           <div class="f">
             <span class="f-label" id="ptype-l">Property type</span>
             <div class="seg" role="group" aria-labelledby="ptype-l">
@@ -1356,8 +1402,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
           <div class="f">
             <span class="f-label" id="disc-l">Discount</span>
             <div class="chips" role="group" aria-labelledby="disc-l">
-              <button type="button" data-disc="20-24" aria-pressed="false">20%</button>
-              <button type="button" data-disc="25-29" aria-pressed="false">25%</button>
+              <button type="button" data-disc="20-100" aria-pressed="false">20%+</button>
+              <button type="button" data-disc="25-100" aria-pressed="false">25%+</button>
               <button type="button" data-disc="30-100" aria-pressed="false">30%+</button>
             </div>
           </div>
@@ -1387,7 +1433,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             </div>
             <span class="dual-hint">Up to $1,000,000</span>
           </div>
-          <div class="f"><span class="f-label">Construction completion</span><div class="input select">By end of 2027</div></div>
+          <div class="f"><span class="f-label">Construction completion</span><div class="input select is-live"><select id="fReady" aria-label="Construction completion"><option value="">Any time</option><option value="2027">By end of 2027</option><option value="2028">By end of 2028</option><option value="2029">By end of 2029</option></select></div></div>
           <div class="f f-wide">
             <span class="f-label" id="fcond-l">Handover condition</span>
             <div class="chips cond-chips" id="condFilter" role="group" aria-labelledby="fcond-l">
@@ -1398,18 +1444,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             </div>
           </div>
         </div>
-        <div class="budget">
-          <div class="budget-top"><label for="budget">Available cash budget</label><span class="pill pill-gold">Concept</span></div>
-          <div class="budget-amt"><span id="budgetOut">$70,000</span><small>cash</small></div>
-          <input id="budget" type="range" min="20000" max="250000" step="1000" value="70000" aria-describedby="budgetNote">
-          <div class="budget-scale"><span>$20k</span><span>$250k</span></div>
-          <p id="budgetNote">Investors enter the cash they have on hand. The platform ranks listings that fit first and flags the rest. <b>Concept for further product design:</b> later versions could factor in developer installment plans.</p>
-        </div>
       </div>
 
       <div class="results-bar">
-        <p id="summary"><b>3 example listings</b> · 2 fit a $70,000 budget</p>
-        <span class="sort">Sorted by <span>Budget fit, then discount</span></span>
+        <p id="summary"><b>4 example listings</b></p>
+        <span class="sort">Sorted by <span>Biggest discount</span></span>
       </div>
       <div class="results" id="results">
         <article class="listing" data-type="apartment" data-price="68250" data-size="65" data-discount="20">
@@ -1588,11 +1627,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   <section class="sec" aria-label="Overview">
     <div class="wrap">
       <div class="stats">
-        <div class="stat"><span>Published</span><b id="statPub">2</b></div>
-        <div class="stat"><span>In review</span><b id="statRev">0</b></div>
-        <div class="stat" data-demo-only><span>Listing views</span><b>137</b></div>
-      </div>
-
+        <div class="stat"><span>Published</span><b id="statPub">2</b><button class="info" type="button" aria-label="What this number means"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.200v4.300M10 6.400v.1"/></svg><em>Listings ARI has checked. Investors can see them now.</em></button></div>
+        <div class="stat"><span>In review</span><b id="statRev">0</b><button class="info" type="button" aria-label="What this number means"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.200v4.300M10 6.400v.1"/></svg><em>Listings waiting for ARI’s check. Investors don’t see them yet.</em></button></div>
+        <div class="stat" data-demo-only><span>Listing views</span><b>137</b><button class="info" type="button" aria-label="What this number means"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9.200v4.300M10 6.400v.1"/></svg><em>How many times investors opened your listings in total.</em></button></div>
       </div>
 
       <div class="dash-block">
@@ -1937,7 +1974,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="price-meta"><span class="saving"><span>You save</span> <b id="dSave"></b></span><span id="dPerM"></span></div>
       <dl class="d-specs" id="dSpecs"></dl>
       <div class="d-block" id="dInfoBox"><h4>Additional information</h4><p id="dInfo"></p></div>
-      <div class="d-block" id="dPlanBox"><h4>Floor plan / dimensional drawing</h4><div class="d-plan" id="dPlan"></div><div class="d-plan-bar"><span class="d-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span id="dPlanName"></span></span><a class="btn btn-outline btn-sm" id="dPlanDl" href="#" download><svg aria-hidden="true"><use href="#i-dl"/></svg>Download plan</a></div></div>
+      <div class="d-block" id="dPlanBox"><h4 id="dPlanTitle">Floor plan / dimensional drawing</h4><div class="d-plan" id="dPlan"></div><div class="d-plan-bar"><span class="d-file"><svg aria-hidden="true"><use href="#i-doc"/></svg><span id="dPlanName"></span></span><a class="btn btn-outline btn-sm" id="dPlanDl" href="#" download><svg aria-hidden="true"><use href="#i-dl"/></svg>Download plan</a></div></div>
       <form class="d-interest" id="dInterest" novalidate>
         <h4>Interested in this property?</h4>
         <p>ARI will call you to answer questions and arrange a viewing. The developer doesn’t see your contact details.</p>
@@ -1983,7 +2020,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- Session (demo) ---------- */
-  var state = { role:null, type:'all', disc:null, cond:[], budget:70000 };
+  var state = { role:null, type:'all', disc:null, cond:[], district:'', ready:'' };
   try { state.role = sessionStorage.getItem('bm-role'); } catch(e){}
   function saveRole(){ try { state.role ? sessionStorage.setItem('bm-role', state.role) : sessionStorage.removeItem('bm-role'); } catch(e){} }
 
@@ -2027,6 +2064,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   $('#menuPanel').addEventListener('click', function(e){ if (e.target.closest('a,button')) closeMenu(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#menuPanel').hidden){ closeMenu(); $('#menuBtn').focus(); } });
   $('#menuSignOut').addEventListener('click', function(){ $('#signOut').click(); });
+
+  /* ---------- Account button: role and Sign out open under it ---------- */
+  function closeAcct(){ $('#acctMenu').hidden = true; $('#acctBtn').setAttribute('aria-expanded', 'false'); }
+  $('#acctBtn').addEventListener('click', function(){
+    var open = $('#acctMenu').hidden;
+    $('#acctMenu').hidden = !open; this.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', function(e){ if (!e.target.closest('#authUser') || e.target.closest('#signOut')) closeAcct(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#acctMenu').hidden){ closeAcct(); $('#acctBtn').focus(); } });
 
   /* ---------- Auth-dependent visibility ---------- */
   function applyAuth(){
@@ -2110,7 +2156,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (!form.checkValidity()){ form.reportValidity(); return; }
     var b = $('#r-budget').value, budget = b === '250000+' ? 250000 : +b;
     if (!sb){   /* library unavailable: fall back to the sample-data account */
-      if (pick === 'investor'){ state.budget = budget; $('#budget').value = budget; signIn('investor', 'Investor account created (demo). Listings are now unlocked.'); }
+      if (pick === 'investor'){ signIn('investor', 'Investor account created (demo). Listings are now unlocked.'); }
       else signIn('developer', 'Developer account created (demo). Your listing workspace is open.');
       form.reset(); setPick(pick); return;
     }
@@ -2168,7 +2214,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var prof = res.data || {}, role = prof.role || (u.user_metadata || {}).role;
       if (role !== 'developer' && role !== 'investor'){ toast('This account isn’t set up for the platform yet.'); return; }
       state.role = role; try { sessionStorage.removeItem('bm-role'); } catch(e){}
-      if (role === 'investor' && prof.budget){ state.budget = Math.min(250000, Math.max(20000, prof.budget)); $('#budget').value = state.budget; }
       setDemoOnly(false); applyAuth(); update();
       if (!modal.hidden) closeModal();
       if (role === 'developer') loadMine(); else loadPublished();
@@ -2246,14 +2291,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       setPlan(box, { file:file, name:file.name, ext:ext.toUpperCase(), url:isImg ? URL.createObjectURL(file) : null,
         info:(kb < 1024 ? Math.max(1, Math.round(kb)) + ' KB' : (kb / 1024).toFixed(1) + ' MB') + ' · ' + ext.toUpperCase() });
       mark(box.closest('.field'), '');
-      toast('Floor plan added.');
+      toast(box.dataset.added || 'Floor plan added.');
     });
   });
 
   /* validation: one message per field, shown under it */
   function fieldMsg(f){
     var plan = f.querySelector('[data-plan]');
-    if (plan) return plan.dataset.has && (!user || plan._file) ? '' : 'Upload a floor plan.';   /* a real account needs a real file */
+    if (plan) return plan.dataset.has && (!user || plan._file) ? '' : (plan.dataset.need || 'Upload a floor plan.');   /* a real account needs a real file */
     var chips = f.querySelector('.cond-chips');
     if (chips) return chips.querySelector('[aria-pressed="true"]') ? '' : 'Choose one.';
     var els = ctrls(f), msg = '';
@@ -2343,7 +2388,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', cad:'01.10.13.002.045',
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf', planInfo:'1.2 MB · PDF' },
     land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', cad:'01.19.09.011.112',
-      info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
+      info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.', plan:'masterplan_tskneti_plots.pdf', planInfo:'2.1 MB · PDF' },
     commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', cad:'01.14.05.008.021',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf', planInfo:'1.4 MB · PDF' }
   };
@@ -2364,6 +2409,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   function fillCard(c, L, mine){
     var m = Math.round(L.price / (1 - L.disc / 100) / 100) * 100;
     c.dataset.type = L.type; c.dataset.price = L.price; c.dataset.discount = L.disc; c.dataset.size = L.size;
+    c.dataset.district = L.district || ''; c.dataset.ready = L.ready || '';
     if (L.id) c.dataset.id = L.id;
     c.querySelector('.loc').lastChild.nodeValue = L.district;
     c.querySelector('.listing-price strong').textContent = money(L.price);
@@ -2551,7 +2597,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   function closeEdit(){ $('#editModal').hidden = true; document.body.classList.remove('modal-open'); }
   document.addEventListener('click', function(e){
-    var b = e.target.closest('[data-edit]');
+    var b = e.target.closest('[data-edit]'), mine = !b && !e.target.closest('button,a,input,label') && e.target.closest('.my-card');
+    if (mine) b = mine.querySelector('[data-edit]');   /* the whole card opens its editor, not only the button */
     if (b){
       editCard = b.closest('.my-card'); $('#editFile').value = '';
       $('#editImg').src = editCard.querySelector('.photo').src;
@@ -2629,12 +2676,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf' },
     { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', cad:'01.14.05.011.027', photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
       info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan:'plan_vake_floor-5_unit-18.pdf' },
-    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', photos:['img/land.jpg'],
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', photos:['img/land.jpg'], sketch:'land', plan:'masterplan_tskneti_plots.pdf',
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
     { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', cad:'01.14.05.008.021', photos:['img/commercial.svg'], sketch:'commercial',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf' }
   ];
-  DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; });
+  DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; c.dataset.district = DEMO_DETAIL[i].district; c.dataset.ready = DEMO_DETAIL[i].ready; });
   var dCur = null, dPhotos = [], dIdx = 0;
   function closeDetail(){ $('#detailModal').hidden = true; document.body.classList.remove('modal-open'); dCur = null; }
   function fileName(u, i){ var n = (u.split('?')[0].split('/').pop() || 'photo'); return n.indexOf('.') > 0 ? n : 'photo-' + (i + 1) + '.jpg'; }
@@ -2680,6 +2727,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var box = $('#dPlan'); box.innerHTML = '';
     if (sketchUrl){ URL.revokeObjectURL(sketchUrl); sketchUrl = null; }
     $('#dPlanBox').hidden = !plan;
+    $('#dPlanTitle').textContent = D.type === 'land' ? 'Site master plan' : 'Floor plan / dimensional drawing';
     if (plan){
       if (plan.svg){ box.appendChild(plan.svg); }
       else if (/^(png|jpe?g|webp|gif)$/.test(plan.ext)){ var im = document.createElement('img'); im.alt = ''; im.src = plan.view; box.appendChild(im); }
@@ -2801,32 +2849,29 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   var fmt = function(n){ return '$' + n.toLocaleString('en-US'); };
   function update(){
-    $('#budgetOut').textContent = fmt(state.budget);
     syncSizeMax();
-    var items = $$('#results .listing').map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond }; });
-    var shown = 0, fits = 0, ka = lang === 'ka';
+    var items = $$('#results .listing').map(function(c){ return { c:c, p:+c.dataset.price, s:+c.dataset.size, d:+c.dataset.discount, t:c.dataset.type, k:(c.querySelector('.chip-cond') || c).dataset.cond,
+      w:c.dataset.district || '', y:+((c.dataset.ready || '').match(/\d{4}/) || [0])[0] }; });
+    var shown = 0, ka = lang === 'ka';
     items.forEach(function(o){
       var vis = (state.type === 'all' || o.t === state.type) && (!state.disc || (o.d >= state.disc[0] && o.d <= state.disc[1]))
         && (!state.cond.length || state.cond.indexOf(o.k) > -1)
+        && (!state.district || o.w === state.district) && (!state.ready || (o.y && o.y <= +state.ready))
         && o.s >= ranges.size.lo && o.s <= ranges.size.hi && o.p >= ranges.price.lo && o.p <= ranges.price.hi;
-      var ok = o.p <= state.budget;
       o.c.hidden = !vis;
-      o.c.classList.toggle('is-over', !ok);
-      var f = o.c.querySelector('[data-fit]');
-      f.textContent = ok ? 'Fits your budget' : (ka ? 'ბიუჯეტს აჭარბებს ' + fmt(o.p - state.budget) + '-ით' : fmt(o.p - state.budget) + ' over budget');
-      f.className = 'fit ' + (ok ? 'fit-yes' : 'fit-no');
-      if (vis){ shown++; if (ok) fits++; }
+      var f = o.c.querySelector('[data-fit]'); if (f) f.hidden = true;   /* the cash-budget match is gone */
+      if (vis) shown++;
     });
-    items.sort(function(a,b){ return ((b.p <= state.budget) - (a.p <= state.budget)) || (b.d - a.d); })
-         .forEach(function(o,i){ o.c.style.order = i; });
+    items.sort(function(a,b){ return b.d - a.d; }).forEach(function(o,i){ o.c.style.order = i; });
     $('#summary').innerHTML = ka
-      ? '<b>' + shown + (user ? ' განცხადება' : ' სანიმუშო განცხადება') + '</b> · ' + fits + ' ჯდება ' + fmt(state.budget) + '-იან ბიუჯეტში'
-      : '<b>' + shown + (user ? ' listing' : ' example listing') + (shown === 1 ? '' : 's') + '</b> · ' + fits + ' fit' + (fits === 1 ? 's' : '') + ' a ' + fmt(state.budget) + ' budget';
+      ? '<b>' + shown + (user ? ' განცხადება' : ' სანიმუშო განცხადება') + '</b>'
+      : '<b>' + shown + (user ? ' listing' : ' example listing') + (shown === 1 ? '' : 's') + '</b>';
     var none = user && !items.length ? 'No published listings yet. ARI reviews each listing before it appears here.' : 'No listings match these filters. Lower the discount, clear the handover condition or switch the property type.';
     if ($('#empty').dataset.msg !== none){ $('#empty').dataset.msg = none; $('#empty').textContent = none; }
     $('#empty').hidden = shown > 0;
   }
-  $('#budget').addEventListener('input', function(){ state.budget = +this.value; update(); });
+  $('#fDistrict').addEventListener('change', function(){ state.district = this.value; update(); });
+  $('#fReady').addEventListener('change', function(){ state.ready = this.value; update(); });
   function group(sel, key, parse){
     var btns = $$(sel);
     btns.forEach(function(b){ b.addEventListener('click', function(){
@@ -2853,7 +2898,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   document.addEventListener('click', function(e){   /* delegated: the cards can be replaced by stored listings */
     var dt = e.target.closest('[data-details]');
     if (dt){ openDetail(dt.closest('.listing')); return; }
-    var b = e.target.closest('.save'); if (!b) return;
+    var b = e.target.closest('.save');
+    if (!b){   /* anywhere else on a result card opens it, same as its Details button */
+      var card = !e.target.closest('button,a') && e.target.closest('#results .listing');
+      if (card) openDetail(card);
+      return;
+    }
     var on = b.getAttribute('aria-pressed') !== 'true';
     b.setAttribute('aria-pressed', String(on));
     b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
@@ -3102,6 +3152,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Architects, surveyors and lawyers review plans, cadastral data and documents.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო მონაცემებს და დოკუმენტებს.',
     'Three steps to selling early.':'სამი ნაბიჯი ადრეულ გაყიდვამდე.',
     'ARI connects developers and investors':'ARI აკავშირებს დეველოპერებს და ინვესტორებს',
+    'Site master plan':'გენგეგმა','Upload master plan':'გენგეგმის ატვირთვა','Upload the master plan.':'ატვირთე გენგეგმა.','Master plan added.':'გენგეგმა დაემატა.',
+    'Plot 1':'ნაკვეთი 1','Plot 2':'ნაკვეთი 2','Plot 3':'ნაკვეთი 3','Plot 4':'ნაკვეთი 4','Road':'გზა',
+    'Account':'ანგარიში','What this number means':'რას ნიშნავს ეს რიცხვი',
+    'Listings ARI has checked. Investors can see them now.':'განცხადებები, რომლებიც ARI-მ შეამოწმა. ინვესტორები მათ უკვე ხედავენ.',
+    'Listings waiting for ARI’s check. Investors don’t see them yet.':'განცხადებები, რომლებიც ARI-ის შემოწმებას ელოდება. ინვესტორები მათ ჯერ ვერ ხედავენ.',
+    'How many times investors opened your listings in total.':'სულ რამდენჯერ გახსნეს ინვესტორებმა შენი განცხადებები.',
+    'All districts':'ყველა რაიონი','Any time':'ნებისმიერ დროს','By end of 2028':'2028 წლის ბოლომდე','By end of 2029':'2029 წლის ბოლომდე','Biggest discount':'ყველაზე დიდი ფასდაკლებით',
     'Verified projects':'შემოწმებული პროექტები','Members-only access':'დახურული წვდომა','Legal support':'იურიდიული მხარდაჭერა',
     'Verified apartments and land plots before completion. Choose your side.':'შემოწმებული ბინები და მიწები მშენებლობამდე. აირჩიე შენი მხარე.',
     'Sell early, to the right investor.':'გაყიდე ადრე, სწორ ინვესტორზე.',
