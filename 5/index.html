@@ -236,10 +236,15 @@ button,input,select,textarea{font:inherit;color:inherit}
 @keyframes viewIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 body.fx-enter .view:not([hidden]) .page-hero-inner{animation:viewIn .75s .1s cubic-bezier(.2,.7,.2,1) both}
 body.fx-enter .view:not([hidden]) .page-hero~*{animation:viewIn .75s .2s cubic-bezier(.2,.7,.2,1) both}
-.home2-center{position:absolute;left:50%;top:clamp(18px,5vh,48px);transform:translateX(-50%);z-index:6;text-align:center;color:#fff;background:rgba(12,30,26,.26);border:1px solid rgba(255,255,255,.16);text-shadow:0 1px 3px rgba(12,30,26,.55),0 2px 18px rgba(12,30,26,.5);border-radius:18px;padding:18px 28px;width:min(620px,calc(100% - 32px))}
+.home2-center{position:absolute;left:50%;top:0;transform:translateX(-50%);z-index:6;text-align:center;color:#fff;text-shadow:0 1px 3px rgba(12,30,26,.5);padding:26px 34px 20px;width:min(760px,calc(100% - 32px))}
+/* Home: the header's green fades softly into the photos behind the headline */
+.home2::before{content:"";position:absolute;left:0;right:0;top:0;height:clamp(230px,36vh,300px);z-index:5;pointer-events:none;background:linear-gradient(180deg,var(--navy) 0%,color-mix(in srgb,var(--navy) 92%,transparent) 30%,color-mix(in srgb,var(--navy) 55%,transparent) 68%,transparent 100%)}
+body:has(.view[data-view="home"]:not([hidden])) .site-head{border-bottom-color:transparent}
 .kicker2{font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mint);margin-bottom:8px}
-.home2-center h1{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:6px}
-.home2-sub{color:rgba(255,255,255,.85);font-size:15px}
+.home2-center h1{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:14px}
+.home2-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.home2-chips span{display:inline-flex;align-items:center;gap:7px;font-size:13px;padding:6px 12px;border-radius:99px;background:rgba(241,226,191,.1);border:1px solid rgba(241,226,191,.26);color:var(--champ)}
+.home2-chips span::before{content:"";width:6px;height:6px;border-radius:50%;background:#E3B860}
 .mid2{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:6;width:84px;height:84px;border-radius:50%;background:var(--champ);color:var(--on-champ);display:grid;place-items:center;font:700 22px var(--f-display);box-shadow:0 0 0 8px rgba(255,255,255,.16)}
 .home2-foot{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;padding:12px 16px;font-size:12.5px;color:rgba(255,255,255,.75);background:rgba(12,30,26,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .home2-foot a{color:inherit;text-decoration:none}
@@ -248,7 +253,11 @@ html[lang="ka"] .home2-center h1{font-size:clamp(1.25rem,2.1vw,1.75rem)}
 html[lang="ka"] .door2 .h2{font-size:clamp(1.45rem,2.4vw,2.1rem)}
 @media (max-width:820px){
   .home2{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr auto;min-height:0}
-  .home2-center{position:relative;left:auto;top:auto;transform:none;width:auto;margin:12px 12px 0;padding:14px 16px;grid-row:1}
+  .home2-center{position:relative;left:auto;top:auto;transform:none;width:auto;margin:0;padding:14px 16px;grid-row:1;border-bottom:1px solid rgba(241,226,191,.28);text-shadow:none}
+  .home2::before{display:none}
+  .home2-center h1{margin-bottom:10px}
+  .home2-chips{gap:6px}
+  .home2-chips span{font-size:12px;padding:4px 10px}
   .door2{padding:16px 18px 18px}
   .door2+.door2{border-left:0;border-top:1px solid rgba(255,255,255,.18)}
   .door2 .in{gap:8px}
@@ -961,7 +970,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     <div class="home2-center">
       <p class="kicker2">Development and investment platform · Georgia</p>
       <h1 id="hero-h">ARI connects developers and investors</h1>
-      <p class="home2-sub">Verified apartments and land plots before completion. Choose your side.</p>
+      <div class="home2-chips"><span>Verified projects</span><span>Members-only access</span><span>Legal support</span></div>
     </div>
     <a class="door2" href="#developers">
       <img src="img/tbilisi-city.jpg" alt="" style="object-position:55% center" fetchpriority="high">
@@ -3023,6 +3032,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Architects, surveyors and lawyers review plans, cadastral data and documents.':'არქიტექტორები, ამზომველები და იურისტები ამოწმებენ გეგმებს, საკადასტრო მონაცემებს და დოკუმენტებს.',
     'Three steps to selling early.':'სამი ნაბიჯი ადრეულ გაყიდვამდე.',
     'ARI connects developers and investors':'ARI აკავშირებს დეველოპერებს და ინვესტორებს',
+    'Verified projects':'შემოწმებული პროექტები','Members-only access':'დახურული წვდომა','Legal support':'იურიდიული მხარდაჭერა',
     'Verified apartments and land plots before completion. Choose your side.':'შემოწმებული ბინები და მიწები მშენებლობამდე. აირჩიე შენი მხარე.',
     'Sell early, to the right investor.':'გაყიდე ადრე, სწორ ინვესტორზე.',
     'Investors with cash ready, your public price intact, legal support from ARI.':'ინვესტორები მზა თანხით, საჯარო ფასი უცვლელი, ARI-ის იურიდიული მხარდაჭერა.',
