@@ -3302,23 +3302,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (fxBusy) return;
       fxBusy = true;
       var home = $('.home2'), from = door.getBoundingClientRect(), to = home.getBoundingClientRect();
-      /* phones (photos stacked): the whole screen scrolls. The lower photo pushes Home up and its page
-         comes in from below; the upper photo pushes Home down and its page comes in from above. */
-      if (matchMedia('(max-width:820px)').matches){
-        var up = door.getAttribute('href') === '#investors', snap = home.cloneNode(true), main = $('main'), over = false;
-        snap.setAttribute('aria-hidden', 'true'); snap.removeAttribute('aria-labelledby');
-        $$('[id]', snap).forEach(function(n){ n.removeAttribute('id'); });
-        snap.style.cssText = 'position:fixed;z-index:40;margin:0;min-height:0;pointer-events:none;left:' + to.left + 'px;top:' + to.top + 'px;width:' + to.width + 'px;height:' + to.height + 'px';
-        document.body.appendChild(snap);
-        location.hash = door.getAttribute('href'); route();
-        var next = $('.view:not([hidden])'), d = to.height, ease = 'cubic-bezier(.7,0,.2,1)';
-        main.style.overflow = 'hidden';
-        var enter = next.animate([{ transform:'translateY(' + (up ? d : -d) + 'px)' }, { transform:'none' }], { duration:640, easing:ease });
-        var end = function(){ if (over) return; over = true; snap.remove(); try { enter.cancel(); } catch(e){} main.style.overflow = ''; fxBusy = false; };
-        var slide = snap.animate([{ transform:'none' }, { transform:'translateY(' + (up ? -d : d) + 'px)' }], { duration:640, easing:ease, fill:'forwards' });
-        slide.onfinish = end; slide.oncancel = end; setTimeout(end, 1400);
-        return;
-      }
+      /* phones (photos stacked): same sweep as on desktop, turned vertical. The lower photo unrolls from the
+         bottom up over the whole screen; the upper one only downwards, from under the headline band. */
+      if (matchMedia('(max-width:820px)').matches && door.getAttribute('href') === '#developers')
+        to = { left:to.left, top:from.top, width:to.width, height:to.bottom - from.top };
       var box = function(r){ return { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' }; };
       var fx = door.cloneNode(true), a = box(from);
       fx.removeAttribute('href'); fx.setAttribute('aria-hidden', 'true'); fx.classList.add('door-fx');
