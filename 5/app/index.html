@@ -82,6 +82,26 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 .phone b{padding:0 4px 0 14px;font-weight:600;color:var(--ink-2);font-size:16px}
 .phone .input{border:0;background:none;box-shadow:none;padding-left:6px}
 .err{color:var(--bad);font-size:13.5px;font-weight:500}
+/* password: the eye shows what was typed; the list under it ticks off each rule while typing */
+.pw{position:relative;display:block}
+.pw .input{padding-right:52px}
+.pw-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;border-radius:10px;color:var(--ink-3);display:grid;place-items:center}
+.pw-eye svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
+.pw-eye[aria-pressed="true"]{color:var(--ink)}
+.pw-eye[aria-pressed="false"]::after{content:"";position:absolute;width:24px;height:2px;background:currentColor;transform:rotate(-45deg);border-radius:2px}
+.pw-rules{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-3)}
+.pw-rules li{display:inline-flex;align-items:center;gap:6px}
+.pw-rules li::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;flex:none;box-sizing:border-box}
+.pw-rules li.ok{color:var(--ink);font-weight:600}
+.pw-rules li.ok::before{content:"✓";border:0;background:var(--accent);color:var(--on-accent);font-size:10px;line-height:14px;text-align:center}
+.pw-rules li.bad{color:var(--bad);font-weight:600}
+/* saved filters on the My offers screen */
+.ss-list{display:grid;gap:10px;padding:0 var(--g) 8px}
+.ss{display:grid;gap:12px;padding:14px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
+.ss-tags{display:flex;flex-wrap:wrap;gap:6px}
+.ss-tags span{padding:5px 11px;border-radius:999px;background:var(--field);border:1px solid var(--line-2);font-size:13px;font-weight:600;color:var(--ink-2)}
+.ss-acts{display:flex;gap:8px}
+.ss-acts .btn-primary{flex:1}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{min-height:40px;padding:0 15px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);font-weight:600;font-size:14px;color:var(--ink-2);white-space:nowrap}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -293,6 +313,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.200 4.200L19 7"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
   <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.600-6.500 10-6.500S22 12 22 12s-3.600 6.500-10 6.500S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-star" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1.200l2 4.300 4.700.6-3.500 3.200.9 4.700L8 11.700 3.900 14l.9-4.700L1.300 6.100l4.700-.6z"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></g></symbol>
@@ -312,7 +333,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     <div class="seg" role="group"><button type="button" data-mode="signin" aria-pressed="true" data-t>Sign in</button><button type="button" data-mode="register" aria-pressed="false" data-t>Register</button></div>
     <form id="signForm" novalidate>
       <label class="field"><span data-t>Email</span><input class="input" id="s-email" type="email" autocomplete="email" inputmode="email" required></label>
-      <label class="field"><span data-t>Password</span><input class="input" id="s-pass" type="password" autocomplete="current-password" required></label>
+      <div class="field"><span data-t>Password</span><div class="pw"><input class="input" id="s-pass" type="password" autocomplete="current-password" required aria-label="Password" data-ta><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password" data-ta><svg><use href="#i-eye"/></svg></button></div></div>
       <p class="err" id="signErr" hidden></p>
       <button class="btn btn-primary btn-block" id="signSubmit" type="submit" data-t>Sign in</button>
     </form>
@@ -322,7 +343,8 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <label class="field"><span data-t>Phone</span><span class="phone"><b>+995</b><input class="input" id="r-phone" type="tel" inputmode="tel" autocomplete="tel-national" required maxlength="20" placeholder="5XX XX XX XX"></span></label>
       <label class="field"><span data-t>Available budget</span><select class="input" id="r-budget"></select></label>
       <label class="field"><span data-t>Interested in</span><select class="input" id="r-interest"></select></label>
-      <label class="field"><span data-t>Password</span><input class="input" id="r-pass" type="password" autocomplete="new-password" required minlength="8"></label>
+      <div class="field"><span data-t>Password</span><div class="pw"><input class="input" id="r-pass" type="password" autocomplete="new-password" required aria-label="Password" data-ta aria-describedby="pwRules"><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password" data-ta><svg><use href="#i-eye"/></svg></button></div>
+        <ul class="pw-rules" id="pwRules"><li data-pw="len" data-t>At least 8 characters</li><li data-pw="up" data-t>One capital letter (A–Z)</li><li data-pw="num" data-t>One number</li></ul></div>
       <p class="err" id="regErr" hidden></p>
       <button class="btn btn-primary btn-block" id="regSubmit" type="submit" data-t>Create investor account</button>
     </form>
@@ -377,7 +399,12 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   </section>
 
   <section data-screen="saved" hidden>
-    <div class="bar"><h1 data-t>My offers</h1><p data-t>Listings you saved with the heart.</p></div>
+    <div class="bar"><h1 data-t>My offers</h1><p data-t>Listings and filters you saved.</p></div>
+    <div id="ssBox" hidden>
+      <div class="sec-h"><h2 data-t>Saved filters</h2></div>
+      <div class="ss-list" id="ssList"></div>
+      <div class="sec-h"><h2 data-t>Saved listings</h2></div>
+    </div>
     <div class="list" id="savedList"></div>
     <div class="empty" id="savedEmpty" hidden><b data-t>Nothing saved yet</b><span data-t>Tap the heart on a listing and it will appear here.</span></div>
   </section>
@@ -462,7 +489,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       <label class="field"><span data-t>Construction completion</span><select class="input" id="fReady"></select></label>
       <div class="field"><span data-t>Handover condition</span><div class="chips" id="fCond"><button class="chip" type="button" data-v="black" data-t>Black frame</button><button class="chip" type="button" data-v="white" data-t>White frame</button><button class="chip" type="button" data-v="green" data-t>Green frame</button><button class="chip" type="button" data-v="renovated" data-t>Renovated</button></div></div>
     </div>
-    <div class="sheet-foot"><button class="btn btn-line" id="fClear" type="button" data-t>Clear</button><button class="btn btn-primary" id="fApply" type="button" data-t>Show listings</button></div>
+    <div class="sheet-foot"><button class="btn btn-line" id="fClear" type="button" data-t>Clear</button><button class="btn btn-line" id="fSave" type="button" aria-label="Save this filter" data-ta><svg style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round"><use href="#i-heart"/></svg></button><button class="btn btn-primary" id="fApply" type="button" data-t>Show listings</button></div>
   </div>
 </div>
 
@@ -534,6 +561,13 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     'District':'რაიონი', 'All districts':'ყველა რაიონი', 'Discount':'ფასდაკლება', 'Price, $':'ფასი, $', 'Size, m²':'ფართი, მ²', 'From':'დან', 'To':'მდე',
     'Construction completion':'მშენებლობის დასრულება', 'Any time':'ნებისმიერ დროს', 'By end of':'ბოლომდე:', 'Handover condition':'ჩაბარების მდგომარეობა',
     'Black frame':'შავი კარკასი', 'White frame':'თეთრი კარკასი', 'Green frame':'მწვანე კარკასი', 'Renovated':'რემონტით',
+    'At least 8 characters':'მინიმუმ 8 სიმბოლო', 'One capital letter (A–Z)':'ერთი დიდი ასო (A–Z)', 'One number':'ერთი ციფრი', 'Show password':'პაროლის ჩვენება', 'Hide password':'პაროლის დამალვა',
+    'Password needs at least 8 characters, a capital letter and a number.':'პაროლში უნდა იყოს მინიმუმ 8 სიმბოლო, ერთი დიდი ასო და ერთი ციფრი.',
+    'Bedrooms':'საძინებლები', 'Access road':'მისასვლელი გზა', 'Asphalt':'ასფალტი', 'Gravel':'ხრეში', 'Concrete':'ბეტონი',
+    'Utilities':'კომუნიკაციები', 'Electricity':'დენი', 'Water':'წყალი', 'Gas':'გაზი', 'Sewage':'კანალიზაცია',
+    'Listings and filters you saved.':'შენახული განცხადებები და ფილტრები.', 'Save this filter':'ფილტრის შენახვა', 'Saved filters':'შენახული ფილტრები', 'Saved listings':'შენახული განცხადებები',
+    'Delete saved filter':'შენახული ფილტრის წაშლა', 'Choose at least one filter first.':'ჯერ აირჩიე ერთი ფილტრი მაინც.', 'This filter is already in My offers.':'ეს ფილტრი უკვე არის ჩემს შეთავაზებებში.',
+    'Filter saved to My offers.':'ფილტრი შეინახა ჩემს შეთავაზებებში.', 'Saved filter deleted.':'შენახული ფილტრი წაიშალა.',
     'Clear':'გასუფთავება', 'Show listings':'განცხადებების ჩვენება',
     'Send a request to ARI':'მოთხოვნა ARI-ს', 'Message (optional)':'შეტყობინება (არასავალდებულო)', 'When is it convenient to call you?':'როდის გაწყობს ზარი?',
     'Only ARI sees your request. A sales manager will call you about this property.':'შენს მოთხოვნას მხოლოდ ARI ხედავს. გაყიდვების მენეჯერი დაგირეკავს ამ ქონებაზე.',
@@ -615,6 +649,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   function readyTxt(s){ var m = /^Q([1-4]) (\d{4})$/.exec(s || ''); return m && lang === 'ka' ? ['I', 'II', 'III', 'IV'][m[1] - 1] + ' კვ. ' + m[2] : (s || ''); }
   var TYPE = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' };
   var COND = { black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated' };
+  var ROAD = { asphalt:'Asphalt', gravel:'Gravel', concrete:'Concrete' }, UTIL = { electricity:'Electricity', water:'Water', gas:'Gas', sewage:'Sewage' };
   var FALLBACK = { apartment:'../img/interior.jpg', land:'../img/land.jpg', commercial:'../img/commercial.svg' };
 
   /* ---------- State ---------- */
@@ -627,13 +662,13 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   function filterCount(){ return (F.district ? 1 : 0) + (F.disc ? 1 : 0) + (F.cond.length ? 1 : 0) + (F.ready ? 1 : 0) + (F.priceLo != null || F.priceHi != null ? 1 : 0) + (F.sizeLo != null || F.sizeHi != null ? 1 : 0); }
 
   var DEMO = [
-    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', cad:'01.10.13.002.045', urls:['../img/interior.jpg', '../img/room.jpg', '../img/home-inv.jpg'],
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', beds:2, road:'asphalt', utils:['electricity', 'water', 'gas', 'sewage'], urls:['../img/interior.jpg', '../img/room.jpg', '../img/home-inv.jpg'],
       info:'Developer installment plan available up to 24 months. Underground parking on request.' },
-    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', cad:'01.14.05.011.027', urls:['../img/room.jpg', '../img/interior.jpg'],
+    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', beds:2, road:'asphalt', utils:['electricity', 'water', 'gas', 'sewage'], urls:['../img/room.jpg', '../img/interior.jpg'],
       info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.' },
-    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', urls:['../img/land.jpg'], featured:true,
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', road:'gravel', utils:['electricity', 'water'], urls:['../img/land.jpg'], featured:true,
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
-    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', cad:'01.14.05.008.021', urls:['../img/commercial.svg'],
+    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', road:'asphalt', utils:['electricity', 'water', 'sewage'], urls:['../img/commercial.svg'],
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.' }
   ];
   DEMO.forEach(function(L, i){ L.demo = i; L.photo = L.urls[0]; });
@@ -694,7 +729,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   }
   function rowToL(r){
     return { id:r.id, type:r.type, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type, cond:r.handover,
-      price:r.price_usd, disc:r.discount_pct, ready:r.ready, cad:r.cadastral, info:r.info, featured:!!r.featured, photos:r.photos || [], plan:r.plan_path || null, photo:null };
+      price:r.price_usd, disc:r.discount_pct, ready:r.ready, info:r.info, beds:r.bedrooms, road:r.road, utils:r.utilities || [], featured:!!r.featured, photos:r.photos || [], plan:r.plan_path || null, photo:null };
   }
   function toLs(rows){   /* rows -> listings with a signed first photo, remembered by id */
     var Ls = rows.map(rowToL);
@@ -814,14 +849,80 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   }); });
   ['#fSizeLo', '#fSizeHi'].forEach(function(s){ $(s).addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g, ''); }); });
   $('#fClear').addEventListener('click', function(){ var ty = F.type; F = blankF(); F.type = ty; showF(); });
-  $('#fApply').addEventListener('click', function(){
+  function takeSheet(){   /* what is set in the sheet becomes the current filter */
     var on = function(box){ return $$('.chip[aria-pressed="true"]', $(box)).map(function(b){ return b.dataset.v; }); };
     var pl = numIn('#fPriceLo'), ph = numIn('#fPriceHi'), sl = numIn('#fSizeLo'), sh = numIn('#fSizeHi'), x;
     if (pl != null && ph != null && pl > ph){ x = pl; pl = ph; ph = x; }
     if (sl != null && sh != null && sl > sh){ x = sl; sl = sh; sh = x; }
     F.district = $('#fDistrict').value; F.ready = $('#fReady').value; F.disc = +(on('#fDisc')[0] || 0); F.cond = on('#fCond');
     F.priceLo = pl; F.priceHi = ph; F.sizeLo = sl; F.sizeHi = sh;
+  }
+  $('#fApply').addEventListener('click', function(){ takeSheet(); closeSheets(); window.scrollTo(0, 0); fetchPage(true); });
+
+  /* ---------- Saved filters ----------
+     The heart in the filter sheet keeps the current filter in My offers (on this device, per account).
+     Stored in the website's shape, so a filter saved on the site shows up here on the same device, and the other way round. */
+  var TYPE_SHORT = { apartment:'Apartment', land:'Land', commercial:'Commercial' };
+  function searchKey(){ return 'ari-searches-' + (user ? user.id : 'demo'); }
+  function getSearches(){ try { return JSON.parse(localStorage.getItem(searchKey()) || '[]'); } catch(e){ return []; } }
+  function putSearches(a){ try { localStorage.setItem(searchKey(), JSON.stringify(a)); return true; } catch(e){ return false; } }
+  function toSaved(f){
+    var o = { type:f.type, district:f.district, disc:f.disc ? [f.disc, 100] : null, cond:f.cond.slice().sort(), ready:f.ready };
+    if (f.sizeLo != null || f.sizeHi != null) o.size = [f.sizeLo || 0, f.sizeHi == null ? null : f.sizeHi];
+    if (f.priceLo != null || f.priceHi != null) o.price = [f.priceLo || 0, f.priceHi == null ? null : f.priceHi];
+    return o;
+  }
+  function fromSaved(o){
+    var f = blankF();
+    f.type = o.type || 'all'; f.district = o.district || ''; f.disc = o.disc ? o.disc[0] : 0; f.cond = (o.cond || []).slice(); f.ready = o.ready || '';
+    if (o.size){ f.sizeLo = o.size[0] || null; f.sizeHi = o.size[1]; }
+    if (o.price){ f.priceLo = o.price[0] || null; f.priceHi = o.price[1]; }
+    return f;
+  }
+  function span(a, unit, pre){
+    var lo = pre + a[0].toLocaleString('en-US'), hi = a[1] == null ? null : pre + a[1].toLocaleString('en-US');
+    return (hi == null ? lo + '+' : lo + ' – ' + hi) + unit;
+  }
+  function searchTags(o){
+    var tags = [];
+    if (o.type && o.type !== 'all') tags.push(t(TYPE_SHORT[o.type]));
+    if (o.district) tags.push(t(o.district));
+    if (o.disc) tags.push(o.disc[0] + '%+');
+    if (o.size) tags.push(span(o.size, ' m²', ''));
+    if (o.price) tags.push(span(o.price, '', '$'));
+    if (o.ready) tags.push(lang === 'ka' ? o.ready + ' წლის ბოლომდე' : 'By end of ' + o.ready);
+    (o.cond || []).forEach(function(c){ tags.push(t(COND[c])); });
+    return tags;
+  }
+  function renderSearches(){
+    var list = getSearches(), box = $('#ssList');
+    $('#ssBox').hidden = !list.length;
+    box.innerHTML = list.map(function(o, i){
+      return '<div class="ss"><div class="ss-tags">' + searchTags(o).map(function(x){ return '<span>' + esc(x) + '</span>'; }).join('') + '</div>'
+        + '<div class="ss-acts"><button class="btn btn-primary" type="button" data-ss-open="' + i + '">' + esc(t('Show listings')) + '</button>'
+        + '<button class="btn btn-line" type="button" data-ss-del="' + i + '" aria-label="' + esc(t('Delete saved filter')) + '"><svg style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><use href="#i-x"/></svg></button></div></div>';
+    }).join('');
+  }
+  $('#fSave').addEventListener('click', function(){
+    takeSheet();
+    var o = toSaved(F), list = getSearches(), sig = JSON.stringify(o);
+    if (!searchTags(o).length){ toast('Choose at least one filter first.'); return; }
     closeSheets(); window.scrollTo(0, 0); fetchPage(true);
+    if (list.some(function(x){ return JSON.stringify(x) === sig; })){ toast('This filter is already in My offers.'); return; }
+    list.unshift(o);
+    toast(putSearches(list.slice(0, 12)) ? 'Filter saved to My offers.' : 'Couldn’t save. Try again.');
+  });
+  document.addEventListener('click', function(e){
+    var open = e.target.closest('[data-ss-open]'), del = e.target.closest('[data-ss-del]'), list;
+    if (open){
+      var o = getSearches()[+open.dataset.ssOpen]; if (!o) return;
+      F = fromSaved(o);
+      $$('[data-type]').forEach(function(x){ x.setAttribute('aria-pressed', String(x.dataset.type === F.type)); });
+      location.hash = 'home'; fetchPage(true);
+    } else if (del){
+      list = getSearches(); list.splice(+del.dataset.ssDel, 1); putSearches(list); renderSearches();
+      toast('Saved filter deleted.');
+    }
   });
 
   /* ---------- Sheets ---------- */
@@ -833,6 +934,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   /* ---------- Saved ---------- */
   function renderSaved(){
     var keys = getSaved(), box = $('#savedList');
+    renderSearches();
     if (demo || !user){
       var Ls = DEMO.filter(function(L){ return keys.indexOf(keyOf(L)) > -1; });
       paintList(box, Ls); $('#savedEmpty').hidden = Ls.length > 0; syncHearts(); return;
@@ -972,7 +1074,10 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     if (L.view) specs.push(['View', t(L.view)]);
     if (L.use) specs.push(['Intended use', t(L.use)]);
     if (L.cond) specs.push(['Handover condition', t(COND[L.cond])]);
+    if (L.beds != null) specs.splice(1, 0, ['Bedrooms', String(L.beds)]);
     specs.push(['Construction completion', readyTxt(L.ready)]);
+    if (L.road) specs.push(['Access road', t(ROAD[L.road] || L.road)]);
+    if (L.utils && L.utils.length) specs.push(['Utilities', L.utils.map(function(u){ return t(UTIL[u] || u); }).join(', ')]);
     $('#dSpecs').innerHTML = specs.map(function(x, i){ return '<div' + (i === specs.length - 1 && specs.length % 2 ? ' class="wide"' : '') + '><dt>' + esc(t(x[0])) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('');
     $('#dInfoBox').hidden = !L.info; $('#dInfo').textContent = L.info ? t(L.info) : '';
     $('#dPlanBox').hidden = true; $('#dPlan').innerHTML = '';
@@ -1111,10 +1216,28 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     if (/email not confirmed/i.test(m)) return 'Confirm your email first. The link is in your inbox.';
     if (/already registered|already been registered/i.test(m)) return 'This email is already registered. Sign in instead.';
     if (/rate limit|too many|only request this after/i.test(m)) return 'Too many attempts. Try again in a few minutes.';
-    if (/password/i.test(m)) return 'Use a password with at least 8 characters.';
+    if (/password/i.test(m)) return PW_MSG;
     if (/fetch|network/i.test(m)) return OFFLINE;
     return 'Something went wrong. Try again.';
   }
+  /* password rules for a new account, ticked off under the field while typing; "strict" also marks what is missing */
+  var PW_MSG = 'Password needs at least 8 characters, a capital letter and a number.';
+  var PW_RULES = { len:function(v){ return v.length >= 8; }, up:function(v){ return /[A-Z]/.test(v); }, num:function(v){ return /\d/.test(v); } };
+  function pwCheck(strict){
+    var v = $('#r-pass').value, all = true;
+    $$('#pwRules [data-pw]').forEach(function(li){
+      var ok = PW_RULES[li.dataset.pw](v); if (!ok) all = false;
+      li.classList.toggle('ok', ok); li.classList.toggle('bad', !ok && (strict || (li.classList.contains('bad') && !!v)));
+    });
+    return all;
+  }
+  $('#r-pass').addEventListener('input', function(){ pwCheck(false); });
+  function eyeSet(b, show){ b.parentNode.querySelector('input').type = show ? 'text' : 'password'; b.setAttribute('aria-pressed', String(show)); b.dataset.ta = show ? 'Hide password' : 'Show password'; b.setAttribute('aria-label', t(b.dataset.ta)); }
+  document.addEventListener('click', function(e){ var b = e.target.closest('[data-pw-eye]'); if (b) eyeSet(b, b.getAttribute('aria-pressed') !== 'true'); });
+  ['#regForm', '#signForm'].forEach(function(sel){ $(sel).addEventListener('reset', function(){   /* a cleared form hides the password again */
+    $$('[data-pw-eye]', this).forEach(function(b){ eyeSet(b, false); });
+    $$('#pwRules li').forEach(function(li){ li.classList.remove('ok', 'bad'); });
+  }); });
   $('#signForm').addEventListener('submit', function(e){
     e.preventDefault();
     if (!this.checkValidity()){ showErr('#signErr', 'Fill in every field.'); return; }
@@ -1129,8 +1252,8 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
   $('#regForm').addEventListener('submit', function(e){
     e.preventDefault();
     var form = this;
-    if ($('#r-pass').value.length < 8 && $('#r-name').value.trim() && $('#r-email').validity.valid && $('#r-phone').value.trim()){ showErr('#regErr', 'Use a password with at least 8 characters.'); $('#r-pass').focus(); return; }
     if (!form.checkValidity()){ showErr('#regErr', 'Fill in every field.'); return; }
+    if (!pwCheck(true)){ showErr('#regErr', PW_MSG); $('#r-pass').focus(); return; }
     if (!sb){ showErr('#regErr', 'Sign-in is unavailable right now. Try the sample account.'); return; }
     var b = $('#r-budget').value, email = $('#r-email').value.trim(), btn = $('#regSubmit');
     var meta = { role:'investor', full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim(), budget:String(b === '250000+' ? 250000 : +b), interest:$('#r-interest').value };
