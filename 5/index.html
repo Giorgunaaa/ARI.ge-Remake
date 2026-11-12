@@ -980,6 +980,19 @@ body[data-view="home"] .foot{display:none}
 .fg label{font-size:13px;font-weight:600}
 .fg label small{font-weight:500;color:var(--ink-3)}
 .fg input,.fg select{width:100%;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--field);font-size:15px;min-width:0}
+/* password: the eye shows what was typed; the list under it ticks off each rule while typing */
+.pw{position:relative}
+.fg .pw input{padding-right:48px}
+.pw-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:none;border-radius:8px;color:var(--ink-3);cursor:pointer;display:grid;place-items:center}
+.pw-eye svg{width:20px;height:20px}
+.pw-eye[aria-pressed="true"]{color:var(--accent-ink)}
+.pw-eye[aria-pressed="false"]::after{content:"";position:absolute;width:22px;height:2px;background:currentColor;transform:rotate(-45deg);border-radius:2px}
+.pw-rules{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--ink-3)}
+.pw-rules li{display:inline-flex;align-items:center;gap:6px}
+.pw-rules li::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;flex:none;box-sizing:border-box}
+.pw-rules li.ok{color:var(--accent-ink);font-weight:600}
+.pw-rules li.ok::before{content:"✓";border:0;background:var(--accent);color:var(--card);font-size:10px;line-height:14px;text-align:center}
+.pw-rules li.bad{color:var(--bad);font-weight:600}
 .fg input:focus,.fg select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
 .phone{display:flex;align-items:center;border:1px solid var(--line-2);border-radius:10px;background:var(--field);overflow:hidden}
 .phone span{padding:0 10px;color:var(--ink-3);font-size:14.5px;border-right:1px solid var(--line)}
@@ -2011,14 +2024,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="fg full"><label for="r-name">Full name</label><input id="r-name" required autocomplete="name"></div>
         <div class="fg"><label for="r-email">Email</label><input id="r-email" type="email" required autocomplete="email"></div>
         <div class="fg"><label for="r-phone">Phone</label><div class="phone"><span>+995</span><input id="r-phone" type="tel" inputmode="tel" required placeholder="5XX XX XX XX"></div></div>
-        <div class="fg full"><label for="r-pass">Password <small>(8+ characters)</small></label><input id="r-pass" type="password" required minlength="8" autocomplete="new-password"></div>
+        <div class="fg full"><label for="r-pass">Password</label><div class="pw"><input id="r-pass" type="password" required autocomplete="new-password" aria-describedby="pwRules"><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password"><svg aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <ul class="pw-rules" id="pwRules"><li data-pw="len">At least 8 characters</li><li data-pw="up">One capital letter (A–Z)</li><li data-pw="num">One number</li></ul></div>
         <div class="fg" data-for-role="investor"><label for="r-budget">Available cash</label>
           <select id="r-budget"><option value="50000">Up to $50,000</option><option value="100000" selected>$50,000 – $100,000</option><option value="250000">$100,000 – $250,000</option><option value="250000+">$250,000+</option></select></div>
         <div class="fg" data-for-role="investor"><label for="r-interest">Interested in</label>
           <select id="r-interest"><option value="Apartments and land">Apartments and land</option><option value="Apartments">Apartments</option><option value="Land plots">Land plots</option><option value="Commercial spaces">Commercial spaces</option></select></div>
         <div class="fg full" data-for-role="developer" hidden><label for="r-company">Company name</label><input id="r-company" autocomplete="organization"></div>
-        <div class="fg" data-for-role="developer" hidden><label for="r-code">Company ID code <small>(9 digits)</small></label><input id="r-code" inputmode="numeric" pattern="\d{9}" maxlength="9"></div>
-        <div class="fg" data-for-role="developer" hidden><label for="r-site">Website <small>(optional)</small></label><input id="r-site" type="url" placeholder="https://"></div>
+        <div class="fg full" data-for-role="developer" hidden><label for="r-site">Website <small>(optional)</small></label><input id="r-site" type="url" placeholder="https://"></div>
       </div>
       <label class="check"><input type="checkbox" id="r-terms" required><span>I agree to the Terms of use and Privacy policy.</span></label>
       <p class="form-err" id="regErr" role="alert" hidden></p>
@@ -2036,7 +2049,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <p class="modal-sub">Sign in to see listings.</p>
       <div class="form-grid">
         <div class="fg full"><label for="s-email">Email</label><input id="s-email" type="email" required autocomplete="email"></div>
-        <div class="fg full"><label for="s-pass">Password</label><input id="s-pass" type="password" required autocomplete="current-password"></div>
+        <div class="fg full"><label for="s-pass">Password</label><div class="pw"><input id="s-pass" type="password" required autocomplete="current-password"><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password"><svg aria-hidden="true"><use href="#i-eye"/></svg></button></div></div>
       </div>
       <p class="form-err" id="signErr" role="alert" hidden></p>
       <button class="btn btn-primary btn-block" type="submit" id="signSubmit" style="margin-top:18px">Sign in</button>
@@ -2324,7 +2337,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     $$('[data-pick]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.pick === p)); });
     $$('[data-for-role]').forEach(function(el){ el.hidden = el.dataset.forRole !== p; });
     $('#r-company').required = p === 'developer';
-    $('#r-code').required = p === 'developer';
     $('#regSubmit').textContent = p === 'developer' ? 'Create developer account' : 'Create investor account';
   }
   function openModal(mode, role){
@@ -2365,9 +2377,31 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (/email not confirmed/i.test(m)) return 'Confirm your email first. The link is in your inbox.';
     if (/already registered|already been registered/i.test(m)) return 'This email is already registered. Sign in instead.';
     if (/rate limit|too many|only request this after/i.test(m)) return 'Too many attempts. Try again in a few minutes.';
-    if (/password/i.test(m)) return 'Use a password with at least 8 characters.';
+    if (/password/i.test(m)) return PW_MSG;
     return 'Something went wrong. Try again.';
   }
+  /* password rules for a new account, ticked off under the field while typing; "strict" also marks what is missing */
+  var PW_MSG = 'Password needs at least 8 characters, a capital letter and a number.';
+  var PW_RULES = { len:function(v){ return v.length >= 8; }, up:function(v){ return /[A-Z]/.test(v); }, num:function(v){ return /\d/.test(v); } };
+  function pwCheck(strict){
+    var v = $('#r-pass').value, all = true;
+    $$('#pwRules [data-pw]').forEach(function(li){
+      var ok = PW_RULES[li.dataset.pw](v); if (!ok) all = false;
+      li.classList.toggle('ok', ok); li.classList.toggle('bad', !ok && (strict || (li.classList.contains('bad') && !!v)));
+    });
+    return all;
+  }
+  $('#r-pass').addEventListener('input', function(){ pwCheck(false); });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-pw-eye]'); if (!b) return;
+    var inp = b.parentNode.querySelector('input'), show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    b.setAttribute('aria-pressed', String(show)); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+  ['#regForm', '#signForm'].forEach(function(sel){ $(sel).addEventListener('reset', function(){   /* a cleared form hides the password again */
+    $$('[data-pw-eye]', this).forEach(function(b){ b.parentNode.querySelector('input').type = 'password'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Show password'); });
+    $$('#pwRules li').forEach(function(li){ li.className = ''; });
+  }); });
   function showErr(sel, msg){ var el = $(sel); el.textContent = msg || ''; el.hidden = !msg; }
   var OFFLINE = 'Couldn’t reach the server. Check your connection.';
 
@@ -2375,17 +2409,17 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     e.preventDefault();
     var form = this;
     if (!form.checkValidity()){ form.reportValidity(); return; }
+    if (!pwCheck(true)){ showErr('#regErr', PW_MSG); $('#r-pass').focus(); return; }
     var b = $('#r-budget').value, budget = b === '250000+' ? 250000 : +b;
     if (!sb){   /* library unavailable: fall back to the sample-data account */
       if (pick === 'investor'){ signIn('investor', 'Investor account created (demo). Listings are now unlocked.'); }
       else signIn('developer', 'Developer account created (demo). Your listing workspace is open.');
       form.reset(); setPick(pick); return;
     }
-    if ($('#r-pass').value.length < 8){ showErr('#regErr', 'Use a password with at least 8 characters.'); $('#r-pass').focus(); return; }
     var btn = $('#regSubmit'), email = $('#r-email').value.trim();
     var meta = { role:pick, full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim() };
     if (pick === 'investor'){ meta.budget = String(budget); meta.interest = $('#r-interest').value; }
-    else { meta.company = $('#r-company').value.trim(); meta.company_code = $('#r-code').value.trim(); meta.website = $('#r-site').value.trim(); }
+    else { meta.company = $('#r-company').value.trim(); meta.website = $('#r-site').value.trim(); }
     showErr('#regErr', ''); btn.disabled = true;
     sb.auth.signUp({ email:email, password:$('#r-pass').value, options:{ data:meta, emailRedirectTo:location.origin + location.pathname.replace(/index\.html$/, '') } }).then(function(res){
       btn.disabled = false;
@@ -3447,7 +3481,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Developer lists a property':'დეველოპერი ამატებს ქონებას','Investor filters by budget':'ინვესტორი ფილტრავს ბიუჯეტით','They connect directly':'ისინი პირდაპირ უკავშირდებიან',
     'How the platform works':'როგორ მუშაობს პლატფორმა','© 2026 ARI Development':'© 2026 ARI Development','Investment platform':'საინვესტიციო პლატფორმა','ARI home':'ARI მთავარი',
     'Full diagram':'სრული სქემა',
-    'Password':'პაროლი','(8+ characters)':'(მინიმუმ 8 სიმბოლო)','We’ll email you a link to confirm your address.':'ელფოსტაზე გამოგიგზავნით ბმულს მისამართის დასადასტურებლად.',
+    'Password':'პაროლი','At least 8 characters':'მინიმუმ 8 სიმბოლო','One capital letter (A–Z)':'ერთი დიდი ასო (A–Z)','One number':'ერთი ციფრი','Show password':'პაროლის ჩვენება','Hide password':'პაროლის დამალვა',
+    'Password needs at least 8 characters, a capital letter and a number.':'პაროლში უნდა იყოს მინიმუმ 8 სიმბოლო, ერთი დიდი ასო და ერთი ციფრი.','(8+ characters)':'(მინიმუმ 8 სიმბოლო)','We’ll email you a link to confirm your address.':'ელფოსტაზე გამოგიგზავნით ბმულს მისამართის დასადასტურებლად.',
     'Check your email':'შეამოწმე ელფოსტა','We sent a confirmation link to':'დადასტურების ბმული გავგზავნეთ მისამართზე','. Open it to finish creating your account.':'. გახსენი ის, რომ ანგარიშის შექმნა დაასრულო.','Got it':'გასაგებია',
     'New here?':'ახალი ხარ?','Wrong email or password.':'ელფოსტა ან პაროლი არასწორია.','Confirm your email first. The link is in your inbox.':'ჯერ დაადასტურე ელფოსტა. ბმული შენს საფოსტო ყუთშია.',
     'This email is already registered. Sign in instead.':'ეს ელფოსტა უკვე დარეგისტრირებულია. შედი ანგარიშში.','Too many attempts. Try again in a few minutes.':'ზედმეტად ბევრი ცდა. სცადე რამდენიმე წუთში.',
