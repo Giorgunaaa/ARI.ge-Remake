@@ -731,10 +731,15 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
 .input.area textarea{min-height:54px;resize:vertical;line-height:1.45}
 .field.is-bad .input,.field.is-bad .drop,.field.is-bad .cond-chips button,.field.is-bad .yn button{border-color:var(--bad)}
 /* yes / no questions in the listing form; the bank list opens next to "Yes" */
-.yn-row{display:flex;gap:8px;align-items:center;min-width:0}
+.yn-row{display:flex;gap:8px;align-items:center;min-width:0;flex-wrap:wrap}
+.yn-row .input.bank-other{flex:1 0 100%}
+.fields>.field>.input{align-self:start}
 .chips.yn{flex:none;flex-wrap:nowrap}
 .yn button{min-height:44px;min-width:58px}
 .yn-row .input{flex:1}
+.chips.multi button{min-height:44px;display:inline-flex;align-items:center;gap:8px}
+.chips.multi button::before{content:"";width:15px;height:15px;border-radius:4px;border:1.5px solid var(--line-2);flex:none;box-sizing:border-box}
+.chips.multi button[aria-pressed="true"]::before{content:"✓";border-color:var(--accent);background:var(--accent);color:var(--card);font-size:11px;line-height:12px;text-align:center}
 .hint.err{color:var(--bad);font-weight:600}
 .legend-fill{margin-left:auto;border:0;background:none;padding:4px 0;font:inherit;font-weight:600;color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .input .unit{margin-left:auto;color:var(--ink-3);font-size:13.5px}
@@ -1240,14 +1245,17 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
               </div>
             </div>
             <div class="field"><div class="field-label"><span>Size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="65" data-rule="num" aria-label="Size" data-req><span class="unit">m²</span></div></div>
+            <div class="field"><div class="field-label"><span>Bedrooms</span><span class="req">Required</span></div><div class="input"><input type="text" name="beds" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="2" data-rule="int0" aria-label="Bedrooms" data-req></div></div>
             <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input pair"><input type="text" name="floor" inputmode="numeric" autocomplete="off" placeholder="8" data-rule="int" aria-label="Floor" data-req><span class="unit sep">/</span><input type="text" name="floors" inputmode="numeric" autocomplete="off" placeholder="14" data-rule="int" aria-label="Total floors" data-req></div></div>
-            <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
             <div class="field"><div class="field-label"><span>View</span><span class="opt">Optional</span></div><div class="input select is-live"><select class="is-empty" name="view" aria-label="View"><option value="">Choose</option><option value="City view">City view</option><option value="Courtyard">Courtyard</option><option value="Mountain view">Mountain view</option><option value="Park view">Park view</option><option value="River view">River view</option></select></div></div>
+            <div class="field full"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
+            <div class="field full"><div class="field-label"><span id="road-l-apartment">Access road</span><span class="req">Required</span></div><div class="chips yn" data-yn="road" role="group" aria-labelledby="road-l-apartment"><button type="button" data-v="asphalt" aria-pressed="false">Asphalt</button><button type="button" data-v="gravel" aria-pressed="false">Gravel</button><button type="button" data-v="concrete" aria-pressed="false">Concrete</button></div></div>
+            <div class="field full"><div class="field-label"><span id="util-l-apartment">Utilities</span><span class="opt">Optional</span></div><div class="chips multi" role="group" aria-labelledby="util-l-apartment"><button type="button" data-v="electricity" aria-pressed="false">Electricity</button><button type="button" data-v="water" aria-pressed="false">Water</button><button type="button" data-v="gas" aria-pressed="false">Gas</button><button type="button" data-v="sewage" aria-pressed="false">Sewage</button></div><span class="hint">Mark what is connected to the property</span></div>
             <div class="field full"><div class="field-label"><span id="cond-l-apartment">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-apartment"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="68,250" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
-            <div class="field"><div class="field-label"><span id="fin-l-apartment">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-apartment"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
+            <div class="field"><div class="field-label"><span id="fin-l-apartment">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-apartment"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div><div class="input bank-other" hidden><input type="text" name="bank_other" maxlength="60" autocomplete="off" placeholder="Bank name" aria-label="Bank name"></div></div></div>
             <div class="field"><div class="field-label"><span id="split-l-apartment">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-apartment"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.10.13.002.045" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Installment terms, parking, finishes…" aria-label="Additional information"></textarea></div></div>
@@ -1281,12 +1289,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             </div>
             <div class="field"><div class="field-label"><span>Land size</span><span class="req">Required</span></div><div class="input"><input type="text" name="size" inputmode="decimal" autocomplete="off" placeholder="500" data-rule="num" aria-label="Land size" data-req><span class="unit">m²</span></div></div>
             <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
+            <div class="field full"><div class="field-label"><span id="road-l-land">Access road</span><span class="req">Required</span></div><div class="chips yn" data-yn="road" role="group" aria-labelledby="road-l-land"><button type="button" data-v="asphalt" aria-pressed="false">Asphalt</button><button type="button" data-v="gravel" aria-pressed="false">Gravel</button><button type="button" data-v="concrete" aria-pressed="false">Concrete</button></div></div>
+            <div class="field full"><div class="field-label"><span id="util-l-land">Utilities</span><span class="opt">Optional</span></div><div class="chips multi" role="group" aria-labelledby="util-l-land"><button type="button" data-v="electricity" aria-pressed="false">Electricity</button><button type="button" data-v="water" aria-pressed="false">Water</button><button type="button" data-v="gas" aria-pressed="false">Gas</button><button type="button" data-v="sewage" aria-pressed="false">Sewage</button></div><span class="hint">Mark what is connected to the property</span></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="45,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="30" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
-            <div class="field"><div class="field-label"><span id="fin-l-land">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-land"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
-            <div class="field"><div class="field-label"><span id="split-l-land">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-land"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
-            <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.19.09.011.112" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
+            <div class="field"><div class="field-label"><span id="fin-l-land">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-land"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div><div class="input bank-other" hidden><input type="text" name="bank_other" maxlength="60" autocomplete="off" placeholder="Bank name" aria-label="Bank name"></div></div></div>
+            <div class="field full"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.19.09.011.112" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Utilities, access road, building coefficient…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
               <div class="field-label"><span>Photos</span><span class="opt">Optional</span></div>
@@ -1322,11 +1331,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Floor</span><span class="req">Required</span></div><div class="input pair"><input type="text" name="floor" inputmode="numeric" autocomplete="off" placeholder="8" data-rule="int" aria-label="Floor" data-req><span class="unit sep">/</span><input type="text" name="floors" inputmode="numeric" autocomplete="off" placeholder="14" data-rule="int" aria-label="Total floors" data-req></div></div>
             <div class="field"><div class="field-label"><span>Location / district</span><span class="req">Required</span></div><div class="input select is-live has-ico"><svg aria-hidden="true"><use href="#i-pin"/></svg><select class="is-empty" name="district" aria-label="Location / district" data-req><option value="">Choose</option><option value="Saburtalo, Tbilisi">Saburtalo, Tbilisi</option><option value="Vake, Tbilisi">Vake, Tbilisi</option><option value="Tskneti, Tbilisi">Tskneti, Tbilisi</option><option value="Didube, Tbilisi">Didube, Tbilisi</option><option value="Didi Dighomi, Tbilisi">Didi Dighomi, Tbilisi</option><option value="Gldani, Tbilisi">Gldani, Tbilisi</option><option value="Isani, Tbilisi">Isani, Tbilisi</option><option value="Samgori, Tbilisi">Samgori, Tbilisi</option><option value="Nadzaladevi, Tbilisi">Nadzaladevi, Tbilisi</option><option value="Chughureti, Tbilisi">Chughureti, Tbilisi</option><option value="Krtsanisi, Tbilisi">Krtsanisi, Tbilisi</option><option value="Mtatsminda, Tbilisi">Mtatsminda, Tbilisi</option><option value="Lisi, Tbilisi">Lisi, Tbilisi</option></select></div></div>
             <div class="field"><div class="field-label"><span>Intended use</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="use" aria-label="Intended use" data-req><option value="">Choose</option><option value="Retail / showroom">Retail / showroom</option><option value="Office">Office</option><option value="Restaurant / café">Restaurant / café</option><option value="Warehouse">Warehouse</option><option value="Other">Other</option></select></div></div>
+            <div class="field full"><div class="field-label"><span id="road-l-commercial">Access road</span><span class="req">Required</span></div><div class="chips yn" data-yn="road" role="group" aria-labelledby="road-l-commercial"><button type="button" data-v="asphalt" aria-pressed="false">Asphalt</button><button type="button" data-v="gravel" aria-pressed="false">Gravel</button><button type="button" data-v="concrete" aria-pressed="false">Concrete</button></div></div>
+            <div class="field full"><div class="field-label"><span id="util-l-commercial">Utilities</span><span class="opt">Optional</span></div><div class="chips multi" role="group" aria-labelledby="util-l-commercial"><button type="button" data-v="electricity" aria-pressed="false">Electricity</button><button type="button" data-v="water" aria-pressed="false">Water</button><button type="button" data-v="gas" aria-pressed="false">Gas</button><button type="button" data-v="sewage" aria-pressed="false">Sewage</button></div><span class="hint">Mark what is connected to the property</span></div>
             <div class="field full"><div class="field-label"><span id="cond-l-commercial">Handover condition</span><span class="req">Required</span></div><div class="chips cond-chips" role="group" aria-labelledby="cond-l-commercial"><button type="button" data-cond="black" aria-pressed="false">Black frame</button><button type="button" data-cond="white" aria-pressed="false">White frame</button><button type="button" data-cond="green" aria-pressed="false">Green frame</button><button type="button" data-cond="renovated" aria-pressed="false">Renovated</button></div><span class="hint hint-accent">Shown to investors on the listing card</span></div>
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="216,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
-            <div class="field"><div class="field-label"><span id="fin-l-commercial">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-commercial"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
+            <div class="field"><div class="field-label"><span id="fin-l-commercial">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-commercial"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div><div class="input bank-other" hidden><input type="text" name="bank_other" maxlength="60" autocomplete="off" placeholder="Bank name" aria-label="Bank name"></div></div></div>
             <div class="field"><div class="field-label"><span id="split-l-commercial">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-commercial"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.14.05.008.021" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Entrance, shopfront, power supply…" aria-label="Additional information"></textarea></div></div>
@@ -2508,7 +2519,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var v = {};
     ctrls(p).forEach(function(el){ v[el.name] = el.value.trim(); });
     var c = p.querySelector('.cond-chips [aria-pressed="true"]'); if (c) v.cond = c.dataset.cond;
-    v.fin = ynVal(p, 'fin'); v.split = ynVal(p, 'split');
+    v.fin = ynVal(p, 'fin'); v.split = ynVal(p, 'split'); v.road = ynVal(p, 'road');
+    v.utils = $$('.multi [aria-pressed="true"]', p).map(function(b){ return b.dataset.v; });
     return v;
   }
   function setVals(p, v){
@@ -2518,16 +2530,21 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     });
     $$('.cond-chips [data-cond]', p).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.cond === v.cond)); });
     $$('.yn', p).forEach(function(g){ $$('[data-v]', g).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v[g.dataset.yn])); }); });
+    $$('.multi [data-v]', p).forEach(function(b){ b.setAttribute('aria-pressed', String((v.utils || []).indexOf(b.dataset.v) > -1)); });
     syncYN(p);
   }
   /* yes / no questions. "Financed by a bank: yes" opens the bank list. "Subdivision done" decides which
      cadastral code is asked for: the unit's own code when it is done, the land's code when it is not. */
+  var ROAD = { asphalt:'Asphalt', gravel:'Gravel', concrete:'Concrete' }, UTIL = { electricity:'Electricity', water:'Water', gas:'Gas', sewage:'Sewage' };
   var CAD_OWN = { apartment:'Apartment cadastral code', commercial:'Space cadastral code', land:'Plot cadastral code' };
   function ynVal(p, k){ var b = p.querySelector('[data-yn="' + k + '"] [aria-pressed="true"]'); return b ? b.dataset.v : ''; }
   function syncYN(p){
     var fin = ynVal(p, 'fin'), split = ynVal(p, 'split'), t = p.dataset.panel, bank = p.querySelector('[name="bank"]'), cad = p.querySelector('[name="cad"]');
     bank.closest('.input').hidden = fin !== 'yes';
     if (fin !== 'yes'){ bank.value = ''; bank.classList.add('is-empty'); }
+    var other = p.querySelector('[name="bank_other"]');   /* "Other" opens a line for the bank's name */
+    other.closest('.input').hidden = bank.value !== 'Other';
+    if (bank.value !== 'Other') other.value = '';
     var name = split === 'yes' ? CAD_OWN[t] : split === 'no' ? 'Land cadastral code' : 'Cadastral code', lab = cad.closest('.field').querySelector('.field-label span');
     if (!cad.dataset.ph) cad.dataset.ph = cad.getAttribute('placeholder');
     if (lab.dataset.name !== name){ lab.dataset.name = name; lab.textContent = name; cad.setAttribute('aria-label', name); }
@@ -2577,7 +2594,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var yn = f.querySelector('.yn');
     if (yn){
       var on = yn.querySelector('[aria-pressed="true"]'), bank = f.querySelector('[name="bank"]');
-      return !on ? 'Choose one.' : bank && on.dataset.v === 'yes' && !bank.value ? 'Choose the bank.' : '';
+      if (!on) return 'Choose one.';
+      if (!bank || on.dataset.v !== 'yes') return '';
+      return !bank.value ? 'Choose the bank.' : bank.value === 'Other' && !f.querySelector('[name="bank_other"]').value.trim() ? 'Enter the bank name.' : '';
     }
     var els = ctrls(f), msg = '';
     els.forEach(function(el){
@@ -2621,7 +2640,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   /* keep typed values tidy, and clear an error as soon as the field is fixed */
   $('#wsForm').addEventListener('input', function(e){
     var el = e.target, rule = el.dataset && el.dataset.rule, v = el.value;
-    if (rule === 'int' || rule === 'pct') el.value = v.replace(/[^0-9]/g, '');
+    if (rule === 'int' || rule === 'int0' || rule === 'pct') el.value = v.replace(/[^0-9]/g, '');
     else if (rule === 'money'){ var d = v.replace(/[^0-9]/g, ''); el.value = d ? (+d).toLocaleString('en-US') : ''; }
     else if (rule === 'num'){ v = v.replace(',', '.').replace(/[^0-9.]/g, ''); var i = v.indexOf('.'); el.value = i < 0 ? v : v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, ''); }
     else if (rule === 'cad'){
@@ -2635,6 +2654,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   $('#wsForm').addEventListener('change', function(e){
     var el = e.target; if (el.tagName !== 'SELECT') return;
     el.classList.toggle('is-empty', !el.value);
+    if (el.name === 'bank'){ syncYN(el.closest('[data-panel]')); if (el.value === 'Other') el.closest('.field').querySelector('[name="bank_other"]').focus(); }
     var f = el.closest('.field'); if (f && f.classList.contains('is-bad')) mark(f, fieldMsg(f));
   });
   $$('[data-panel] .cond-chips').forEach(function(g){ g.addEventListener('click', function(e){
@@ -2643,6 +2663,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     mark(g.closest('.field'), '');
   }); });
 
+  /* utilities: mark any number */
+  $$('[data-panel] .multi').forEach(function(g){ g.addEventListener('click', function(e){
+    var b = e.target.closest('[data-v]'); if (b) b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+  }); });
   $$('[data-panel] .yn').forEach(function(g){ g.addEventListener('click', function(e){
     var b = e.target.closest('[data-v]'); if (!b) return;
     $$('[data-v]', g).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
@@ -2672,11 +2696,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* example values, so the form can be tried without typing everything */
   var EXAMPLE = {
-    apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', fin:'yes', bank:'TBC Bank', split:'yes', cad:'01.10.13.002.045.01.012',
+    apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', fin:'yes', bank:'TBC Bank', split:'yes', cad:'01.10.13.002.045.01.012', beds:'2', road:'asphalt', utils:['electricity', 'water', 'gas', 'sewage'],
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf', planInfo:'1.2 MB · PDF' },
-    land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', fin:'no', split:'yes', cad:'01.19.09.011.112',
+    land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', fin:'no', cad:'01.19.09.011.112', road:'gravel', utils:['electricity', 'water'],
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.', plan:'masterplan_tskneti_plots.pdf', planInfo:'2.1 MB · PDF' },
-    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', fin:'yes', bank:'Bank of Georgia', split:'no', cad:'01.14.05.008.021',
+    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', fin:'yes', bank:'Bank of Georgia', split:'no', cad:'01.14.05.008.021', road:'asphalt', utils:['electricity', 'water', 'sewage'],
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf', planInfo:'1.4 MB · PDF' }
   };
   $('[data-fill-example]').addEventListener('click', function(){
@@ -2866,12 +2890,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         floor:v.floor ? +v.floor : null, floors:v.floors ? +v.floors : null, view_type:v.view || null, use_type:v.use || null, handover:v.cond || null,
         price_usd:+v.price.replace(/[^0-9]/g, ''), discount_pct:+v.disc, ready:v.ready, cadastral:v.cad,
         info:v.info || null, plan_path:planPath, photos:photos,
-        bank_financed:v.fin === 'yes', bank:v.fin === 'yes' ? v.bank : null, subdivided:v.split === 'yes' };
+        bank_financed:v.fin === 'yes', bank:v.fin !== 'yes' ? null : v.bank === 'Other' ? v.bank_other : v.bank, subdivided:type === 'land' ? null : v.split === 'yes',
+        bedrooms:type === 'apartment' ? +v.beds : null, utilities:v.utils, road:v.road };
       return sb.from('platform_listings').insert(row).then(function(res){
-        if (!res.error || !/bank_financed|subdivided|'bank'/.test(res.error.message || '')) return res;
-        /* finance.sql not run yet: keep the answers in the notes so ARI still sees them */
-        var extra = 'Bank financing: ' + (row.bank_financed ? row.bank : 'no') + ' · Subdivision: ' + (row.subdivided ? 'yes' : 'no');
-        delete row.bank_financed; delete row.bank; delete row.subdivided;
+        if (!res.error || !/bank_financed|subdivided|'bank'|bedrooms|utilities|'road'/.test(res.error.message || '')) return res;
+        /* finance.sql or details.sql not run yet: keep the answers in the notes so ARI still sees them */
+        var extra = 'Bank financing: ' + (row.bank_financed ? row.bank : 'no') + (row.subdivided == null ? '' : ' · Subdivision: ' + (row.subdivided ? 'yes' : 'no'))
+          + (row.bedrooms == null ? '' : ' · Bedrooms: ' + row.bedrooms) + ' · Utilities: ' + (row.utilities.join(', ') || 'none') + ' · Access road: ' + row.road;
+        ['bank_financed', 'bank', 'subdivided', 'bedrooms', 'utilities', 'road'].forEach(function(k){ delete row[k]; });
         row.info = ((row.info ? row.info + '\n' : '') + extra).slice(0, 2000);
         return sb.from('platform_listings').insert(row);
       });
@@ -3031,13 +3057,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
      short-lived links); the sample cards carry their own example data. The interest goes to ARI
      only (platform_interests); the developer never sees it. */
   var DEMO_DETAIL = [
-    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', photos:['img/interior.jpg', 'img/room.jpg', 'img/home-inv.jpg'], sketch:'apartment',
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', beds:2, road:'asphalt', utils:['electricity', 'water', 'gas', 'sewage'], photos:['img/interior.jpg', 'img/room.jpg', 'img/home-inv.jpg'], sketch:'apartment',
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf' },
-    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
+    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', beds:2, road:'asphalt', utils:['electricity', 'water', 'gas', 'sewage'], photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
       info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan:'plan_vake_floor-5_unit-18.pdf' },
-    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', photos:['img/land.jpg'], sketch:'land', plan:'masterplan_tskneti_plots.pdf',
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', road:'gravel', utils:['electricity', 'water'], photos:['img/land.jpg'], sketch:'land', plan:'masterplan_tskneti_plots.pdf',
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
-    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', photos:['img/commercial.svg'], sketch:'commercial',
+    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', road:'asphalt', utils:['electricity', 'water', 'sewage'], photos:['img/commercial.svg'], sketch:'commercial',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf' }
   ];
   DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; c.dataset.district = DEMO_DETAIL[i].district; c.dataset.ready = DEMO_DETAIL[i].ready; });
@@ -3188,7 +3214,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (D.view) specs.push(['View', D.view]);
     if (D.use) specs.push(['Intended use', D.use]);
     if (D.cond) specs.push(['Handover condition', COND[D.cond]]);
+    if (D.beds != null) specs.splice(1, 0, ['Bedrooms', String(D.beds)]);
     specs.push(['Construction completion', D.ready]);
+    if (D.road) specs.push(['Access road', ROAD[D.road] || D.road]);
+    if (D.utils && D.utils.length) specs.push(['Utilities', D.utils.map(function(u){ return tr(UTIL[u] || u); }).join(', ')]);
     var dl = $('#dSpecs'); dl.innerHTML = '';
     specs.forEach(function(x){
       var d = document.createElement('div'); d.innerHTML = '<dt></dt><dd></dd>';
@@ -3238,7 +3267,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var r = PUB[card.dataset.id], ph = r.photos || [], paths = ph.concat(r.plan_path ? [r.plan_path] : []);
       dCur = { id:r.id };
       var D = { id:r.id, type:r.type, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type, cond:r.handover,
-        price:r.price_usd, disc:r.discount_pct, ready:r.ready, info:r.info };
+        price:r.price_usd, disc:r.discount_pct, ready:r.ready, info:r.info, beds:r.bedrooms, road:r.road, utils:r.utilities || [] };
       Promise.all([signUrls(paths), signUrls(paths, true)]).then(function(u){
         if (!dCur || dCur.id !== r.id) return;
         var view = u[0], save = u[1], plan = null;
@@ -3504,6 +3533,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'No preview for this file type. Download it to open.':'ამ ტიპის ფაილის გადახედვა აქ ვერ ხერხდება. ჩამოტვირთე და ისე გახსენი.',
     'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.':'სრულად გარემონტებული, ჩაშენებული სამზარეულოთი. ორი საძინებელი მშვიდ ეზოზე.',
     'No file chosen':'ფაილი არ არის არჩეული','PDF, DWG or JPG':'PDF, DWG ან JPG','Choose':'აირჩიე','Fill with example':'მაგალითით შევსება','Total floors':'სართულების რაოდენობა',
+    'Bedrooms':'საძინებლები','Access road':'მისასვლელი გზა','Asphalt':'ასფალტი','Gravel':'ხრეში','Concrete':'ბეტონი',
+    'Utilities':'კომუნიკაციები','Electricity':'დენი','Water':'წყალი','Gas':'გაზი','Sewage':'კანალიზაცია','Mark what is connected to the property':'მონიშნე, რაც ობიექტამდე მიყვანილია',
+    'Bank name':'ბანკის სახელი','Enter the bank name.':'ჩაწერე ბანკის სახელი.',
     'Financed by a bank':'ბანკის მიერ დაფინანსებულია','Which bank?':'რომელი ბანკი?','Choose the bank.':'აირჩიე ბანკი.',
     'Bank of Georgia':'საქართველოს ბანკი','TBC Bank':'თიბისი ბანკი','Basisbank':'ბაზისბანკი','Halyk Bank':'ხალიკ ბანკი',
     'Subdivision done':'განშლა გაკეთებულია','Registered as a separate unit in the public registry':'საჯარო რეესტრში ცალკე ერთეულად არის რეგისტრირებული',
