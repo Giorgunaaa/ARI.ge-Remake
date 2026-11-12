@@ -153,6 +153,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .note-txt span{font-size:13.5px;line-height:1.45;color:var(--on-navy-2)}
 .note-txt small{font-size:12.5px;color:var(--mint)}
 .note-txt time{font-size:12px;color:var(--on-navy-2);opacity:.75}
+.note-txt .note-body{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--on-navy)}
+.note-msg{cursor:default}
 .note.is-new b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:8px;border-radius:50%;background:#E3B860;vertical-align:middle}
 .inbox-empty{margin:0;padding:22px 16px;font-size:14px;color:var(--on-navy-2);text-align:center}
 .lang{display:flex;padding:3px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid var(--navy-line)}
@@ -727,7 +729,12 @@ html[lang="ka"] .d-specs dt{letter-spacing:.01em}
 .input.select.is-live.has-ico select{padding-left:37px}
 .input.select.is-live::after{position:absolute;right:15px;top:50%;margin:-6px 0 0;pointer-events:none}
 .input.area textarea{min-height:54px;resize:vertical;line-height:1.45}
-.field.is-bad .input,.field.is-bad .drop,.field.is-bad .cond-chips button{border-color:var(--bad)}
+.field.is-bad .input,.field.is-bad .drop,.field.is-bad .cond-chips button,.field.is-bad .yn button{border-color:var(--bad)}
+/* yes / no questions in the listing form; the bank list opens next to "Yes" */
+.yn-row{display:flex;gap:8px;align-items:center;min-width:0}
+.chips.yn{flex:none;flex-wrap:nowrap}
+.yn button{min-height:44px;min-width:58px}
+.yn-row .input{flex:1}
 .hint.err{color:var(--bad);font-weight:600}
 .legend-fill{margin-left:auto;border:0;background:none;padding:4px 0;font:inherit;font-weight:600;color:var(--accent-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .input .unit{margin-left:auto;color:var(--ink-3);font-size:13.5px}
@@ -892,6 +899,16 @@ div.view[data-view="saved"] .sec{padding-block:clamp(28px,4vw,48px)}
 .sort{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-3)}
 .sort span{color:var(--ink);font-weight:600}
 .results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+/* saved filters in the investor's My offers */
+.sub-h{font-family:var(--f-display);font-size:20px;font-weight:600;margin:0 0 14px}
+.ss-list{display:grid;gap:10px;margin-bottom:36px}
+.ss{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card)}
+.ss-tags{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.ss-tags span{padding:5px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:600}
+.ss-acts{display:flex;gap:8px;align-items:center;margin-left:auto}
+.ss-x{width:38px;height:38px;border-radius:10px;border:1px solid var(--line-2);background:none;color:var(--ink-2);font-size:20px;line-height:1;cursor:pointer}
+.ss-x:hover{border-color:var(--bad);color:var(--bad)}
+.results-bar .bar-end{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
 .empty{padding:28px;border:1.5px dashed var(--line-2);border-radius:var(--r-lg);text-align:center;color:var(--ink-2)}
 .fine{font-size:13.5px;color:var(--ink-3);margin-top:20px;max-width:70ch}
 @media (max-width:1060px){.filters{grid-template-columns:1fr}.filters-main{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -1217,6 +1234,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="68,250" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span id="fin-l-apartment">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-apartment"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
+            <div class="field"><div class="field-label"><span id="split-l-apartment">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-apartment"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.10.13.002.045" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Installment terms, parking, finishes…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
@@ -1252,6 +1271,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="45,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="30" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span id="fin-l-land">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-land"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
+            <div class="field"><div class="field-label"><span id="split-l-land">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-land"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.19.09.011.112" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Utilities, access road, building coefficient…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
@@ -1292,6 +1313,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
             <div class="field"><div class="field-label"><span>Price</span><span class="req">Required</span></div><div class="input"><span class="pre">$</span><input type="text" name="price" inputmode="numeric" autocomplete="off" placeholder="216,000" data-rule="money" aria-label="Price" data-req><span class="unit">USD</span></div></div>
             <div class="field"><div class="field-label"><span>Discount vs market price</span><span class="req">Required</span></div><div class="input"><input type="text" name="disc" inputmode="numeric" autocomplete="off" placeholder="20" data-rule="pct" aria-label="Discount vs market price" data-req><span class="unit">%</span></div><span class="hint hint-accent">Shown to investors as a badge</span></div>
             <div class="field"><div class="field-label"><span>Construction completion</span><span class="req">Required</span></div><div class="input select is-live"><select class="is-empty" name="ready" aria-label="Construction completion" data-req><option value="">Choose</option></select></div></div>
+            <div class="field"><div class="field-label"><span id="fin-l-commercial">Financed by a bank</span><span class="req">Required</span></div><div class="yn-row"><div class="chips yn" data-yn="fin" role="group" aria-labelledby="fin-l-commercial"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><div class="input select is-live" hidden><select class="is-empty" name="bank" aria-label="Which bank?"><option value="">Which bank?</option><option value="Bank of Georgia">Bank of Georgia</option><option value="TBC Bank">TBC Bank</option><option value="Basisbank">Basisbank</option><option value="Halyk Bank">Halyk Bank</option><option value="Other">Other</option></select></div></div></div>
+            <div class="field"><div class="field-label"><span id="split-l-commercial">Subdivision done</span><span class="req">Required</span></div><div class="chips yn" data-yn="split" role="group" aria-labelledby="split-l-commercial"><button type="button" data-v="yes" aria-pressed="false">Yes</button><button type="button" data-v="no" aria-pressed="false">No</button></div><span class="hint">Registered as a separate unit in the public registry</span></div>
             <div class="field"><div class="field-label"><span>Cadastral code</span><span class="req">Required</span></div><div class="input"><input type="text" name="cad" maxlength="23" inputmode="decimal" autocomplete="off" placeholder="01.14.05.008.021" data-rule="cad" aria-label="Cadastral code" data-req class="mono"></div><span class="hint">Checked against the public registry</span></div>
             <div class="field full"><div class="field-label"><span>Additional information</span><span class="opt">Optional</span></div><div class="input area"><textarea name="info" rows="3" placeholder="Entrance, shopfront, power supply…" aria-label="Additional information"></textarea></div></div>
             <div class="field full">
@@ -1493,7 +1516,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
       <div class="results-bar">
         <p id="summary"><b>4 example listings</b></p>
-        <span class="sort">Sorted by <span>Biggest discount</span></span>
+        <div class="bar-end"><span class="sort">Sorted by <span>Biggest discount</span></span><button class="btn btn-outline btn-sm" type="button" id="saveSearch"><svg aria-hidden="true"><use href="#i-filter"/></svg>Save this filter</button></div>
       </div>
       <div class="results" id="results">
         <article class="listing" data-type="apartment" data-price="68250" data-size="65" data-discount="20">
@@ -1655,13 +1678,18 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <div class="dash-main">
         <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>My offers</span></nav>
         <h1 id="saved-h">My offers</h1>
-        <p>Listings you saved with the heart. Open one to see the details or send a request.</p>
+        <p>Listings you saved with the heart and filters you saved from the search.</p>
         <a class="btn btn-primary" href="#investors">Browse listings<svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>
   <section class="sec" aria-label="Saved listings">
     <div class="wrap">
+      <div id="ssBox" hidden>
+        <h2 class="sub-h">Saved filters</h2>
+        <div class="ss-list" id="ssList"></div>
+        <h2 class="sub-h">Saved listings</h2>
+      </div>
       <div class="results" id="savedGrid"></div>
       <p class="empty" id="savedEmpty" hidden>Nothing saved yet. Tap the heart on a listing and it will appear here.</p>
     </div>
@@ -2151,8 +2179,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
      Messages are worked out from what the account already has, so nothing extra is stored:
      a developer gets one per listing from its review status (received / approved / not approved, with ARI's note);
      an investor gets one per request from its status (received / accepted / closed), with the property it is about.
-     Which ones were already seen is remembered on this device. Demo sign-in shows example messages. */
-  var INBOX = [], INTS = [], TYPE_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' };
+     Which ones were already seen is remembered on this device. Demo sign-in shows example messages.
+     Texts ARI writes in the admin panel (to one person, or to all developers / investors) are the one stored kind:
+     they come from platform_messages; in the demo, from what the admin demo sent in this browser. */
+  var INBOX = [], INTS = [], MSGS = [], TYPE_NAME = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' };
   var DEMO_L = [
     { type:'apartment', district:'Saburtalo, Tbilisi', size:65, price:68250, disc:20 },
     { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30 }
@@ -2168,8 +2198,19 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'dev-no':['Your listing was not approved', 'Open it, correct the details and send it again.'],
     'inv-wait':['Request received', 'ARI got your request and will call you about this property.'],
     'inv-ok':['Your request was accepted', 'ARI confirmed your interest and will arrange the viewing and next steps with you.'],
-    'inv-closed':['Request closed', 'This request is finished. You can send a new one from any listing.']
+    'inv-closed':['Request closed', 'This request is finished. You can send a new one from any listing.'],
+    'msg':['Message from ARI', '']
   };
+  function demoMsgs(role){ try { return JSON.parse(localStorage.getItem('ari-demo-msgs') || '[]').filter(function(m){ return m.to === role; }); } catch(e){ return []; } }
+  function loadMsgs(){   /* fails quietly until messages.sql has been run */
+    var uid = user && user.id; if (!uid){ if (state.role) buildInbox(); return; }
+    sb.from('platform_messages').select('id,body,created_at').order('created_at', { ascending:false }).limit(50).then(function(res){
+      if (!user || user.id !== uid || res.error) return;
+      MSGS = res.data || []; buildInbox();
+    }, function(){});
+  }
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && state.role) loadMsgs(); });
+  window.addEventListener('storage', function(e){ if (e.key === 'ari-demo-msgs' && !user && state.role) buildInbox(); });
   function seenKey(){ return 'ari-inbox-seen-' + (user ? user.id : 'demo-' + state.role); }
   function getSeen(){ try { return JSON.parse(localStorage.getItem(seenKey()) || '[]'); } catch(e){ return []; } }
   function buildInbox(){
@@ -2183,11 +2224,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     } else if (user && state.role === 'investor'){
       INTS.forEach(function(x){
         var r = PUB[x.listing_id], w = x.status === 'contacted' ? 'inv-ok' : x.status === 'closed' ? 'inv-closed' : 'inv-wait';
-        list.push({ key:x.id + ':' + x.status, kind:w === 'inv-wait' ? 'wait' : 'ok', what:w, at:x.created_at, id:x.listing_id, raw:x.listing_summary,
+        list.push({ key:x.id + ':' + x.status, kind:w === 'inv-wait' ? 'wait' : 'ok', what:w, at:x.created_at, id:x.listing_id, raw:(x.listing_summary || '').replace(/ · [\d.]{16,}$/, ''),
           L:r ? { type:r.type, district:r.district, size:+r.size_m2, price:r.price_usd, disc:r.discount_pct } : null });
       });
-    } else if (!user && state.role) list = DEMO_NOTES[state.role].slice();
-    list.sort(function(a, b){ return (b.at || '') < (a.at || '') ? -1 : (b.at || '') > (a.at || '') ? 1 : 0; });
+    } else if (!user && state.role) list = demoMsgs(state.role).reverse().map(function(m){ return { key:'m:' + m.id, kind:'msg', what:'msg', text:m.body, at:m.at }; }).concat(DEMO_NOTES[state.role]);
+    if (user) MSGS.forEach(function(m){ list.push({ key:'m:' + m.id, kind:'msg', what:'msg', text:m.body, at:m.created_at }); });
+    if (user) list.sort(function(a, b){ return (b.at || '') < (a.at || '') ? -1 : (b.at || '') > (a.at || '') ? 1 : 0; });
     INBOX = list; renderInbox();
   }
   function renderInbox(){
@@ -2197,11 +2239,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var isNew = seen.indexOf(n.key) < 0, li = document.createElement('li'), T = NOTE_TEXT[n.what];
       if (isNew) fresh++;
       li.innerHTML = '<button type="button" class="note note-' + n.kind + (isNew ? ' is-new' : '') + '" data-note="' + i + '"><span class="note-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        + (n.kind === 'ok' ? '<path d="M3 8.500l3.200 3.200L13 4.800"/>' : n.kind === 'no' ? '<path d="M4 4l8 8M12 4l-8 8"/>' : '<circle cx="8" cy="8" r="5.500"/><path d="M8 5v3.200l2 1.300"/>')
+        + (n.kind === 'ok' ? '<path d="M3 8.500l3.200 3.200L13 4.800"/>' : n.kind === 'msg' ? '<rect x="2" y="3.500" width="12" height="9" rx="1.500"/><path d="M2.500 4.500L8 9l5.500-4.500"/>' : n.kind === 'no' ? '<path d="M4 4l8 8M12 4l-8 8"/>' : '<circle cx="8" cy="8" r="5.500"/><path d="M8 5v3.200l2 1.300"/>')
         + '</svg></span><span class="note-txt"><b></b><span></span><small></small><time></time></span></button>';
       var t = li.querySelector('.note-txt');
       t.children[0].textContent = T[0];
       if (n.note){ t.children[1].innerHTML = '<span>ARI’s note:</span> <span></span>'; t.children[1].lastChild.textContent = n.note; }
+      else if (n.text){ t.children[1].className = 'note-body'; t.children[1].textContent = n.text; }
       else t.children[1].textContent = T[1];
       if (n.L){
         t.children[2].innerHTML = '<span></span> · <span></span> · ' + n.L.size.toLocaleString('en-US') + ' m² · ' + money(n.L.price) + ' (−' + n.L.disc + '%)';
@@ -2228,7 +2271,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   });
   $('#inboxList').addEventListener('click', function(e){
     var b = e.target.closest('[data-note]'); if (!b) return;
-    var n = INBOX[+b.dataset.note]; closeInbox(); renderInbox();
+    var n = INBOX[+b.dataset.note]; if (n.kind === 'msg') return;   /* a text from ARI is read in place: nothing to open */
+    closeInbox(); renderInbox();
     if (state.role === 'developer'){
       if (location.hash !== '#offers') location.hash = '#offers';
       setTimeout(function(){
@@ -2373,7 +2417,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* leaving an account, real or demo: back to guest and to the sample data */
   function leave(){
-    user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; DEMO_NOTES = demoNotes(); daySig = null; pg.seq++; noFeat = false; state.role = null; saveRole(); setTab(null);
+    user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; MSGS = []; DEMO_NOTES = demoNotes(); daySig = null; pg.seq++; noFeat = false; state.role = null; saveRole(); setTab(null);
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
     if (location.hash === '#offers') location.hash = '#developers';
@@ -2395,6 +2439,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       setDemoOnly(false); applyAuth(); update();
       if (!modal.hidden) closeModal();
       if (role === 'developer') loadMine(); else loadPublished();
+      loadMsgs();
       if (announce){
         toast(role === 'developer' ? 'Signed in as a developer.' : 'Signed in as an investor. Listings are unlocked.');
         if (role === 'investor') goTo('#investors', '#invSearch'); else goTo('#developers', '#devWorkspace');
@@ -2429,6 +2474,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var v = {};
     ctrls(p).forEach(function(el){ v[el.name] = el.value.trim(); });
     var c = p.querySelector('.cond-chips [aria-pressed="true"]'); if (c) v.cond = c.dataset.cond;
+    v.fin = ynVal(p, 'fin'); v.split = ynVal(p, 'split');
     return v;
   }
   function setVals(p, v){
@@ -2437,6 +2483,21 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       if (el.tagName === 'SELECT') el.classList.toggle('is-empty', !el.value);
     });
     $$('.cond-chips [data-cond]', p).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.cond === v.cond)); });
+    $$('.yn', p).forEach(function(g){ $$('[data-v]', g).forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v[g.dataset.yn])); }); });
+    syncYN(p);
+  }
+  /* yes / no questions. "Financed by a bank: yes" opens the bank list. "Subdivision done" decides which
+     cadastral code is asked for: the unit's own code when it is done, the land's code when it is not. */
+  var CAD_OWN = { apartment:'Apartment cadastral code', commercial:'Space cadastral code', land:'Plot cadastral code' };
+  function ynVal(p, k){ var b = p.querySelector('[data-yn="' + k + '"] [aria-pressed="true"]'); return b ? b.dataset.v : ''; }
+  function syncYN(p){
+    var fin = ynVal(p, 'fin'), split = ynVal(p, 'split'), t = p.dataset.panel, bank = p.querySelector('[name="bank"]'), cad = p.querySelector('[name="cad"]');
+    bank.closest('.input').hidden = fin !== 'yes';
+    if (fin !== 'yes'){ bank.value = ''; bank.classList.add('is-empty'); }
+    var name = split === 'yes' ? CAD_OWN[t] : split === 'no' ? 'Land cadastral code' : 'Cadastral code', lab = cad.closest('.field').querySelector('.field-label span');
+    if (!cad.dataset.ph) cad.dataset.ph = cad.getAttribute('placeholder');
+    if (lab.dataset.name !== name){ lab.dataset.name = name; lab.textContent = name; cad.setAttribute('aria-label', name); }
+    cad.setAttribute('placeholder', cad.dataset.ph + (split === 'yes' && t !== 'land' ? '.01.012' : ''));
   }
 
   /* floor plan box: empty, a chosen file, or the example sketch */
@@ -2479,6 +2540,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (plan) return plan.dataset.has && (!user || plan._file) ? '' : (plan.dataset.need || 'Upload a floor plan.');   /* a real account needs a real file */
     var chips = f.querySelector('.cond-chips');
     if (chips) return chips.querySelector('[aria-pressed="true"]') ? '' : 'Choose one.';
+    var yn = f.querySelector('.yn');
+    if (yn){
+      var on = yn.querySelector('[aria-pressed="true"]'), bank = f.querySelector('[name="bank"]');
+      return !on ? 'Choose one.' : bank && on.dataset.v === 'yes' && !bank.value ? 'Choose the bank.' : '';
+    }
     var els = ctrls(f), msg = '';
     els.forEach(function(el){
       if (msg) return;
@@ -2543,6 +2609,15 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     mark(g.closest('.field'), '');
   }); });
 
+  $$('[data-panel] .yn').forEach(function(g){ g.addEventListener('click', function(e){
+    var b = e.target.closest('[data-v]'); if (!b) return;
+    $$('[data-v]', g).forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    var f = g.closest('.field'), p = g.closest('[data-panel]');
+    syncYN(p);
+    mark(f, f.classList.contains('is-bad') && g.dataset.yn === 'fin' && b.dataset.v === 'yes' ? fieldMsg(f) : '');
+    if (g.dataset.yn === 'split'){ var cf = p.querySelector('[name="cad"]').closest('.field'); if (cf.classList.contains('is-bad')) mark(cf, fieldMsg(cf)); }
+  }); });
+
   /* nothing is picked at first: the form opens under the chooser once a type is chosen */
   function setTab(t){
     var opening = !curTab && t;
@@ -2563,11 +2638,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* example values, so the form can be tried without typing everything */
   var EXAMPLE = {
-    apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', cad:'01.10.13.002.045',
+    apartment:{ size:'65', floor:'8', floors:'14', district:'Saburtalo, Tbilisi', view:'City view', cond:'black', price:'68,250', disc:'20', fin:'yes', bank:'TBC Bank', split:'yes', cad:'01.10.13.002.045.01.012',
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf', planInfo:'1.2 MB · PDF' },
-    land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', cad:'01.19.09.011.112',
+    land:{ size:'500', district:'Tskneti, Tbilisi', price:'45,000', disc:'30', fin:'no', split:'yes', cad:'01.19.09.011.112',
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.', plan:'masterplan_tskneti_plots.pdf', planInfo:'2.1 MB · PDF' },
-    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', cad:'01.14.05.008.021',
+    commercial:{ size:'120', floor:'1', floors:'14', district:'Vake, Tbilisi', use:'Retail / showroom', cond:'white', price:'216,000', disc:'20', fin:'yes', bank:'Bank of Georgia', split:'no', cad:'01.14.05.008.021',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf', planInfo:'1.4 MB · PDF' }
   };
   $('[data-fill-example]').addEventListener('click', function(){
@@ -2753,10 +2828,19 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     Promise.all(ups).then(function(rs){
       var bad = rs.filter(function(r){ return r.error; })[0];
       if (bad) throw bad.error;
-      return sb.from('platform_listings').insert({ id:id, type:type, district:v.district, size_m2:parseFloat(v.size),
+      var row = { id:id, type:type, district:v.district, size_m2:parseFloat(v.size),
         floor:v.floor ? +v.floor : null, floors:v.floors ? +v.floors : null, view_type:v.view || null, use_type:v.use || null, handover:v.cond || null,
         price_usd:+v.price.replace(/[^0-9]/g, ''), discount_pct:+v.disc, ready:v.ready, cadastral:v.cad,
-        info:v.info || null, plan_path:planPath, photos:photos });
+        info:v.info || null, plan_path:planPath, photos:photos,
+        bank_financed:v.fin === 'yes', bank:v.fin === 'yes' ? v.bank : null, subdivided:v.split === 'yes' };
+      return sb.from('platform_listings').insert(row).then(function(res){
+        if (!res.error || !/bank_financed|subdivided|'bank'/.test(res.error.message || '')) return res;
+        /* finance.sql not run yet: keep the answers in the notes so ARI still sees them */
+        var extra = 'Bank financing: ' + (row.bank_financed ? row.bank : 'no') + ' · Subdivision: ' + (row.subdivided ? 'yes' : 'no');
+        delete row.bank_financed; delete row.bank; delete row.subdivided;
+        row.info = ((row.info ? row.info + '\n' : '') + extra).slice(0, 2000);
+        return sb.from('platform_listings').insert(row);
+      });
     }).then(function(res){
       if (res.error) throw res.error;
       done();
@@ -2913,13 +2997,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
      short-lived links); the sample cards carry their own example data. The interest goes to ARI
      only (platform_interests); the developer never sees it. */
   var DEMO_DETAIL = [
-    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', cad:'01.10.13.002.045', photos:['img/interior.jpg', 'img/room.jpg', 'img/home-inv.jpg'], sketch:'apartment',
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', photos:['img/interior.jpg', 'img/room.jpg', 'img/home-inv.jpg'], sketch:'apartment',
       info:'Developer installment plan available up to 24 months. Underground parking on request.', plan:'plan_block-B_floor-8_unit-12.pdf' },
-    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', cad:'01.14.05.011.027', photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
+    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', photos:['img/room.jpg', 'img/interior.jpg'], sketch:'apartment',
       info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan:'plan_vake_floor-5_unit-18.pdf' },
-    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', photos:['img/land.jpg'], sketch:'land', plan:'masterplan_tskneti_plots.pdf',
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', photos:['img/land.jpg'], sketch:'land', plan:'masterplan_tskneti_plots.pdf',
       info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
-    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', cad:'01.14.05.008.021', photos:['img/commercial.svg'], sketch:'commercial',
+    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', photos:['img/commercial.svg'], sketch:'commercial',
       info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.', plan:'plan_block-A_ground_unit-C2.pdf' }
   ];
   DEMO_RES.forEach(function(c, i){ c.dataset.demo = i; c.dataset.district = DEMO_DETAIL[i].district; c.dataset.ready = DEMO_DETAIL[i].ready; });
@@ -2944,8 +3028,61 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'Remove from saved' : 'Save listing');
     });
   }
+  /* ---------- Saved filters ----------
+     "Save this filter" keeps the current search in My offers (on this device, per account, like the hearts);
+     "Show listings" there puts it back into the search. */
+  var TYPE_NAME = { apartment:'Apartment', land:'Land', commercial:'Commercial' };
+  function searchKey(){ return 'ari-searches-' + (user ? user.id : 'demo'); }
+  function getSearches(){ try { return JSON.parse(localStorage.getItem(searchKey()) || '[]'); } catch(e){ return []; } }
+  function putSearches(a){ try { localStorage.setItem(searchKey(), JSON.stringify(a)); return true; } catch(e){ return false; } }
+  function curSearch(){   /* a slider at its end means "no limit" and is stored as null */
+    var s = ranges.size, p = ranges.price, f = { type:state.type, district:state.district, disc:state.disc, cond:state.cond.slice().sort(), ready:state.ready };
+    if (s.lo > 0 || s.hi < s.max) f.size = [s.lo, s.hi < s.max ? s.hi : null];
+    if (p.lo > 0 || p.hi < p.max) f.price = [p.lo, p.hi < p.max ? p.hi : null];
+    return f;
+  }
+  function span(f, unit, pre){
+    var a = pre + num(f[0]), b = f[1] == null ? null : pre + num(f[1]);
+    return (b == null ? a + '+' : a + ' – ' + b) + unit;
+  }
+  function searchTags(f){
+    var tags = [];
+    if (f.type && f.type !== 'all') tags.push(TYPE_NAME[f.type]);
+    if (f.district) tags.push(f.district);
+    if (f.disc) tags.push(f.disc[0] + '%+');
+    if (f.size) tags.push(span(f.size, ' m²', ''));
+    if (f.price) tags.push(span(f.price, '', '$'));
+    if (f.ready) tags.push('By end of ' + f.ready);
+    (f.cond || []).forEach(function(c){ tags.push(COND[c]); });
+    return tags;
+  }
+  function applySearch(f){
+    state.type = f.type || 'all'; state.district = f.district || ''; state.disc = f.disc || null; state.cond = (f.cond || []).slice(); state.ready = f.ready || '';
+    $$('[data-ptype]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.ptype === state.type)); });
+    $$('[data-disc]').forEach(function(b){ b.setAttribute('aria-pressed', String(!!state.disc && b.dataset.disc === state.disc.join('-'))); });
+    $$('#condFilter [data-cond]').forEach(function(b){ b.setAttribute('aria-pressed', String(state.cond.indexOf(b.dataset.cond) > -1)); });
+    $('#fDistrict').value = state.district; $('#fReady').value = state.ready;
+    ranges.size.max = sizeMax();
+    ['size', 'price'].forEach(function(k){
+      var r = ranges[k], v = f[k];
+      r.lo = v ? Math.min(v[0], r.max) : 0; r.hi = v && v[1] != null ? Math.min(v[1], r.max) : r.max;
+      paintDual(k);
+    });
+    update(true);
+  }
+  function renderSearches(){
+    var list = getSearches(), box = $('#ssList');
+    box.innerHTML = ''; $('#ssBox').hidden = !list.length;
+    list.forEach(function(f, i){
+      var row = document.createElement('div'); row.className = 'ss';
+      row.innerHTML = '<div class="ss-tags"></div><div class="ss-acts"><button class="btn btn-primary btn-sm" type="button" data-ss-open="' + i + '">Show listings</button><button class="ss-x" type="button" data-ss-del="' + i + '" aria-label="Delete saved filter">×</button></div>';
+      searchTags(f).forEach(function(t){ var s = document.createElement('span'); s.textContent = t; row.firstChild.appendChild(s); });
+      box.appendChild(row);
+    });
+  }
   function renderSaved(){
     var saved = getSaved(), grid = $('#savedGrid'), n = 0;
+    renderSearches();
     grid.innerHTML = '';
     if (user){   /* real account: saved listings may not be on the loaded pages, so ask for them by id */
       var uid = user.id, ids = saved.filter(function(k){ return k.indexOf('demo-') !== 0; });
@@ -3018,7 +3155,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (D.use) specs.push(['Intended use', D.use]);
     if (D.cond) specs.push(['Handover condition', COND[D.cond]]);
     specs.push(['Construction completion', D.ready]);
-    specs.push(['Cadastral code', D.cad]);
     var dl = $('#dSpecs'); dl.innerHTML = '';
     specs.forEach(function(x){
       var d = document.createElement('div'); d.innerHTML = '<dt></dt><dd></dd>';
@@ -3068,7 +3204,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var r = PUB[card.dataset.id], ph = r.photos || [], paths = ph.concat(r.plan_path ? [r.plan_path] : []);
       dCur = { id:r.id };
       var D = { id:r.id, type:r.type, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type, cond:r.handover,
-        price:r.price_usd, disc:r.discount_pct, ready:r.ready, cad:r.cadastral, info:r.info };
+        price:r.price_usd, disc:r.discount_pct, ready:r.ready, info:r.info };
       Promise.all([signUrls(paths), signUrls(paths, true)]).then(function(u){
         if (!dCur || dCur.id !== r.id) return;
         var view = u[0], save = u[1], plan = null;
@@ -3185,6 +3321,24 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     $('#empty').hidden = shown > 0;
   }
   $('#moreBtn').addEventListener('click', function(){ fetchPage(false); });
+  $('#saveSearch').addEventListener('click', function(){
+    var f = curSearch(), list = getSearches(), sig = JSON.stringify(f);
+    if (!searchTags(f).length){ toast('Choose at least one filter first.'); return; }
+    if (list.some(function(x){ return JSON.stringify(x) === sig; })){ toast('This filter is already in My offers.'); return; }
+    list.unshift(f);
+    toast(putSearches(list.slice(0, 12)) ? 'Filter saved to My offers.' : 'Couldn’t save the filter in this browser.');
+  });
+  document.addEventListener('click', function(e){
+    var open = e.target.closest('[data-ss-open]'), del = e.target.closest('[data-ss-del]'), list;
+    if (open){
+      var f = getSearches()[+open.dataset.ssOpen]; if (!f) return;
+      applySearch(f); location.hash = '#investors';
+      setTimeout(function(){ $('.filters').scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+    } else if (del){
+      list = getSearches(); list.splice(+del.dataset.ssDel, 1); putSearches(list); renderSearches();
+      toast('Saved filter deleted.');
+    }
+  });
   $('#fDistrict').addEventListener('change', function(){ state.district = this.value; update(true); });
   $('#fReady').addEventListener('change', function(){ state.ready = this.value; update(true); });
   function group(sel, key, parse){
@@ -3315,6 +3469,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'No preview for this file type. Download it to open.':'ამ ტიპის ფაილის გადახედვა აქ ვერ ხერხდება. ჩამოტვირთე და ისე გახსენი.',
     'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.':'სრულად გარემონტებული, ჩაშენებული სამზარეულოთი. ორი საძინებელი მშვიდ ეზოზე.',
     'No file chosen':'ფაილი არ არის არჩეული','PDF, DWG or JPG':'PDF, DWG ან JPG','Choose':'აირჩიე','Fill with example':'მაგალითით შევსება','Total floors':'სართულების რაოდენობა',
+    'Financed by a bank':'ბანკის მიერ დაფინანსებულია','Which bank?':'რომელი ბანკი?','Choose the bank.':'აირჩიე ბანკი.',
+    'Bank of Georgia':'საქართველოს ბანკი','TBC Bank':'თიბისი ბანკი','Basisbank':'ბაზისბანკი','Halyk Bank':'ხალიკ ბანკი',
+    'Subdivision done':'განშლა გაკეთებულია','Registered as a separate unit in the public registry':'საჯარო რეესტრში ცალკე ერთეულად არის რეგისტრირებული',
+    'Apartment cadastral code':'ბინის საკადასტრო კოდი','Space cadastral code':'ფართის საკადასტრო კოდი','Plot cadastral code':'ნაკვეთის საკადასტრო კოდი','Land cadastral code':'მიწის საკადასტრო კოდი',
+    'Save this filter':'ფილტრის შენახვა','Saved filters':'შენახული ფილტრები','Saved listings':'შენახული განცხადებები','Show listings':'განცხადებების ნახვა','Delete saved filter':'შენახული ფილტრის წაშლა',
+    'Choose at least one filter first.':'ჯერ აირჩიე ერთი ფილტრი მაინც.','This filter is already in My offers.':'ეს ფილტრი უკვე არის „ჩემს შეთავაზებებში“.','Filter saved to My offers.':'ფილტრი შეინახა „ჩემს შეთავაზებებში“.',
+    'Couldn’t save the filter in this browser.':'ამ ბრაუზერში ფილტრი ვერ შეინახა.','Saved filter deleted.':'შენახული ფილტრი წაიშალა.',
+    'Listings you saved with the heart and filters you saved from the search.':'გულით შენახული განცხადებები და ძიებიდან შენახული ფილტრები.',
     'Fill in this field.':'შეავსე ეს ველი.','Choose one.':'აირჩიე ერთ-ერთი.','Enter a number above 0.':'შეიყვანე 0-ზე მეტი რიცხვი.',
     'Discount must be between 1% and 60%.':'ფასდაკლება უნდა იყოს 1%-დან 60%-მდე.','Floor can’t be higher than the total.':'სართული სართულების რაოდენობას ვერ გადააჭარბებს.',
     'Use the format 01.10.13.002.045.':'გამოიყენე ფორმატი 01.10.13.002.045.','Upload a floor plan.':'ატვირთე გეგმა.','Check the highlighted fields.':'შეამოწმე მონიშნული ველები.',
@@ -3479,7 +3641,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Browse listings':'განცხადებების ნახვა','Nothing saved yet. Tap the heart on a listing and it will appear here.':'ჯერ არაფერი შეგინახავს. დააჭირე გულს განცხადებაზე და ის აქ გამოჩნდება.',
     'Saved to My offers.':'შეინახა „ჩემს შეთავაზებებში“.','Removed from My offers.':'წაიშალა „ჩემი შეთავაზებებიდან“.',
     'Show more':'მეტის ჩვენება',
-    'Inbox':'შეტყობინებები','No messages yet.':'შეტყობინებები ჯერ არ არის.','ARI’s note:':'ARI-ის შენიშვნა:','This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
+    'Inbox':'შეტყობინებები','Message from ARI':'შეტყობინება ARI-სგან','No messages yet.':'შეტყობინებები ჯერ არ არის.','ARI’s note:':'ARI-ის შენიშვნა:','This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
     'Listing received for review':'განცხადება მიღებულია განსახილველად','ARI is checking the details. You’ll get a message here when it’s decided.':'ARI ამოწმებს მონაცემებს. გადაწყვეტილებას აქვე შეიტყობ.',
     'Your listing was approved':'შენი განცხადება დამტკიცდა','ARI checked it and published it. Investors can see it now.':'ARI-მ შეამოწმა და გამოაქვეყნა. ინვესტორები მას უკვე ხედავენ.',
     'Your listing was not approved':'შენი განცხადება არ დამტკიცდა','Open it, correct the details and send it again.':'გახსენი, შეასწორე მონაცემები და გაგზავნე თავიდან.',

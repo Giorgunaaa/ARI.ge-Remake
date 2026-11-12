@@ -1,0 +1,1234 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ARI Investor</title>
+<meta name="description" content="ARI app for investors: verified apartments, land plots and commercial spaces below market price.">
+<meta name="theme-color" content="#1A3732">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ARI">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* ARI investor app. Phone-first: four tabs (listings, saved, messages, profile), a full-screen listing page
+   and bottom sheets. Same accounts, listings and rules as the website; there is no developer side here. */
+@font-face{font-family:"KA Sans";font-style:normal;font-weight:400 700;font-display:swap;size-adjust:88%;src:url(https://fonts.gstatic.com/s/notosansgeorgian/v49/PlIVFke5O6RzLfvNNVSitxkr76PRHBC4Ytyq-Gof7PUs4S7zcGyUkdjo.woff2) format("woff2");unicode-range:U+0589,U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+205A,U+2D00-2D2F,U+2E31}
+:root{
+  --bg:#F7F4EC; --card:#FFFFFF; --field:#FAF8F3;
+  --line:#E7E1D3; --line-2:#D6CDB9;
+  --ink:#16231F; --ink-2:#47554F; --ink-3:#717B76;
+  --navy:#1A3732; --navy-2:#24463F; --on-navy:#FFF8E8; --on-navy-2:#CFC8B4;
+  --accent:#1A3732; --on-accent:#F1E2BF; --accent-ink:#2B5A4F; --accent-soft:#F3ECDA;
+  --champ:#F1E2BF; --on-champ:#1A3732;
+  --gold:#8A6D2F; --gold-soft:#F6EEDB; --gold-line:#E4D2A8;
+  --bad:#B4462F; --ok:#2B6B55; --heart:#C4513A;
+  --shadow:0 1px 2px rgba(22,35,31,.05), 0 10px 28px -14px rgba(22,35,31,.22);
+  --f-display:"Bricolage Grotesque","KA Sans","Segoe UI",system-ui,sans-serif;
+  --f-body:"Hanken Grotesk","KA Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --g:16px; --tab-h:58px; --w:520px;
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0E1916; --card:#162A26; --field:#11201D;
+    --line:#22382F; --line-2:#2F4A42;
+    --ink:#F1EDE2; --ink-2:#C9C3B2; --ink-3:#9D988B;
+    --navy:#0E201C; --navy-2:#163029;
+    --accent:#E9D6A6; --on-accent:#1A3732; --accent-ink:#E9D6A6; --accent-soft:rgba(233,214,166,.14);
+    --gold:#E3C27A; --gold-soft:rgba(227,194,122,.13); --gold-line:rgba(227,194,122,.35);
+    --bad:#F0907A; --ok:#8FC1B2; --heart:#F0907A;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--f-body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+body.lock{overflow:hidden}
+h1,h2,h3,p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+svg{width:20px;height:20px;flex:none}
+img{display:block;max-width:100%}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.col{max-width:var(--w);margin-inline:auto}
+
+/* ---------- buttons, fields ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 20px;border-radius:var(--r-md);font-weight:600;font-size:15.5px;text-decoration:none;transition:transform .08s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.55}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-champ{background:var(--champ);color:var(--on-champ)}
+.btn-line{border:1px solid var(--line-2);background:var(--card);color:var(--ink)}
+.btn-ghost{color:var(--accent-ink);min-height:44px}
+.btn-block{display:flex;width:100%}
+.field{display:grid;gap:6px}
+.field>span{font-size:13px;font-weight:600;color:var(--ink-2)}
+.input{width:100%;min-height:50px;padding:0 14px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--field);font-size:16px;appearance:none;-webkit-appearance:none}
+textarea.input{padding:12px 14px;min-height:104px;resize:none;line-height:1.4}
+select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23717B76' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:38px}
+.input:focus{outline:none;border-color:var(--accent-ink);box-shadow:0 0 0 3px var(--accent-soft)}
+.phone{display:flex;align-items:center;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--field)}
+.phone b{padding:0 4px 0 14px;font-weight:600;color:var(--ink-2);font-size:16px}
+.phone .input{border:0;background:none;box-shadow:none;padding-left:6px}
+.err{color:var(--bad);font-size:13.5px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:0 15px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);font-weight:600;font-size:14px;color:var(--ink-2);white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+/* ---------- boot / sign in ---------- */
+#boot{position:fixed;inset:0;display:grid;place-items:center;background:var(--navy);z-index:90}
+.mark{width:72px;height:72px;border-radius:20px;background:var(--champ);display:grid;place-items:center;color:#1A3732}
+.mark svg{width:46px;height:46px}
+#boot .mark{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+#auth{min-height:100dvh;background:var(--navy);color:var(--on-navy);display:flex;flex-direction:column}
+.auth-top{padding:calc(var(--sat) + 14px) var(--g) 26px;display:grid;gap:14px}
+.auth-bar{display:flex;justify-content:flex-end}
+.lang{display:inline-flex;border:1px solid rgba(241,226,191,.25);border-radius:999px;padding:3px}
+.lang button{min-width:42px;min-height:32px;border-radius:999px;font-size:13px;font-weight:700;color:var(--on-navy-2)}
+.lang button[aria-pressed="true"]{background:var(--champ);color:#1A3732}
+.auth-top .mark{width:56px;height:56px;border-radius:16px}
+.auth-top .mark svg{width:36px;height:36px}
+.auth-top h1{font:700 30px/1.1 var(--f-display);letter-spacing:-.01em}
+.auth-top p{color:var(--on-navy-2);font-size:15.5px;max-width:34ch}
+.auth-card{flex:1;background:var(--bg);color:var(--ink);border-radius:26px 26px 0 0;padding:20px var(--g) calc(var(--sab) + 24px)}
+.auth-card form{display:grid;gap:14px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--accent-soft);border-radius:var(--r-md);padding:4px;margin-bottom:18px}
+.seg button{min-height:42px;border-radius:11px;font-weight:600;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.auth-alt{margin-top:16px;display:grid;gap:6px;justify-items:center;text-align:center;color:var(--ink-3);font-size:13.5px}
+.done-box{display:grid;gap:10px;justify-items:center;text-align:center;padding:26px 8px}
+.done-box .ok-ico{width:56px;height:56px;border-radius:50%;background:var(--accent-soft);color:var(--ok);display:grid;place-items:center}
+.done-box h2{font:700 21px/1.2 var(--f-display)}
+.done-box p{color:var(--ink-2)}
+
+/* a signed-in account this app is not for (developer), or the first load failed */
+#blocked{min-height:100dvh;display:grid;place-content:center;gap:14px;padding:32px var(--g);text-align:center;justify-items:center}
+#blocked h1{font:700 23px/1.2 var(--f-display)}
+#blocked p{color:var(--ink-2);max-width:32ch}
+#blocked .mark{background:var(--navy);color:var(--champ)}
+
+/* ---------- shell ---------- */
+#shell{min-height:100dvh;padding-bottom:calc(var(--tab-h) + var(--sab) + 18px)}
+.tabbar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,var(--w));z-index:30;display:grid;grid-template-columns:repeat(4,1fr);height:calc(var(--tab-h) + var(--sab));padding-bottom:var(--sab);background:var(--card);border-top:1px solid var(--line)}
+.tabbar button{display:grid;justify-items:center;align-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--ink-3);position:relative}
+.tabbar svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button[aria-current="page"]{color:var(--accent-ink)}
+.tabbar button[aria-current="page"] svg{stroke-width:2.2}
+.badge{position:absolute;top:6px;left:calc(50% + 5px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.bar{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(var(--sat) + 14px) var(--g) 12px;border-bottom:1px solid transparent}
+.bar h1{font:700 25px/1.15 var(--f-display);letter-spacing:-.01em}
+.bar p{color:var(--ink-3);font-size:13.5px;margin-top:2px}
+.pad{padding:4px var(--g) 0}
+
+/* home */
+.hero{background:var(--navy);color:var(--on-navy);padding:calc(var(--sat) + 14px) var(--g) 18px;display:flex;align-items:center;gap:12px}
+.hero .mark{width:42px;height:42px;border-radius:12px}
+.hero .mark svg{width:27px;height:27px}
+.hero small{display:block;color:var(--on-navy-2);font-size:12.5px}
+.hero b{font:700 19px/1.2 var(--f-display)}
+.toolbar{position:sticky;top:0;z-index:20;background:var(--navy);padding:calc(var(--sat) + 8px) 0 12px var(--g);display:flex;gap:8px;align-items:center;margin-top:calc(var(--sat) * -1 - 1px)}
+.types{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:1;padding-right:4px}
+.types::-webkit-scrollbar{display:none}
+.toolbar .chip{background:rgba(255,248,232,.08);border-color:rgba(241,226,191,.2);color:var(--on-navy)}
+.toolbar .chip[aria-pressed="true"]{background:var(--champ);border-color:var(--champ);color:#1A3732}
+.filter-btn{position:relative;flex:none;width:44px;height:40px;margin-right:var(--g);border-radius:12px;background:var(--champ);color:#1A3732;display:grid;place-items:center}
+.filter-btn i{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font:700 11px/18px var(--f-body);text-align:center;font-style:normal}
+.notice{margin:14px var(--g) 0;padding:13px 14px;border-radius:var(--r-md);background:var(--gold-soft);border:1px solid var(--gold-line);color:var(--ink-2);font-size:14px;display:flex;gap:10px}
+.notice svg{color:var(--gold);margin-top:1px}
+.day{padding-top:18px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 var(--g) 10px}
+.sec-h h2{font:700 18px/1.2 var(--f-display)}
+.sec-h span{color:var(--ink-3);font-size:13px;white-space:nowrap;flex:none}
+.star{display:inline-flex;align-items:center;gap:6px;color:var(--gold)}
+.star svg{width:15px;height:15px}
+.rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--g) 6px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail .card{flex:none;width:min(82%,330px);scroll-snap-align:center;border-color:var(--gold-line)}
+.rail .card:only-child{width:100%}
+.list{display:grid;gap:14px;padding:0 var(--g)}
+.results-h{padding-top:20px}
+.more{display:grid;place-items:center;padding:18px var(--g) 0}
+.empty{margin:8px var(--g) 0;padding:28px 18px;border:1px dashed var(--line-2);border-radius:var(--r-lg);text-align:center;color:var(--ink-2)}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.fine{padding:14px var(--g) 0;color:var(--ink-3);font-size:12.5px;text-align:center}
+.skel{height:300px;border-radius:var(--r-lg);background:linear-gradient(100deg,var(--line) 30%,var(--card) 50%,var(--line) 70%);background-size:300% 100%;animation:sk 1.2s linear infinite;opacity:.6}
+@keyframes sk{to{background-position:-150% 0}}
+
+/* listing card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);cursor:pointer}
+.card-media{position:relative;aspect-ratio:16/10;background:var(--line)}
+.card-media img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;left:10px;top:10px;padding:5px 10px;border-radius:999px;background:rgba(26,55,50,.86);color:#FFF8E8;font-size:12px;font-weight:600;backdrop-filter:blur(6px)}
+.disc{position:absolute;left:10px;bottom:10px;padding:5px 10px;border-radius:9px;background:var(--champ);color:#1A3732;font-weight:700;font-size:13.5px}
+.heart{position:absolute;right:8px;top:8px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.92);color:#16231F;display:grid;place-items:center}
+.heart svg{fill:none;stroke:currentColor;stroke-width:1.9}
+.heart[aria-pressed="true"]{color:#C4513A}
+.heart[aria-pressed="true"] svg{fill:currentColor}
+.card-body{padding:12px 14px 14px;display:grid;gap:6px}
+.day-tag{justify-self:start;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;background:var(--gold-soft);border:1px solid var(--gold-line);color:var(--gold);font-size:12px;font-weight:700}
+.day-tag svg{width:12px;height:12px}
+.loc{display:flex;align-items:center;gap:5px;color:var(--ink-2);font-size:14px;font-weight:500}
+.loc svg{width:16px;height:16px;color:var(--ink-3)}
+.price{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.price strong{font:700 23px/1.1 var(--f-display)}
+.price s{color:var(--ink-3);font-size:14px}
+.save-line{color:var(--ok);font-size:13.5px;font-weight:600}
+.save-line span{color:var(--ink-3);font-weight:500}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.facts span{padding:4px 9px;border-radius:8px;background:var(--accent-soft);color:var(--ink-2);font-size:12.5px;font-weight:600}
+
+/* messages */
+.notes{display:grid;gap:10px;padding:0 var(--g);list-style:none;margin:0}
+.note{width:100%;text-align:left;display:flex;gap:12px;padding:14px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);position:relative}
+.note-ico{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--ok)}
+.note-wait .note-ico{background:var(--gold-soft);color:var(--gold)}
+.note-ico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.note-txt{display:grid;gap:3px;min-width:0}
+.note-txt b{font-size:15px}
+.note-txt span{color:var(--ink-2);font-size:14px}
+.note-txt small{color:var(--ink-3);font-size:12.5px}
+.note-txt time{color:var(--ink-3);font-size:12px}
+.note-txt .note-body{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.note.is-new{border-color:var(--gold-line)}
+.note.is-new::after{content:"";position:absolute;top:14px;right:14px;width:9px;height:9px;border-radius:50%;background:var(--bad)}
+
+/* profile */
+.who{display:flex;align-items:center;gap:14px;margin:0 var(--g);padding:16px;border-radius:var(--r-lg);background:var(--navy);color:var(--on-navy)}
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--champ);color:#1A3732;display:grid;place-items:center;font:700 20px/1 var(--f-display)}
+.who b{display:block;font-size:17px}
+.who div span{color:var(--on-navy-2);font-size:13.5px;word-break:break-all}
+.panel{margin:14px var(--g) 0;padding:16px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);display:grid;gap:14px}
+.panel h2{font:700 16.5px/1.2 var(--f-display)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;color:var(--ink);text-decoration:none;font-weight:500}
+.row + .row{border-top:1px solid var(--line);padding-top:10px}
+.row svg{color:var(--ink-3)}
+.panel .lang{border-color:var(--line-2)}
+.panel .lang button{color:var(--ink-2)}
+.panel .lang button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.signout{color:var(--bad);font-weight:600}
+.btn-danger{background:var(--bad);color:#fff}
+
+/* ---------- listing page ---------- */
+#detail{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;overscroll-behavior:contain}
+#detail .col{min-height:100%;display:flex;flex-direction:column;background:var(--bg)}
+.gal-wrap{position:relative;background:var(--line)}
+.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;aspect-ratio:4/3}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:center}
+.round{position:absolute;top:calc(var(--sat) + 10px);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.92);color:#16231F;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.round svg{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#dBack{left:12px}
+#dHeart{right:12px}
+#dHeart[aria-pressed="true"]{color:#C4513A}
+#dHeart[aria-pressed="true"] svg{fill:currentColor}
+.gal-n{position:absolute;right:12px;bottom:12px;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font-size:12.5px;font-weight:600}
+.gal-note{position:absolute;left:12px;bottom:12px;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font-size:12px}
+.d-body{flex:1;padding:16px var(--g) 22px;display:grid;gap:16px;align-content:start}
+.d-tags{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-size:12.5px;font-weight:700}
+.pill svg{width:14px;height:14px}
+.pill-gold{background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold-line)}
+.d-body h1{font:700 23px/1.2 var(--f-display)}
+.d-price{padding:14px;border-radius:var(--r-lg);background:var(--card);border:1px solid var(--line);display:grid;gap:5px}
+.d-price .price strong{font-size:29px}
+.d-price .pct{padding:3px 8px;border-radius:8px;background:var(--champ);color:#1A3732;font-weight:700;font-size:13.5px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:0}
+.specs div{background:var(--card);padding:11px 13px;display:grid;gap:2px}
+.specs div.wide{grid-column:1/-1}
+.specs dt{color:var(--ink-3);font-size:12.5px}
+.specs dd{margin:0;font-weight:600;font-size:15px;word-break:break-word}
+.d-sec{display:grid;gap:8px}
+.d-sec h2{font:700 16.5px/1.2 var(--f-display)}
+.d-sec p{color:var(--ink-2);white-space:pre-line}
+.plan-img{border:1px solid var(--line);border-radius:var(--r-md);background:#fff;width:100%}
+.cta{position:sticky;bottom:0;z-index:2;background:var(--card);border-top:1px solid var(--line);padding:10px var(--g) calc(var(--sab) + 10px);display:flex;align-items:center;gap:12px}
+.cta .btn{flex:1}
+.cta-sent{flex:1;display:flex;align-items:center;gap:9px;color:var(--ok);font-weight:600;min-height:50px}
+.cta-sent svg{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- bottom sheets ---------- */
+.sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet-back{position:absolute;inset:0;background:rgba(10,20,17,.5);animation:fade .18s}
+.sheet-card{position:relative;width:min(100%,var(--w));max-height:88dvh;display:flex;flex-direction:column;background:var(--bg);border-radius:24px 24px 0 0;animation:up .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px var(--g) 10px}
+.sheet-head h2{font:700 20px/1.2 var(--f-display)}
+.x{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center}
+.x svg{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.sheet-body{overflow-y:auto;padding:4px var(--g) 14px;display:grid;gap:18px}
+.sheet-foot{display:flex;gap:10px;padding:12px var(--g) calc(var(--sab) + 12px);border-top:1px solid var(--line);background:var(--card)}
+.sheet-foot .btn-primary{flex:1}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;color:var(--ink-3)}
+.sum{padding:11px 13px;border-radius:var(--r-md);background:var(--accent-soft);color:var(--ink-2);font-size:14px;font-weight:500}
+.hint{color:var(--ink-3);font-size:13px}
+
+#toast{position:fixed;left:50%;bottom:calc(var(--tab-h) + var(--sab) + 14px);transform:translateX(-50%);z-index:80;width:max-content;max-width:min(92vw,460px);padding:12px 16px;border-radius:14px;background:#16231F;color:#FFF8E8;font-size:14px;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:560px){body{background:color-mix(in srgb,var(--bg) 88%,#000)}#shell,#auth,#blocked{max-width:var(--w);margin-inline:auto;background-color:var(--bg)}#auth{background:var(--navy)}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 34 34"><path d="M9 25V12l6-3v16M15 15l10 3v7M7 25h20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.500"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.3C1.700 7.500 3.800 4.500 7 4.500c2 0 3.300 1.100 5 3 1.700-1.900 3-3 5-3 3.200 0 5.300 3 4.200 6.200C19.500 15.400 12 20 12 20z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0112 0v5l1.500 2h-15L6 16zM10 20.500a2.200 2.200 0 004 0"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.200-4 4.300-6 8-6s6.800 2 8 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.500-5.600-6.500-11a6.500 6.500 0 0113 0c0 5.400-6.500 11-6.500 11z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.400" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.500c0 4.400-3 8.200-7 9.500-4-1.300-7-5.100-7-9.500V6l7-3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.800 12.200l2.200 2.200 4.300-4.400" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.500l4.200 4.200L19 7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-star" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1.200l2 4.300 4.700.6-3.500 3.200.9 4.700L8 11.700 3.900 14l.9-4.700L1.300 6.100l4.700-.6z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></g></symbol>
+</svg>
+
+<div id="boot"><span class="mark"><svg><use href="#i-logo"/></svg></span></div>
+
+<!-- ============ SIGN IN / REGISTER (investors only) ============ -->
+<main id="auth" hidden>
+  <div class="auth-top">
+    <div class="auth-bar"><div class="lang" role="group" aria-label="Language"><button type="button" data-lang="ka">KA</button><button type="button" data-lang="en">EN</button></div></div>
+    <span class="mark"><svg><use href="#i-logo"/></svg></span>
+    <h1 data-t>ARI for investors</h1>
+    <p data-t>Verified apartments, land plots and commercial spaces below market price.</p>
+  </div>
+  <div class="auth-card">
+    <div class="seg" role="group"><button type="button" data-mode="signin" aria-pressed="true" data-t>Sign in</button><button type="button" data-mode="register" aria-pressed="false" data-t>Register</button></div>
+    <form id="signForm" novalidate>
+      <label class="field"><span data-t>Email</span><input class="input" id="s-email" type="email" autocomplete="email" inputmode="email" required></label>
+      <label class="field"><span data-t>Password</span><input class="input" id="s-pass" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="signErr" hidden></p>
+      <button class="btn btn-primary btn-block" id="signSubmit" type="submit" data-t>Sign in</button>
+    </form>
+    <form id="regForm" novalidate hidden>
+      <label class="field"><span data-t>Full name</span><input class="input" id="r-name" autocomplete="name" required maxlength="120"></label>
+      <label class="field"><span data-t>Email</span><input class="input" id="r-email" type="email" autocomplete="email" inputmode="email" required></label>
+      <label class="field"><span data-t>Phone</span><span class="phone"><b>+995</b><input class="input" id="r-phone" type="tel" inputmode="tel" autocomplete="tel-national" required maxlength="20" placeholder="5XX XX XX XX"></span></label>
+      <label class="field"><span data-t>Available budget</span><select class="input" id="r-budget"></select></label>
+      <label class="field"><span data-t>Interested in</span><select class="input" id="r-interest"></select></label>
+      <label class="field"><span data-t>Password</span><input class="input" id="r-pass" type="password" autocomplete="new-password" required minlength="8"></label>
+      <p class="err" id="regErr" hidden></p>
+      <button class="btn btn-primary btn-block" id="regSubmit" type="submit" data-t>Create investor account</button>
+    </form>
+    <div class="done-box" id="regDone" hidden>
+      <span class="ok-ico"><svg style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg></span>
+      <h2 data-t>Check your email</h2>
+      <p><span data-t>We sent a confirmation link to</span> <b id="regDoneEmail"></b>. <span data-t>Open it, then sign in here.</span></p>
+      <button class="btn btn-line" type="button" data-mode="signin" data-t>Sign in</button>
+    </div>
+    <div class="auth-alt">
+      <button class="btn btn-ghost" type="button" id="demoBtn" data-t>Look around with a sample account</button>
+      <span data-t>This app is for investors. Developers use the website.</span>
+    </div>
+  </div>
+</main>
+
+<main id="blocked" hidden>
+  <span class="mark"><svg><use href="#i-logo"/></svg></span>
+  <h1 id="blockedTitle"></h1>
+  <p id="blockedText"></p>
+  <a class="btn btn-primary" id="blockedSite" href="../" data-t>Open the website</a>
+  <button class="btn btn-line" id="blockedRetry" type="button" data-t>Try again</button>
+  <button class="btn btn-ghost" id="blockedOut" type="button" data-t>Sign out</button>
+</main>
+
+<!-- ============ APP ============ -->
+<div id="shell" hidden>
+  <section data-screen="home">
+    <div class="hero">
+      <span class="mark"><svg><use href="#i-logo"/></svg></span>
+      <div><small id="hello"></small><b data-t>Find your next investment</b></div>
+    </div>
+    <div class="toolbar">
+      <div class="types" role="group" aria-label="Property type">
+        <button class="chip" type="button" data-type="all" aria-pressed="true" data-t>All</button>
+        <button class="chip" type="button" data-type="apartment" aria-pressed="false" data-t>Apartment</button>
+        <button class="chip" type="button" data-type="land" aria-pressed="false" data-t>Land</button>
+        <button class="chip" type="button" data-type="commercial" aria-pressed="false" data-t>Commercial</button>
+      </div>
+      <button class="filter-btn" id="filterBtn" type="button" aria-label="Filters" data-ta><svg><use href="#i-filter"/></svg><i id="filterN" hidden></i></button>
+    </div>
+    <div class="notice" id="pending" hidden><svg><use href="#i-clock"/></svg><span data-t>ARI is reviewing your account. Listings open as soon as it is approved.</span></div>
+    <div class="day" id="daySec" hidden>
+      <div class="sec-h"><h2 class="star"><svg><use href="#i-star"/></svg><span data-t style="color:inherit;font-size:inherit">Offer of the day</span></h2><span data-t>Picked by ARI</span></div>
+      <div class="rail" id="dayRail"></div>
+    </div>
+    <div class="sec-h results-h"><h2 id="summary"></h2><span data-t>Biggest discount first</span></div>
+    <div class="list" id="results"></div>
+    <div class="empty" id="empty" hidden></div>
+    <div class="more"><button class="btn btn-line" id="moreBtn" type="button" hidden data-t>Show more</button></div>
+    <p class="fine" id="demoFine" hidden data-t>Sample listings with illustrative prices and photos.</p>
+  </section>
+
+  <section data-screen="saved" hidden>
+    <div class="bar"><h1 data-t>My offers</h1><p data-t>Listings you saved with the heart.</p></div>
+    <div class="list" id="savedList"></div>
+    <div class="empty" id="savedEmpty" hidden><b data-t>Nothing saved yet</b><span data-t>Tap the heart on a listing and it will appear here.</span></div>
+  </section>
+
+  <section data-screen="inbox" hidden>
+    <div class="bar"><h1 data-t>Messages</h1><p data-t>Updates from ARI about your requests.</p></div>
+    <ul class="notes" id="notes"></ul>
+    <div class="empty" id="inboxEmpty" hidden><b data-t>No messages yet</b><span data-t>When you send a request, ARI’s answer appears here.</span></div>
+  </section>
+
+  <section data-screen="profile" hidden>
+    <div class="bar"><h1 data-t>Profile</h1></div>
+    <div class="who"><span class="avatar" id="pInit"></span><div><b id="pName"></b><span id="pEmail"></span></div></div>
+    <form class="panel" id="profForm" novalidate>
+      <h2 data-t>My details</h2>
+      <label class="field"><span data-t>Full name</span><input class="input" id="p-name" autocomplete="name" maxlength="120" required></label>
+      <label class="field"><span data-t>Phone</span><input class="input" id="p-phone" type="tel" inputmode="tel" maxlength="40"></label>
+      <label class="field"><span data-t>Available budget</span><select class="input" id="p-budget"></select></label>
+      <label class="field"><span data-t>Interested in</span><select class="input" id="p-interest"></select></label>
+      <button class="btn btn-primary" id="profSave" type="submit" data-t>Save</button>
+    </form>
+    <div class="panel">
+      <div class="row"><span data-t>Language</span><div class="lang" role="group"><button type="button" data-lang="ka">KA</button><button type="button" data-lang="en">EN</button></div></div>
+      <a class="row" href="../#platform" target="_blank" rel="noopener"><span data-t>How the platform works</span><svg><use href="#i-next"/></svg></a>
+      <button class="row" type="button" id="signOut" data-t>Sign out</button>
+      <button class="row signout" type="button" id="delAcct" data-t>Delete account</button>
+    </div>
+  </section>
+
+  <nav class="tabbar" aria-label="Sections">
+    <button type="button" data-tab="home"><svg><use href="#i-search"/></svg><span data-t>Listings</span></button>
+    <button type="button" data-tab="saved"><svg><use href="#i-heart"/></svg><span data-t>Saved</span></button>
+    <button type="button" data-tab="inbox"><svg><use href="#i-bell"/></svg><span data-t>Messages</span><i class="badge" id="inboxBadge" hidden></i></button>
+    <button type="button" data-tab="profile"><svg><use href="#i-user"/></svg><span data-t>Profile</span></button>
+  </nav>
+</div>
+
+<!-- ============ LISTING PAGE ============ -->
+<div id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="col">
+    <div class="gal-wrap">
+      <div class="gal" id="dGal"></div>
+      <button class="round" id="dBack" type="button" aria-label="Back" data-ta><svg><use href="#i-back"/></svg></button>
+      <button class="round" id="dHeart" type="button" aria-pressed="false" aria-label="Save listing" data-ta><svg><use href="#i-heart"/></svg></button>
+      <span class="gal-note" id="dNote" hidden data-t>Illustrative photo</span>
+      <span class="gal-n" id="dCount" hidden></span>
+    </div>
+    <div class="d-body">
+      <div class="d-tags" id="dTags"></div>
+      <h1 id="dTitle"></h1>
+      <div class="d-price">
+        <div class="price"><strong id="dPrice"></strong><s id="dWas"></s><span class="pct" id="dPct"></span></div>
+        <div class="save-line" id="dSave"></div>
+      </div>
+      <dl class="specs" id="dSpecs"></dl>
+      <div class="d-sec" id="dInfoBox" hidden><h2 data-t>From the developer</h2><p id="dInfo"></p></div>
+      <div class="d-sec" id="dPlanBox" hidden><h2 id="dPlanTitle"></h2><div id="dPlan"></div></div>
+      <p class="hint" data-t>ARI checked this listing before publishing it. The developer’s contacts are shared by ARI after your request.</p>
+    </div>
+    <div class="cta">
+      <button class="btn btn-primary" id="dAsk" type="button" data-t>I’m interested</button>
+      <div class="cta-sent" id="dSent" hidden><svg><use href="#i-check"/></svg><span data-t>Request sent. ARI will contact you.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FILTERS ============ -->
+<div class="sheet" id="filterSheet" hidden role="dialog" aria-modal="true" aria-labelledby="fTitle">
+  <div class="sheet-back" data-close></div>
+  <div class="sheet-card">
+    <div class="sheet-head"><h2 id="fTitle" data-t>Filters</h2><button class="x" type="button" data-close aria-label="Close" data-ta><svg><use href="#i-x"/></svg></button></div>
+    <div class="sheet-body">
+      <label class="field"><span data-t>District</span><select class="input" id="fDistrict"></select></label>
+      <div class="field"><span data-t>Discount</span><div class="chips" id="fDisc"><button class="chip" type="button" data-v="20">20%+</button><button class="chip" type="button" data-v="25">25%+</button><button class="chip" type="button" data-v="30">30%+</button></div></div>
+      <div class="field"><span data-t>Price, $</span>
+        <div class="chips" id="fPriceQuick"><button class="chip" type="button" data-v="50000">≤ $50,000</button><button class="chip" type="button" data-v="100000">≤ $100,000</button><button class="chip" type="button" data-v="250000">≤ $250,000</button></div>
+        <div class="pair"><input class="input" id="fPriceLo" inputmode="numeric" placeholder="From" data-tp><span>–</span><input class="input" id="fPriceHi" inputmode="numeric" placeholder="To" data-tp></div>
+      </div>
+      <div class="field"><span data-t>Size, m²</span>
+        <div class="pair"><input class="input" id="fSizeLo" inputmode="numeric" placeholder="From" data-tp><span>–</span><input class="input" id="fSizeHi" inputmode="numeric" placeholder="To" data-tp></div>
+      </div>
+      <label class="field"><span data-t>Construction completion</span><select class="input" id="fReady"></select></label>
+      <div class="field"><span data-t>Handover condition</span><div class="chips" id="fCond"><button class="chip" type="button" data-v="black" data-t>Black frame</button><button class="chip" type="button" data-v="white" data-t>White frame</button><button class="chip" type="button" data-v="green" data-t>Green frame</button><button class="chip" type="button" data-v="renovated" data-t>Renovated</button></div></div>
+    </div>
+    <div class="sheet-foot"><button class="btn btn-line" id="fClear" type="button" data-t>Clear</button><button class="btn btn-primary" id="fApply" type="button" data-t>Show listings</button></div>
+  </div>
+</div>
+
+<!-- ============ REQUEST TO ARI ============ -->
+<div class="sheet" id="askSheet" hidden role="dialog" aria-modal="true" aria-labelledby="aTitle">
+  <div class="sheet-back" data-close></div>
+  <form class="sheet-card" id="askForm">
+    <div class="sheet-head"><h2 id="aTitle" data-t>Send a request to ARI</h2><button class="x" type="button" data-close aria-label="Close" data-ta><svg><use href="#i-x"/></svg></button></div>
+    <div class="sheet-body">
+      <div class="sum" id="aSum"></div>
+      <label class="field"><span data-t>Message (optional)</span><textarea class="input" id="aMsg" maxlength="1000" placeholder="When is it convenient to call you?" data-tp></textarea></label>
+      <p class="hint" data-t>Only ARI sees your request. A sales manager will call you about this property.</p>
+    </div>
+    <div class="sheet-foot"><button class="btn btn-primary" id="aSend" type="submit" data-t>Send request</button></div>
+  </form>
+</div>
+
+<!-- ============ DELETE ACCOUNT ============ -->
+<div class="sheet" id="delSheet" hidden role="dialog" aria-modal="true" aria-labelledby="xTitle">
+  <div class="sheet-back" data-close></div>
+  <div class="sheet-card">
+    <div class="sheet-head"><h2 id="xTitle" data-t>Delete your account?</h2><button class="x" type="button" data-close aria-label="Close" data-ta><svg><use href="#i-x"/></svg></button></div>
+    <div class="sheet-body"><p data-t>Your profile and the requests you sent to ARI are removed for good. This can’t be undone.</p></div>
+    <div class="sheet-foot"><button class="btn btn-line" type="button" data-close data-t>Cancel</button><button class="btn btn-primary btn-danger" id="delYes" type="button" data-t>Delete account</button></div>
+  </div>
+</div>
+
+<div id="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $ = function(s, r){ return (r || document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+
+  /* Same Supabase project as the website. The key is the public one; what an account may read or
+     write is decided by the database rules (an investor sees only published listings and their own requests). */
+  var SB_URL = 'https://jirqxouwxetighqvhzjh.supabase.co', SB_KEY = 'sb_publishable_K-MhgBEzBTzo4zNR1iK0Cw_UWnEcVJL', BUCKET = 'platform-listings';
+  /* inside the store app (Capacitor) the page is served from the phone itself, so links back to the web use the full address */
+  var NATIVE = !!window.Capacitor, WEB_APP = 'https://designhub.ge/5/app/';
+  var sb = null;
+  try { if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){}
+
+  /* ---------- Language (shared with the website's choice on this device) ---------- */
+  var KA = {
+    'ARI for investors':'ARI ინვესტორებისთვის',
+    'Verified apartments, land plots and commercial spaces below market price.':'გადამოწმებული ბინები, მიწის ნაკვეთები და კომერციული ფართები საბაზრო ფასზე იაფად.',
+    'Sign in':'შესვლა', 'Register':'რეგისტრაცია', 'Email':'ელფოსტა', 'Password':'პაროლი', 'Full name':'სახელი და გვარი', 'Phone':'ტელეფონი',
+    'Available budget':'ხელმისაწვდომი ბიუჯეტი', 'Interested in':'რა გაინტერესებს', 'Create investor account':'ინვესტორის ანგარიშის შექმნა',
+    'Check your email':'შეამოწმე ელფოსტა', 'We sent a confirmation link to':'დადასტურების ბმული გავგზავნეთ მისამართზე', 'Open it, then sign in here.':'გახსენი ის და შემდეგ აქ შედი.',
+    'Look around with a sample account':'სანიმუშო ანგარიშით დათვალიერება', 'This app is for investors. Developers use the website.':'ეს აპი ინვესტორებისთვისაა. დეველოპერები საიტს იყენებენ.',
+    'Open the website':'საიტის გახსნა', 'Try again':'თავიდან ცდა', 'Sign out':'გასვლა',
+    'Find your next investment':'იპოვე შენი შემდეგი ინვესტიცია', 'Hello':'გამარჯობა',
+    'All':'ყველა', 'Apartment':'ბინა', 'Land':'მიწა', 'Commercial':'კომერციული', 'Land plot':'მიწის ნაკვეთი', 'Commercial space':'კომერციული ფართი',
+    'Filters':'ფილტრები', 'ARI is reviewing your account. Listings open as soon as it is approved.':'ARI შენს ანგარიშს ამოწმებს. დამტკიცებისთანავე განცხადებები გაიხსნება.',
+    'Offer of the day':'დღის შეთავაზება', 'Picked by ARI':'ARI-ის რჩეული', 'Biggest discount first':'ჯერ დიდი ფასდაკლება', 'Show more':'მეტის ჩვენება',
+    'Sample listings with illustrative prices and photos.':'სანიმუშო განცხადებები, საილუსტრაციო ფასებით და ფოტოებით.',
+    'My offers':'ჩემი შეთავაზებები', 'Listings you saved with the heart.':'განცხადებები, რომლებიც გულით შეინახე.', 'Nothing saved yet':'ჯერ არაფერია შენახული',
+    'Tap the heart on a listing and it will appear here.':'დააჭირე გულს განცხადებაზე და ის აქ გამოჩნდება.',
+    'Messages':'შეტყობინებები', 'Updates from ARI about your requests.':'ARI-ის პასუხები შენს მოთხოვნებზე.', 'No messages yet':'შეტყობინებები ჯერ არ არის',
+    'When you send a request, ARI’s answer appears here.':'როცა მოთხოვნას გააგზავნი, ARI-ის პასუხი აქ გამოჩნდება.',
+    'Profile':'პროფილი', 'My details':'ჩემი მონაცემები', 'Save':'შენახვა', 'Language':'ენა', 'How the platform works':'როგორ მუშაობს პლატფორმა',
+    'Listings':'განცხადებები', 'Saved':'შენახული', 'Back':'უკან', 'Save listing':'შენახვა', 'Remove from saved':'შენახულებიდან ამოღება', 'Close':'დახურვა',
+    'Illustrative photo':'საილუსტრაციო ფოტო', 'From the developer':'დეველოპერისგან',
+    'ARI checked this listing before publishing it. The developer’s contacts are shared by ARI after your request.':'ARI-მ ეს განცხადება გამოქვეყნებამდე შეამოწმა. დეველოპერთან ARI დაგაკავშირებს მოთხოვნის შემდეგ.',
+    'I’m interested':'მაინტერესებს', 'Request sent. ARI will contact you.':'მოთხოვნა გაგზავნილია. ARI დაგიკავშირდება.',
+    'District':'რაიონი', 'All districts':'ყველა რაიონი', 'Discount':'ფასდაკლება', 'Price, $':'ფასი, $', 'Size, m²':'ფართი, მ²', 'From':'დან', 'To':'მდე',
+    'Construction completion':'მშენებლობის დასრულება', 'Any time':'ნებისმიერ დროს', 'By end of':'ბოლომდე:', 'Handover condition':'ჩაბარების მდგომარეობა',
+    'Black frame':'შავი კარკასი', 'White frame':'თეთრი კარკასი', 'Green frame':'მწვანე კარკასი', 'Renovated':'რემონტით',
+    'Clear':'გასუფთავება', 'Show listings':'განცხადებების ჩვენება',
+    'Send a request to ARI':'მოთხოვნა ARI-ს', 'Message (optional)':'შეტყობინება (არასავალდებულო)', 'When is it convenient to call you?':'როდის გაწყობს ზარი?',
+    'Only ARI sees your request. A sales manager will call you about this property.':'შენს მოთხოვნას მხოლოდ ARI ხედავს. გაყიდვების მენეჯერი დაგირეკავს ამ ქონებაზე.',
+    'Send request':'მოთხოვნის გაგზავნა',
+    'You save':'დაზოგავ', 'Floor':'სართული', 'Verified':'გადამოწმებული', 'below market':'საბაზროზე იაფი',
+    'Size':'ფართი', 'Land size':'მიწის ფართი', 'View':'ხედი', 'Intended use':'დანიშნულება', 'Cadastral code':'საკადასტრო კოდი',
+    'Floor plan':'გეგმა / ნახაზი', 'Site master plan':'გენგეგმა', 'Open the plan':'გეგმის გახსნა',
+    'Up to $50,000':'$50,000-მდე', 'Apartments and land':'ბინები და მიწა', 'Apartments':'ბინები', 'Land plots':'მიწის ნაკვეთები', 'Commercial spaces':'კომერციული ფართები',
+    'Request received':'მოთხოვნა მიღებულია', 'ARI got your request and will call you about this property.':'ARI-მ შენი მოთხოვნა მიიღო და ამ ქონებაზე დაგირეკავს.',
+    'Your request was accepted':'შენი მოთხოვნა დადასტურდა', 'ARI confirmed your interest and will arrange the viewing and next steps with you.':'ARI-მ შენი ინტერესი დაადასტურა და ნახვას და შემდეგ ნაბიჯებს შენთან ერთად დაგეგმავს.',
+    'Request closed':'მოთხოვნა დახურულია', 'This request is finished. You can send a new one from any listing.':'ეს მოთხოვნა დასრულებულია. ახლის გაგზავნა ნებისმიერი განცხადებიდან შეგიძლია.',
+    'New message from ARI':'ახალი შეტყობინება ARI-სგან', 'Message from ARI':'შეტყობინება ARI-სგან',
+    'Wrong email or password.':'ელფოსტა ან პაროლი არასწორია.', 'Confirm your email first. The link is in your inbox.':'ჯერ ელფოსტა დაადასტურე. ბმული შენს ფოსტაშია.',
+    'This email is already registered. Sign in instead.':'ეს ელფოსტა უკვე რეგისტრირებულია. შედი ანგარიშში.', 'Too many attempts. Try again in a few minutes.':'ძალიან ბევრი მცდელობა. სცადე რამდენიმე წუთში.',
+    'Use a password with at least 8 characters.':'პაროლი მინიმუმ 8 სიმბოლო უნდა იყოს.', 'Something went wrong. Try again.':'რაღაც ვერ გამოვიდა. სცადე თავიდან.',
+    'Fill in every field.':'შეავსე ყველა ველი.', 'Couldn’t reach the server. Check your connection.':'სერვერთან დაკავშირება ვერ მოხერხდა. შეამოწმე ინტერნეტი.',
+    'Sign-in is unavailable right now. Try the sample account.':'შესვლა ახლა მიუწვდომელია. სცადე სანიმუშო ანგარიში.',
+    'This app is for investors':'ეს აპი ინვესტორებისთვისაა', 'You’re signed in with a developer account. Add and manage listings on the website.':'შესული ხარ დეველოპერის ანგარიშით. განცხადებების დამატება და მართვა საიტზეა.',
+    'This account isn’t set up as an investor yet.':'ეს ანგარიში ჯერ ინვესტორად არ არის გაფორმებული.', 'No connection':'კავშირი არ არის',
+    'Saved to My offers.':'შენახულია ჩემს შეთავაზებებში.', 'Removed from My offers.':'ამოღებულია ჩემი შეთავაზებებიდან.',
+    'Couldn’t load listings. Pull down or reopen the app.':'განცხადებები ვერ ჩაიტვირთა. გახსენი აპი თავიდან.', 'This listing is no longer published.':'ეს განცხადება აღარ არის გამოქვეყნებული.',
+    'Couldn’t send the request. Try again.':'მოთხოვნა ვერ გაიგზავნა. სცადე თავიდან.', 'You already sent a request for this listing.':'ამ განცხადებაზე მოთხოვნა უკვე გაგზავნილი გაქვს.',
+    'Request sent. ARI will contact you soon.':'მოთხოვნა გაიგზავნა. ARI მალე დაგიკავშირდება.', 'Request sent (sample). Nothing was sent.':'მოთხოვნა გაიგზავნა (ნიმუში). რეალურად არაფერი გაგზავნილა.',
+    'Saved.':'შენახულია.', 'Couldn’t save. Try again.':'ვერ შეინახა. სცადე თავიდან.', 'Sample account: changes are not saved.':'სანიმუშო ანგარიში: ცვლილებები არ ინახება.',
+    'Signed out.':'გასული ხარ.', 'Sample investor':'სანიმუშო ინვესტორი', 'Sample account':'სანიმუშო ანგარიში',
+    'No listings match these filters':'ამ ფილტრებით განცხადება ვერ მოიძებნა', 'Lower the discount or clear the filters.':'შეამცირე ფასდაკლება ან გაასუფთავე ფილტრები.',
+    'No published listings yet':'გამოქვეყნებული განცხადებები ჯერ არ არის', 'ARI reviews each listing before it appears here.':'ARI თითოეულ განცხადებას ამოწმებს, სანამ აქ გამოჩნდება.',
+    'Delete account':'ანგარიშის წაშლა', 'Delete your account?':'წავშალოთ შენი ანგარიში?', 'Cancel':'გაუქმება',
+    'Your profile and the requests you sent to ARI are removed for good. This can’t be undone.':'შენი პროფილი და ARI-სთვის გაგზავნილი მოთხოვნები სამუდამოდ წაიშლება. ამის დაბრუნება შეუძლებელია.',
+    'Your account was deleted.':'შენი ანგარიში წაიშალა.', 'Couldn’t delete the account. Try again or write to ARI.':'ანგარიში ვერ წაიშალა. სცადე თავიდან ან მისწერე ARI-ს.',
+    'Developer installment plan available up to 24 months. Underground parking on request.':'დეველოპერის განვადება 24 თვემდე. მიწისქვეშა პარკინგი მოთხოვნით.',
+    'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.':'სრული რემონტით და ჩაშენებული სამზარეულოთი. ორი საძინებელი წყნარი ეზოს მხარეს.',
+    'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.':'დახურული კოტეჯების დასახლების ნაწილი. გზა, წყალი და ელექტროობა ნაკვეთის საზღვრამდე. განაშენიანების კოეფიციენტი კ-2 0.4.',
+    'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.':'პირველი სართული ქუჩის მხრიდან, ცალკე შესასვლელით და ვიტრინით. სამფაზა დენი, 40 კვტ.',
+    'Saburtalo, Tbilisi':'საბურთალო, თბილისი', 'Vake, Tbilisi':'ვაკე, თბილისი', 'Tskneti, Tbilisi':'წყნეთი, თბილისი', 'Didube, Tbilisi':'დიდუბე, თბილისი',
+    'Didi Dighomi, Tbilisi':'დიდი დიღომი, თბილისი', 'Gldani, Tbilisi':'გლდანი, თბილისი', 'Isani, Tbilisi':'ისანი, თბილისი', 'Samgori, Tbilisi':'სამგორი, თბილისი',
+    'Nadzaladevi, Tbilisi':'ნაძალადევი, თბილისი', 'Chughureti, Tbilisi':'ჩუღურეთი, თბილისი', 'Krtsanisi, Tbilisi':'კრწანისი, თბილისი', 'Mtatsminda, Tbilisi':'მთაწმინდა, თბილისი', 'Lisi, Tbilisi':'ლისი, თბილისი',
+    'City view':'ქალაქის ხედი', 'Courtyard':'ეზოს ხედი', 'Street-facing':'ქუჩის მხრიდან', 'Mountain view':'მთის ხედი', 'Park view':'პარკის ხედი', 'River view':'მდინარის ხედი',
+    'Office':'ოფისი', 'Restaurant / café':'რესტორანი / კაფე', 'Retail / showroom':'სავაჭრო / შოურუმი', 'Warehouse':'საწყობი'
+  };
+  var lang = 'en';
+  try { var st = localStorage.getItem('bm-lang'); lang = st === 'ka' || st === 'en' ? st : (/^ka/i.test(navigator.language || '') ? 'ka' : 'en'); } catch(e){}
+  function t(s){ return lang === 'ka' && KA[s] ? KA[s] : s; }
+  function applyLang(){
+    document.documentElement.lang = lang;
+    $$('[data-t]').forEach(function(el){ if (el.dataset.t === '') el.dataset.t = el.textContent.trim(); el.textContent = t(el.dataset.t); });
+    $$('[data-tp]').forEach(function(el){ if (el.dataset.tp === '') el.dataset.tp = el.placeholder; el.placeholder = t(el.dataset.tp); });
+    $$('[data-ta]').forEach(function(el){ if (el.dataset.ta === '') el.dataset.ta = el.getAttribute('aria-label'); el.setAttribute('aria-label', t(el.dataset.ta)); });
+    $$('[data-lang]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    fillSelects();
+  }
+  var DISTRICTS = ['Saburtalo, Tbilisi','Vake, Tbilisi','Tskneti, Tbilisi','Didube, Tbilisi','Didi Dighomi, Tbilisi','Gldani, Tbilisi','Isani, Tbilisi','Samgori, Tbilisi','Nadzaladevi, Tbilisi','Chughureti, Tbilisi','Krtsanisi, Tbilisi','Mtatsminda, Tbilisi','Lisi, Tbilisi'];
+  var BUDGETS = [['50000','Up to $50,000'], ['100000','$50,000 – $100,000'], ['250000','$100,000 – $250,000'], ['250000+','$250,000+']];
+  var INTERESTS = ['Apartments and land','Apartments','Land plots','Commercial spaces'];
+  function opts(sel, list){   /* list: [value, label]; keeps the chosen value across a language switch */
+    var el = $(sel), v = el.value;
+    el.innerHTML = list.map(function(o){ return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+    if (v) el.value = v;
+  }
+  function fillSelects(){
+    var b = BUDGETS.map(function(o){ return [o[0], t(o[1])]; }), i = INTERESTS.map(function(o){ return [o, t(o)]; });
+    var first = !$('#r-budget').options.length;
+    opts('#r-budget', b); opts('#p-budget', b); opts('#r-interest', i); opts('#p-interest', i);
+    if (first) $('#r-budget').value = '100000';
+    opts('#fDistrict', [['', t('All districts')]].concat(DISTRICTS.map(function(d){ return [d, t(d)]; })));
+    opts('#fReady', [['', t('Any time')]].concat([2027, 2028, 2029].map(function(y){ return [String(y), lang === 'ka' ? y + ' წლის ბოლომდე' : 'By end of ' + y]; })));
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-lang]'); if (!b || b.dataset.lang === lang) return;
+    lang = b.dataset.lang; try { localStorage.setItem('bm-lang', lang); } catch(x){}
+    applyLang(); if (mode === 'shell') repaint();
+  });
+
+  /* ---------- Small helpers ---------- */
+  var toastTimer, OFFLINE = 'Couldn’t reach the server. Check your connection.';
+  function toast(msg){ var el = $('#toast'); el.textContent = t(msg); el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.hidden = true; }, 3600); }
+  function money(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+  function market(L){ return Math.round(L.price / (1 - L.disc / 100) / 100) * 100; }
+  function readyTxt(s){ var m = /^Q([1-4]) (\d{4})$/.exec(s || ''); return m && lang === 'ka' ? ['I', 'II', 'III', 'IV'][m[1] - 1] + ' კვ. ' + m[2] : (s || ''); }
+  var TYPE = { apartment:'Apartment', land:'Land plot', commercial:'Commercial space' };
+  var COND = { black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated' };
+  var FALLBACK = { apartment:'../img/interior.jpg', land:'../img/land.jpg', commercial:'../img/commercial.svg' };
+
+  /* ---------- State ---------- */
+  var mode = 'boot', user = null, profile = null, demo = false, tab = 'home';
+  var BY = {};                 /* every listing we know, by key (id, or demo-N for the sample ones) */
+  var items = [], day = [], pg = { n:0, total:0, seq:0, busy:false }, PAGE = 12, noFeat = false;
+  var INTS = [], SENT = {}, INBOX = [];
+  var F = blankF();
+  function blankF(){ return { type:'all', district:'', disc:0, cond:[], ready:'', priceLo:null, priceHi:null, sizeLo:null, sizeHi:null }; }
+  function filterCount(){ return (F.district ? 1 : 0) + (F.disc ? 1 : 0) + (F.cond.length ? 1 : 0) + (F.ready ? 1 : 0) + (F.priceLo != null || F.priceHi != null ? 1 : 0) + (F.sizeLo != null || F.sizeHi != null ? 1 : 0); }
+
+  var DEMO = [
+    { type:'apartment', district:'Saburtalo, Tbilisi', size:65, floor:8, floors:14, view:'City view', cond:'black', price:68250, disc:20, ready:'Q3 2027', cad:'01.10.13.002.045', urls:['../img/interior.jpg', '../img/room.jpg', '../img/home-inv.jpg'],
+      info:'Developer installment plan available up to 24 months. Underground parking on request.' },
+    { type:'apartment', district:'Vake, Tbilisi', size:90, floor:5, floors:9, view:'Courtyard', cond:'renovated', price:153000, disc:25, ready:'Q2 2027', cad:'01.14.05.011.027', urls:['../img/room.jpg', '../img/interior.jpg'],
+      info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.' },
+    { type:'land', district:'Tskneti, Tbilisi', size:500, price:45000, disc:30, ready:'Q4 2027', cad:'01.19.09.011.112', urls:['../img/land.jpg'], featured:true,
+      info:'Part of a gated cottage development. Road, water and electricity to the plot boundary. Building coefficient K-2 0.4.' },
+    { type:'commercial', district:'Vake, Tbilisi', size:120, floor:1, floors:14, use:'Retail / showroom', cond:'white', price:216000, disc:20, ready:'Q2 2027', cad:'01.14.05.008.021', urls:['../img/commercial.svg'],
+      info:'Street-facing ground floor with a separate entrance and shopfront glazing. Three-phase power, 40 kW.' }
+  ];
+  DEMO.forEach(function(L, i){ L.demo = i; L.photo = L.urls[0]; });
+  var DEMO_NOTES = [], DEMO_SENT = {};
+  function keyOf(L){ return L.id || 'demo-' + L.demo; }
+
+  /* ---------- Saved listings: remembered on this device per account, same store as the website ---------- */
+  function savedKey(){ return 'ari-saved-' + (user ? user.id : 'demo'); }
+  function getSaved(){ try { return JSON.parse(localStorage.getItem(savedKey()) || '[]'); } catch(e){ return []; } }
+  function toggleSaved(key){
+    var s = getSaved(), at = s.indexOf(key), on = at < 0;
+    if (on) s.push(key); else s.splice(at, 1);
+    try { localStorage.setItem(savedKey(), JSON.stringify(s)); } catch(e){}
+    syncHearts(); toast(on ? 'Saved to My offers.' : 'Removed from My offers.');
+    if (tab === 'saved') renderSaved();
+  }
+  function syncHearts(){
+    var s = getSaved();
+    $$('.card').forEach(function(c){ setHeart(c.querySelector('.heart'), s.indexOf(c.dataset.key) > -1); });
+    if (cur) setHeart($('#dHeart'), s.indexOf(keyOf(cur)) > -1);
+  }
+  function setHeart(b, on){ if (!b) return; b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', t(on ? 'Remove from saved' : 'Save listing')); }
+
+  /* ---------- Listing card ---------- */
+  function cardHTML(L){
+    var m = market(L), extra = L.type === 'apartment' ? L.view : L.type === 'commercial' ? L.use : null;
+    return '<article class="card" data-key="' + esc(keyOf(L)) + '">'
+      + '<div class="card-media"><img src="' + esc(L.photo || FALLBACK[L.type]) + '" alt="" loading="lazy">'
+      + '<span class="tag">' + esc(t(TYPE[L.type])) + '</span><span class="disc">−' + L.disc + '% ' + esc(t('below market')) + '</span>'
+      + '<button class="heart" type="button" aria-pressed="false"><svg><use href="#i-heart"/></svg></button></div>'
+      + '<div class="card-body">'
+      + (L.featured ? '<span class="day-tag"><svg><use href="#i-star"/></svg>' + esc(t('Offer of the day')) + '</span>' : '')
+      + '<div class="loc"><svg><use href="#i-pin"/></svg>' + esc(t(L.district)) + '</div>'
+      + '<div class="price"><strong>' + money(L.price) + '</strong><s>' + money(m) + '</s></div>'
+      + '<div class="save-line">' + esc(t('You save')) + ' ' + money(m - L.price) + ' <span>· ' + money(L.price / L.size) + ' / m²</span></div>'
+      + '<div class="facts"><span>' + L.size.toLocaleString('en-US') + ' m²</span>'
+      + (L.floor ? '<span>' + esc(t('Floor')) + ' ' + L.floor + ' / ' + L.floors + '</span>' : '')
+      + '<span>' + esc(readyTxt(L.ready)) + '</span>'
+      + (L.cond ? '<span>' + esc(t(COND[L.cond])) + '</span>' : '')
+      + (extra ? '<span>' + esc(t(extra)) + '</span>' : '')
+      + '</div></div></article>';
+  }
+  function paintList(box, list, append){
+    var html = list.map(cardHTML).join('');
+    if (append) box.insertAdjacentHTML('beforeend', html); else box.innerHTML = html;
+  }
+
+  /* ---------- Stored listings ---------- */
+  var URLS = {}, URLS_DL = {};
+  function signUrls(paths, download){   /* private files are shown through links that expire in an hour */
+    var cache = download ? URLS_DL : URLS, now = Date.now(), out = {}, need = [];
+    paths.filter(Boolean).forEach(function(p){ var c = cache[p]; if (c && now - c.at < 45 * 60000) out[p] = c.url; else if (need.indexOf(p) < 0) need.push(p); });
+    if (!need.length) return Promise.resolve(out);
+    return sb.storage.from(BUCKET).createSignedUrls(need, 3600, download ? { download:true } : undefined).then(function(res){
+      (res.data || []).forEach(function(x){ if (x.signedUrl){ cache[x.path] = { url:x.signedUrl, at:now }; out[x.path] = x.signedUrl; } });
+      return out;
+    }, function(){ return out; });
+  }
+  function rowToL(r){
+    return { id:r.id, type:r.type, district:r.district, size:+r.size_m2, floor:r.floor, floors:r.floors, view:r.view_type, use:r.use_type, cond:r.handover,
+      price:r.price_usd, disc:r.discount_pct, ready:r.ready, cad:r.cadastral, info:r.info, featured:!!r.featured, photos:r.photos || [], plan:r.plan_path || null, photo:null };
+  }
+  function toLs(rows){   /* rows -> listings with a signed first photo, remembered by id */
+    var Ls = rows.map(rowToL);
+    return signUrls(Ls.map(function(L){ return L.photos[0]; })).then(function(u){
+      Ls.forEach(function(L){ L.photo = u[L.photos[0]] || null; BY[L.id] = L; });
+      return Ls;
+    });
+  }
+  function listQuery(){
+    var x = sb.from('platform_listings').select('*', { count:'exact' }).eq('status', 'published');
+    if (F.type !== 'all') x = x.eq('type', F.type);
+    if (F.district) x = x.eq('district', F.district);
+    if (F.disc) x = x.gte('discount_pct', F.disc);
+    if (F.cond.length) x = x.in('handover', F.cond);
+    if (F.sizeLo != null) x = x.gte('size_m2', F.sizeLo);
+    if (F.sizeHi != null) x = x.lte('size_m2', F.sizeHi);
+    if (F.priceLo != null) x = x.gte('price_usd', F.priceLo);
+    if (F.priceHi != null) x = x.lte('price_usd', F.priceHi);
+    if (F.ready){   /* 'Q3 2027' is text, so "by the end of 2028" is a list of years */
+      var ys = []; for (var y = 2024; y <= +F.ready; y++) ys.push('ready.like.*' + y);
+      x = x.or(ys.join(','));
+    }
+    return x;
+  }
+  function fetchPage(reset){
+    if (demo){ demoList(); return; }
+    var uid = user && user.id; if (!uid) return;
+    if (reset){ pg.n = 0; items = []; $('#results').innerHTML = '<div class="skel"></div><div class="skel"></div>'; $('#empty').hidden = true; $('#moreBtn').hidden = true; }
+    var my = ++pg.seq, from = pg.n * PAGE, x = listQuery();
+    if (!noFeat) x = x.order('featured', { ascending:false });
+    x = x.order('discount_pct', { ascending:false }).order('created_at', { ascending:false }).range(from, from + PAGE - 1);
+    pg.busy = true;
+    x.then(function(res){
+      if (my !== pg.seq || !user || user.id !== uid) return;
+      if (res.error){
+        if (!noFeat && /featured/i.test(res.error.message || '')){ noFeat = true; fetchPage(reset); return; }
+        pg.busy = false; if (reset) $('#results').innerHTML = ''; toast('Couldn’t load listings. Pull down or reopen the app.'); return;
+      }
+      toLs(res.data || []).then(function(Ls){
+        if (my !== pg.seq || !user || user.id !== uid) return;
+        items = reset ? Ls : items.concat(Ls);
+        pg.total = res.count == null ? items.length : res.count; pg.n++; pg.busy = false;
+        paintList($('#results'), reset ? items : Ls, !reset);
+        paintHome(); buildInbox();
+      });
+    }, function(){ pg.busy = false; if (reset) $('#results').innerHTML = ''; toast(OFFLINE); });
+  }
+  function fetchDay(){   /* the listings ARI marked as the offer of the day, at most three */
+    var uid = user && user.id; if (!uid) return;
+    sb.from('platform_listings').select('*').eq('status', 'published').eq('featured', true).order('updated_at', { ascending:false }).limit(3).then(function(res){
+      if (!user || user.id !== uid) return;
+      toLs(res.error ? [] : (res.data || [])).then(function(Ls){
+        if (!user || user.id !== uid) return;
+        day = Ls; paintDay();
+      });
+    }, function(){});
+  }
+  function demoList(){
+    var ok = function(L){
+      return (F.type === 'all' || L.type === F.type) && (!F.district || L.district === F.district) && (!F.disc || L.disc >= F.disc)
+        && (!F.cond.length || F.cond.indexOf(L.cond) > -1) && (!F.ready || +(/\d{4}/.exec(L.ready) || [9999])[0] <= +F.ready)
+        && (F.sizeLo == null || L.size >= F.sizeLo) && (F.sizeHi == null || L.size <= F.sizeHi)
+        && (F.priceLo == null || L.price >= F.priceLo) && (F.priceHi == null || L.price <= F.priceHi);
+    };
+    items = DEMO.filter(ok).sort(function(a, b){ return (!!b.featured - !!a.featured) || (b.disc - a.disc); });
+    pg.total = items.length; day = DEMO.filter(function(L){ return L.featured; });
+    paintList($('#results'), items); paintDay(); paintHome();
+  }
+  function paintDay(){
+    paintList($('#dayRail'), day); $('#daySec').hidden = !day.length; syncHearts();
+  }
+  function paintHome(){
+    var n = pg.total, ka = lang === 'ka', fc = filterCount();
+    $('#summary').textContent = ka ? n + (demo ? ' სანიმუშო განცხადება' : ' განცხადება') : n + (demo ? ' sample listing' : ' listing') + (n === 1 ? '' : 's');
+    var filtered = fc > 0 || F.type !== 'all';
+    $('#empty').innerHTML = '<b>' + esc(t(filtered ? 'No listings match these filters' : 'No published listings yet')) + '</b>' + esc(t(filtered ? 'Lower the discount or clear the filters.' : 'ARI reviews each listing before it appears here.'));
+    $('#empty').hidden = items.length > 0 || (profile && profile.approved === false && !filtered);
+    $('#moreBtn').hidden = demo || items.length >= pg.total;
+    $('#filterN').hidden = !fc; $('#filterN').textContent = fc;
+    $('#demoFine').hidden = !demo;
+    $('#pending').hidden = !(profile && profile.approved === false);
+    syncHearts();
+  }
+  $('#moreBtn').addEventListener('click', function(){ if (!pg.busy) fetchPage(false); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function(en){   /* reaching the end of the list loads the next page */
+    if (en[0].isIntersecting && mode === 'shell' && tab === 'home' && !$('#moreBtn').hidden && !pg.busy) fetchPage(false);
+  }, { rootMargin:'300px' }).observe($('#moreBtn').parentNode);
+
+  /* ---------- Filters ---------- */
+  $('.types').addEventListener('click', function(e){
+    var b = e.target.closest('[data-type]'); if (!b) return;
+    F.type = b.dataset.type;
+    $$('[data-type]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    fetchPage(true);
+  });
+  function press(box, test){ $$('.chip', $(box)).forEach(function(b){ b.setAttribute('aria-pressed', String(!!test(b.dataset.v))); }); }
+  function numIn(sel){ var d = $(sel).value.replace(/[^0-9]/g, ''); return d ? +d : null; }
+  function showF(){
+    $('#fDistrict').value = F.district; $('#fReady').value = F.ready;
+    press('#fDisc', function(v){ return +v === F.disc; });
+    press('#fCond', function(v){ return F.cond.indexOf(v) > -1; });
+    press('#fPriceQuick', function(v){ return F.priceLo == null && F.priceHi === +v; });
+    $('#fPriceLo').value = F.priceLo == null ? '' : F.priceLo.toLocaleString('en-US'); $('#fPriceHi').value = F.priceHi == null ? '' : F.priceHi.toLocaleString('en-US');
+    $('#fSizeLo').value = F.sizeLo == null ? '' : F.sizeLo; $('#fSizeHi').value = F.sizeHi == null ? '' : F.sizeHi;
+  }
+  $('#filterBtn').addEventListener('click', function(){ showF(); openSheet('#filterSheet'); });
+  $('#fDisc').addEventListener('click', function(e){ var b = e.target.closest('.chip'); if (!b) return; var on = b.getAttribute('aria-pressed') !== 'true'; press('#fDisc', function(v){ return on && v === b.dataset.v; }); });
+  $('#fCond').addEventListener('click', function(e){ var b = e.target.closest('.chip'); if (b) b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); });
+  $('#fPriceQuick').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if (!b) return; var on = b.getAttribute('aria-pressed') !== 'true';
+    press('#fPriceQuick', function(v){ return on && v === b.dataset.v; });
+    $('#fPriceLo').value = ''; $('#fPriceHi').value = on ? (+b.dataset.v).toLocaleString('en-US') : '';
+  });
+  ['#fPriceLo', '#fPriceHi'].forEach(function(s){ $(s).addEventListener('input', function(){
+    var d = this.value.replace(/[^0-9]/g, ''); this.value = d ? (+d).toLocaleString('en-US') : '';
+    press('#fPriceQuick', function(v){ return !$('#fPriceLo').value && numIn('#fPriceHi') === +v; });
+  }); });
+  ['#fSizeLo', '#fSizeHi'].forEach(function(s){ $(s).addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g, ''); }); });
+  $('#fClear').addEventListener('click', function(){ var ty = F.type; F = blankF(); F.type = ty; showF(); });
+  $('#fApply').addEventListener('click', function(){
+    var on = function(box){ return $$('.chip[aria-pressed="true"]', $(box)).map(function(b){ return b.dataset.v; }); };
+    var pl = numIn('#fPriceLo'), ph = numIn('#fPriceHi'), sl = numIn('#fSizeLo'), sh = numIn('#fSizeHi'), x;
+    if (pl != null && ph != null && pl > ph){ x = pl; pl = ph; ph = x; }
+    if (sl != null && sh != null && sl > sh){ x = sl; sl = sh; sh = x; }
+    F.district = $('#fDistrict').value; F.ready = $('#fReady').value; F.disc = +(on('#fDisc')[0] || 0); F.cond = on('#fCond');
+    F.priceLo = pl; F.priceHi = ph; F.sizeLo = sl; F.sizeHi = sh;
+    closeSheets(); window.scrollTo(0, 0); fetchPage(true);
+  });
+
+  /* ---------- Sheets ---------- */
+  function openSheet(sel){ $(sel).hidden = false; document.body.classList.add('lock'); }
+  function closeSheets(){ $$('.sheet').forEach(function(s){ s.hidden = true; }); if ($('#detail').hidden) document.body.classList.remove('lock'); }
+  document.addEventListener('click', function(e){ if (e.target.closest('[data-close]')) closeSheets(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if ($$('.sheet').some(function(s){ return !s.hidden; })) closeSheets(); else if (!$('#detail').hidden) goBack(); } });
+
+  /* ---------- Saved ---------- */
+  function renderSaved(){
+    var keys = getSaved(), box = $('#savedList');
+    if (demo || !user){
+      var Ls = DEMO.filter(function(L){ return keys.indexOf(keyOf(L)) > -1; });
+      paintList(box, Ls); $('#savedEmpty').hidden = Ls.length > 0; syncHearts(); return;
+    }
+    var uid = user.id, ids = keys.filter(function(k){ return k.indexOf('demo-') !== 0; });
+    $('#savedEmpty').hidden = ids.length > 0;
+    if (!ids.length){ box.innerHTML = ''; return; }
+    if (!box.children.length) box.innerHTML = '<div class="skel"></div>';
+    sb.from('platform_listings').select('*').eq('status', 'published').in('id', ids).then(function(res){
+      if (!user || user.id !== uid) return;
+      toLs(res.error ? [] : (res.data || [])).then(function(Ls){
+        if (!user || user.id !== uid) return;
+        paintList(box, Ls); $('#savedEmpty').hidden = Ls.length > 0; syncHearts();
+      });
+    }, function(){ box.innerHTML = ''; toast(OFFLINE); });
+  }
+
+  /* ---------- Messages ----------
+     Worked out from the investor's requests, as on the website: one message per request from its status,
+     which ARI changes in the admin panel (received -> accepted -> closed). Which ones were read is remembered on this device. */
+  var NOTE = {
+    'inv-wait':['Request received', 'ARI got your request and will call you about this property.'],
+    'inv-ok':['Your request was accepted', 'ARI confirmed your interest and will arrange the viewing and next steps with you.'],
+    'inv-closed':['Request closed', 'This request is finished. You can send a new one from any listing.'],
+    'msg':['Message from ARI', '']   /* a text ARI wrote in the admin panel (platform_messages); the body is shown as written */
+  };
+  var MSGS = [];
+  function demoMsgs(){ try { return JSON.parse(localStorage.getItem('ari-demo-msgs') || '[]').filter(function(m){ return m.to === 'investor'; }); } catch(e){ return []; } }
+  function msgNote(m){ return { key:'m:' + m.id, kind:'msg', what:'msg', text:m.body, at:m.created_at || m.at }; }
+  function seenKey(){ return 'ari-inbox-seen-' + (user ? user.id : 'demo-investor'); }
+  function getSeen(){ try { return JSON.parse(localStorage.getItem(seenKey()) || '[]'); } catch(e){ return []; } }
+  function unread(){ var s = getSeen(); return INBOX.filter(function(n){ return s.indexOf(n.key) < 0; }).length; }
+  function buildInbox(){
+    if (demo) INBOX = demoMsgs().reverse().map(msgNote).concat(DEMO_NOTES);
+    else INBOX = INTS.map(function(x){
+      var w = x.status === 'contacted' ? 'inv-ok' : x.status === 'closed' ? 'inv-closed' : 'inv-wait';
+      return { key:x.id + ':' + x.status, kind:w === 'inv-wait' ? 'wait' : 'ok', what:w, at:x.created_at, lkey:x.listing_id, raw:(x.listing_summary || '').replace(/ · [\d.]{16,}$/, ''), L:BY[x.listing_id] || null };
+    }).concat(MSGS.map(msgNote)).sort(function(a, b){ return (b.at || '') < (a.at || '') ? -1 : (b.at || '') > (a.at || '') ? 1 : 0; });
+    renderInbox();
+  }
+  function renderInbox(){
+    var seen = getSeen(), n = 0;
+    $('#notes').innerHTML = INBOX.map(function(x, i){
+      var isNew = seen.indexOf(x.key) < 0, T = NOTE[x.what]; if (isNew) n++;
+      var sub = x.L ? esc(t(TYPE[x.L.type])) + ' · ' + esc(t(x.L.district)) + ' · ' + x.L.size.toLocaleString('en-US') + ' m² · ' + money(x.L.price) + ' (−' + x.L.disc + '%)' : esc(x.raw || '');
+      var when = x.at ? new Date(x.at).toLocaleDateString(lang === 'ka' ? 'ka-GE' : 'en-GB', { day:'numeric', month:'short', year:'numeric' }) : '';
+      return '<li><button type="button" class="note note-' + x.kind + (isNew ? ' is-new' : '') + '" data-note="' + i + '"><span class="note-ico"><svg viewBox="0 0 16 16">'
+        + (x.kind === 'ok' ? '<path d="M3 8.500l3.200 3.200L13 4.800"/>' : x.kind === 'msg' ? '<rect x="2" y="3.500" width="12" height="9" rx="1.500"/><path d="M2.500 4.500L8 9l5.500-4.500"/>' : '<circle cx="8" cy="8" r="5.500"/><path d="M8 5v3.200l2 1.300"/>')
+        + '</svg></span><span class="note-txt"><b>' + esc(t(T[0])) + '</b>' + (x.text ? '<span class="note-body">' + esc(x.text) + '</span>' : '<span>' + esc(t(T[1])) + '</span>') + (sub ? '<small>' + sub + '</small>' : '') + (when ? '<time>' + esc(when) + '</time>' : '') + '</span></button></li>';
+    }).join('');
+    $('#inboxEmpty').hidden = INBOX.length > 0;
+    setBadge(n);
+  }
+  function setBadge(n){
+    $('#inboxBadge').hidden = !n; $('#inboxBadge').textContent = n > 9 ? '9+' : String(n);
+    try { if (navigator.setAppBadge) n ? navigator.setAppBadge(n) : navigator.clearAppBadge(); } catch(e){}
+  }
+  function markSeen(){   /* opening the tab counts as reading: the dots stay for this view, the badge clears */
+    try { localStorage.setItem(seenKey(), JSON.stringify(INBOX.map(function(n){ return n.key; }))); } catch(e){}
+    setBadge(0);
+  }
+  $('#notes').addEventListener('click', function(e){
+    var b = e.target.closest('[data-note]'); if (!b) return;
+    var n = INBOX[+b.dataset.note]; if (n && n.lkey != null) openListing(n.lkey);
+  });
+  /* the investor's requests; asked again when the app comes back to the front and once a minute, so ARI's answer shows up */
+  function fetchInts(announce){
+    var uid = user && user.id; if (!uid) return;
+    sb.from('platform_interests').select('id,listing_id,status,listing_summary,created_at').then(function(res){
+      if (!user || user.id !== uid || res.error) return;
+      var before = unread();
+      INTS = res.data || []; SENT = {}; INTS.forEach(function(x){ SENT[x.listing_id] = 1; });
+      var missing = INTS.map(function(x){ return x.listing_id; }).filter(function(id, i, a){ return !BY[id] && a.indexOf(id) === i; });
+      var done = function(){
+        if (!user || user.id !== uid) return;
+        buildInbox(); paintCta();
+        if (tab === 'inbox' && mode === 'shell' && $('#detail').hidden) markSeen();
+        else if (announce && unread() > before) toast('New message from ARI');
+      };
+      /* ARI's texts ride along with the requests; an error (messages.sql not run yet) just means none */
+      var go = function(){
+        if (!missing.length){ done(); return; }
+        sb.from('platform_listings').select('*').eq('status', 'published').in('id', missing).then(function(r2){ toLs(r2.error ? [] : (r2.data || [])).then(done); }, done);
+      };
+      sb.from('platform_messages').select('id,body,created_at').order('created_at', { ascending:false }).limit(50).then(function(r3){
+        if (user && user.id === uid && !r3.error) MSGS = r3.data || [];
+        go();
+      }, go);
+    }, function(){});
+  }
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && user && mode === 'shell'){ fetchInts(true); fetchDay(); } });
+  setInterval(function(){ if (!document.hidden && user && mode === 'shell') fetchInts(true); }, 60000);
+
+  /* ---------- Listing page ---------- */
+  var cur = null, inApp = false;
+  function openListing(key){ inApp = true; location.hash = 'l=' + encodeURIComponent(key); }
+  function goBack(){ if (inApp) history.back(); else location.hash = tab; }
+  $('#dBack').addEventListener('click', goBack);
+  $('#dHeart').addEventListener('click', function(){ if (cur) toggleSaved(keyOf(cur)); });
+  function showListing(key){
+    var L = BY[key];
+    if (L){ paintListing(L); return; }
+    if (!user || /^demo-/.test(key)){ toast('This listing is no longer published.'); location.replace('#' + tab); return; }
+    var uid = user.id;
+    sb.from('platform_listings').select('*').eq('id', key).eq('status', 'published').maybeSingle().then(function(res){
+      if (!user || user.id !== uid || location.hash !== '#l=' + encodeURIComponent(key)) return;
+      if (res.error || !res.data){ toast('This listing is no longer published.'); location.replace('#' + tab); return; }
+      toLs([res.data]).then(function(Ls){ if (location.hash === '#l=' + encodeURIComponent(key)) paintListing(Ls[0]); });
+    }, function(){ toast(OFFLINE); location.replace('#' + tab); });
+  }
+  function gallery(urls, note){
+    var g = $('#dGal');
+    g.innerHTML = urls.map(function(u){ return '<img src="' + esc(u) + '" alt="">'; }).join('');
+    g.scrollLeft = 0;
+    $('#dCount').hidden = urls.length < 2; $('#dCount').textContent = '1 / ' + urls.length;
+    $('#dNote').hidden = !note;
+  }
+  $('#dGal').addEventListener('scroll', function(){
+    var n = this.children.length; if (n < 2) return;
+    $('#dCount').textContent = (Math.round(this.scrollLeft / this.clientWidth) + 1) + ' / ' + n;
+  }, { passive:true });
+  function paintCta(){
+    if (!cur) return;
+    var sent = cur.id ? !!SENT[cur.id] : !!DEMO_SENT[cur.demo];
+    $('#dAsk').hidden = sent; $('#dSent').hidden = !sent;
+  }
+  function paintListing(L){
+    cur = L;
+    var m = market(L), specs = [];
+    $('#dTags').innerHTML = '<span class="pill">' + esc(t(TYPE[L.type])) + '</span><span class="pill"><svg><use href="#i-shield"/></svg>' + esc(t('Verified')) + '</span>'
+      + (L.featured ? '<span class="pill pill-gold"><svg><use href="#i-star"/></svg>' + esc(t('Offer of the day')) + '</span>' : '');
+    $('#dTitle').textContent = t(L.district);
+    $('#dPrice').textContent = money(L.price); $('#dWas').textContent = money(m); $('#dPct').textContent = '−' + L.disc + '%';
+    $('#dSave').innerHTML = esc(t('You save')) + ' ' + money(m - L.price) + ' <span>· ' + money(L.price / L.size) + ' / m²</span>';
+    specs.push([L.type === 'land' ? 'Land size' : 'Size', L.size.toLocaleString('en-US') + ' m²']);
+    if (L.floor) specs.push(['Floor', L.floor + ' / ' + L.floors]);
+    if (L.view) specs.push(['View', t(L.view)]);
+    if (L.use) specs.push(['Intended use', t(L.use)]);
+    if (L.cond) specs.push(['Handover condition', t(COND[L.cond])]);
+    specs.push(['Construction completion', readyTxt(L.ready)]);
+    $('#dSpecs').innerHTML = specs.map(function(x, i){ return '<div' + (i === specs.length - 1 && specs.length % 2 ? ' class="wide"' : '') + '><dt>' + esc(t(x[0])) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('');
+    $('#dInfoBox').hidden = !L.info; $('#dInfo').textContent = L.info ? t(L.info) : '';
+    $('#dPlanBox').hidden = true; $('#dPlan').innerHTML = '';
+    gallery(L.urls || [L.photo || FALLBACK[L.type]], L.demo != null || !L.photo);
+    paintCta(); syncHearts();
+    $('#detail').hidden = false; $('#detail').scrollTop = 0; document.body.classList.add('lock');
+    if (!L.id) return;
+    /* stored listing: every photo and the plan through signed links */
+    var paths = L.photos.concat(L.plan ? [L.plan] : []);
+    if (!paths.length) return;
+    signUrls(paths).then(function(u){
+      if (cur !== L) return;
+      var ph = L.photos.map(function(p){ return u[p]; }).filter(Boolean);
+      if (ph.length) gallery(ph, false);
+      if (L.plan && u[L.plan]){
+        var ext = (L.plan.split('.').pop() || '').toLowerCase(), url = u[L.plan], title = t(L.type === 'land' ? 'Site master plan' : 'Floor plan');
+        $('#dPlanTitle').textContent = title;
+        $('#dPlan').innerHTML = /^(png|jpe?g|webp|gif)$/.test(ext)
+          ? '<a href="' + esc(url) + '" target="_blank" rel="noopener"><img class="plan-img" src="' + esc(url) + '" alt=""></a>'
+          : '<a class="btn btn-line btn-block" href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(t('Open the plan')) + ' (' + esc(ext.toUpperCase()) + ')</a>';
+        $('#dPlanBox').hidden = false;
+      }
+    });
+  }
+  function hideListing(){ cur = null; $('#detail').hidden = true; closeSheets(); document.body.classList.remove('lock'); }
+
+  /* request to ARI */
+  $('#dAsk').addEventListener('click', function(){
+    if (!cur) return;
+    $('#aSum').textContent = t(TYPE[cur.type]) + ' · ' + t(cur.district) + ' · ' + cur.size.toLocaleString('en-US') + ' m² · ' + money(cur.price) + ' (−' + cur.disc + '%)';
+    $('#aMsg').value = ''; $('#aSend').disabled = false; openSheet('#askSheet');
+  });
+  $('#askForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var L = cur; if (!L) return;
+    if (L.demo != null){
+      DEMO_SENT[L.demo] = 1; DEMO_NOTES.unshift({ key:'i-' + Date.now(), kind:'wait', what:'inv-wait', lkey:keyOf(L), L:L, at:new Date().toISOString() });
+      closeSheets(); document.body.classList.add('lock'); paintCta(); buildInbox(); toast('Request sent (sample). Nothing was sent.'); return;
+    }
+    var btn = $('#aSend'), uid = user.id; btn.disabled = true;
+    sb.from('platform_interests').insert({ listing_id:L.id, message:$('#aMsg').value.trim() || null }).then(function(res){
+      btn.disabled = false;
+      if (!user || user.id !== uid) return;
+      if (res.error && res.error.code !== '23505'){ toast('Couldn’t send the request. Try again.'); return; }
+      SENT[L.id] = 1; closeSheets(); if (cur) document.body.classList.add('lock'); paintCta();
+      toast(res.error ? 'You already sent a request for this listing.' : 'Request sent. ARI will contact you soon.');
+      fetchInts(false);
+    }, function(){ btn.disabled = false; toast(OFFLINE); });
+  });
+
+  /* cards: the heart saves, anywhere else opens the listing */
+  document.addEventListener('click', function(e){
+    var c = e.target.closest('.card'); if (!c) return;
+    if (e.target.closest('.heart')) toggleSaved(c.dataset.key); else openListing(c.dataset.key);
+  });
+
+  /* ---------- Tabs and routing (the phone's Back button closes a listing, then leaves the app) ---------- */
+  var TABS = ['home', 'saved', 'inbox', 'profile'];
+  function setTab(v){
+    var same = v === tab; tab = v;
+    $$('[data-screen]').forEach(function(s){ s.hidden = s.dataset.screen !== v; });
+    $$('[data-tab]').forEach(function(b){ b.dataset.tab === v ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'); });
+    if (v === 'saved') renderSaved();
+    if (v === 'inbox'){ renderInbox(); markSeen(); }
+    if (v === 'profile') paintProfile();
+    if (!same) window.scrollTo(0, 0);
+  }
+  function route(){
+    if (mode !== 'shell') return;
+    var h = location.hash.slice(1), m = /^l=(.+)$/.exec(h);
+    if (m){ showListing(decodeURIComponent(m[1])); return; }
+    var wasOpen = !$('#detail').hidden;
+    hideListing(); inApp = false;
+    var v = TABS.indexOf(h) > -1 ? h : 'home';
+    if (v !== tab || !wasOpen) setTab(v);
+    else if (v === 'inbox') renderInbox();
+  }
+  window.addEventListener('hashchange', route);
+  $('.tabbar').addEventListener('click', function(e){
+    var b = e.target.closest('[data-tab]'); if (!b) return;
+    if (b.dataset.tab === tab){ window.scrollTo({ top:0, behavior:'smooth' }); return; }
+    location.hash = b.dataset.tab;
+  });
+  function repaint(){   /* after a language switch */
+    paintList($('#results'), items); paintDay(); paintHome(); hello();
+    if (tab === 'saved') renderSaved();
+    renderInbox(); paintProfile(true);
+    if (cur) paintListing(cur);
+  }
+
+  /* ---------- Profile ---------- */
+  function hello(){
+    var n = ((profile && profile.full_name) || '').trim().split(/\s+/)[0];
+    $('#hello').textContent = t('Hello') + (n ? ', ' + (demo ? t('Sample investor') : n) : '');
+  }
+  function paintProfile(keep){
+    if (!profile) return;
+    var name = demo ? t('Sample investor') : (profile.full_name || '');
+    $('#pName').textContent = name || '—'; $('#pEmail').textContent = demo ? t('Sample account') : (user && user.email) || '';
+    $('#pInit').textContent = (name.trim().charAt(0) || 'A').toUpperCase();
+    if (keep) return;
+    $('#p-name').value = name; $('#p-phone').value = profile.phone || '';
+    $('#p-budget').value = profile.budget != null && $('#p-budget option[value="' + profile.budget + '"]') ? String(profile.budget) : '100000';
+    if (profile.interest && INTERESTS.indexOf(profile.interest) > -1) $('#p-interest').value = profile.interest;
+  }
+  $('#profForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (demo || !user){ toast('Sample account: changes are not saved.'); return; }
+    var name = $('#p-name').value.trim(); if (!name){ $('#p-name').focus(); return; }
+    var b = $('#p-budget').value, upd = { full_name:name, phone:$('#p-phone').value.trim() || null, budget:b === '250000+' ? 250000 : +b, interest:$('#p-interest').value };
+    var btn = $('#profSave'), uid = user.id; btn.disabled = true;
+    sb.from('platform_profiles').update(upd).eq('id', uid).then(function(res){
+      btn.disabled = false;
+      if (!user || user.id !== uid) return;
+      if (res.error){ toast('Couldn’t save. Try again.'); return; }
+      Object.keys(upd).forEach(function(k){ profile[k] = upd[k]; });
+      paintProfile(true); hello(); toast('Saved.');
+    }, function(){ btn.disabled = false; toast(OFFLINE); });
+  });
+
+  /* ---------- Sign in, register, sample account ---------- */
+  function showMode(m){
+    mode = m;
+    ['boot', 'auth', 'blocked', 'shell'].forEach(function(id){ $('#' + id).hidden = id !== m; });
+    if (m !== 'shell'){ hideListing(); $('#toast').style.bottom = '24px'; } else $('#toast').style.bottom = '';
+  }
+  function setAuthMode(m){
+    $$('.seg [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
+    $('.seg').hidden = false; $('#signForm').hidden = m !== 'signin'; $('#regForm').hidden = m !== 'register'; $('#regDone').hidden = true;
+  }
+  document.addEventListener('click', function(e){ var b = e.target.closest('[data-mode]'); if (b) setAuthMode(b.dataset.mode); });
+  function showErr(sel, msg){ var el = $(sel); el.textContent = msg ? t(msg) : ''; el.hidden = !msg; }
+  function authMsg(err){
+    var m = (err && err.message) || '';
+    if (/invalid login credentials/i.test(m)) return 'Wrong email or password.';
+    if (/email not confirmed/i.test(m)) return 'Confirm your email first. The link is in your inbox.';
+    if (/already registered|already been registered/i.test(m)) return 'This email is already registered. Sign in instead.';
+    if (/rate limit|too many|only request this after/i.test(m)) return 'Too many attempts. Try again in a few minutes.';
+    if (/password/i.test(m)) return 'Use a password with at least 8 characters.';
+    if (/fetch|network/i.test(m)) return OFFLINE;
+    return 'Something went wrong. Try again.';
+  }
+  $('#signForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!this.checkValidity()){ showErr('#signErr', 'Fill in every field.'); return; }
+    if (!sb){ showErr('#signErr', 'Sign-in is unavailable right now. Try the sample account.'); return; }
+    var btn = $('#signSubmit'), form = this; showErr('#signErr', ''); btn.disabled = true;
+    sb.auth.signInWithPassword({ email:$('#s-email').value.trim(), password:$('#s-pass').value }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#signErr', authMsg(res.error)); return; }
+      form.reset();   /* the auth listener below does the rest */
+    }, function(){ btn.disabled = false; showErr('#signErr', OFFLINE); });
+  });
+  $('#regForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = this;
+    if ($('#r-pass').value.length < 8 && $('#r-name').value.trim() && $('#r-email').validity.valid && $('#r-phone').value.trim()){ showErr('#regErr', 'Use a password with at least 8 characters.'); $('#r-pass').focus(); return; }
+    if (!form.checkValidity()){ showErr('#regErr', 'Fill in every field.'); return; }
+    if (!sb){ showErr('#regErr', 'Sign-in is unavailable right now. Try the sample account.'); return; }
+    var b = $('#r-budget').value, email = $('#r-email').value.trim(), btn = $('#regSubmit');
+    var meta = { role:'investor', full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim(), budget:String(b === '250000+' ? 250000 : +b), interest:$('#r-interest').value };
+    showErr('#regErr', ''); btn.disabled = true;
+    sb.auth.signUp({ email:email, password:$('#r-pass').value, options:{ data:meta, emailRedirectTo:NATIVE ? WEB_APP : location.origin + location.pathname.replace(/index\.html$/, '') } }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#regErr', authMsg(res.error)); return; }
+      var u = res.data.user;
+      if (u && u.identities && !u.identities.length){ showErr('#regErr', 'This email is already registered. Sign in instead.'); return; }
+      form.reset(); $('#r-budget').value = '100000';
+      if (res.data.session) return;   /* confirmation switched off: the auth listener signs in */
+      $('#regDoneEmail').textContent = email; form.hidden = true; $('.seg').hidden = true; $('#regDone').hidden = false;
+    }, function(){ btn.disabled = false; showErr('#regErr', OFFLINE); });
+  });
+
+  function reset(){
+    BY = {}; items = []; day = []; INTS = []; MSGS = []; SENT = {}; INBOX = []; DEMO_NOTES = []; DEMO_SENT = {}; pg.seq++; pg.n = 0; pg.total = 0; pg.busy = false; cur = null;
+    F = blankF(); $$('[data-type]').forEach(function(x){ x.setAttribute('aria-pressed', String(x.dataset.type === 'all')); });
+    $('#results').innerHTML = ''; $('#dayRail').innerHTML = ''; $('#daySec').hidden = true; $('#savedList').innerHTML = ''; setBadge(0);
+  }
+  function start(){   /* signed in as an investor (or the sample account): open the app */
+    showMode('shell'); hello(); paintProfile(); paintHome();
+    if (demo){
+      DEMO.forEach(function(L){ BY[keyOf(L)] = L; });
+      DEMO_NOTES = [{ key:'i-s1', kind:'ok', what:'inv-ok', lkey:'demo-2', L:DEMO[2] }];
+      demoList(); buildInbox();
+    } else { fetchPage(true); fetchDay(); fetchInts(false); }
+    if (/access_token=|type=signup|error/.test(location.hash)) history.replaceState(null, '', location.pathname);
+    route();
+  }
+  function startDemo(){
+    reset(); demo = true; user = null; profile = { full_name:'Sample investor', budget:100000, interest:'Apartments and land', approved:true };
+    try { sessionStorage.setItem('ari-app-demo', '1'); } catch(e){}
+    start();
+  }
+  $('#demoBtn').addEventListener('click', startDemo);
+  function block(title, text, kind){   /* kind: 'dev' (wrong kind of account) or 'offline' */
+    $('#blockedTitle').textContent = t(title); $('#blockedText').textContent = t(text);
+    $('#blockedSite').hidden = kind !== 'dev'; $('#blockedRetry').hidden = kind !== 'offline';
+    showMode('blocked');
+  }
+  $('#blockedRetry').addEventListener('click', function(){ location.reload(); });
+  function enter(u){
+    reset(); user = u; demo = false; try { sessionStorage.removeItem('ari-app-demo'); } catch(e){}
+    sb.from('platform_profiles').select('role,full_name,phone,budget,interest,approved').eq('id', u.id).maybeSingle().then(function(res){
+      if (!user || user.id !== u.id) return;
+      if (res.error){ block('No connection', OFFLINE, 'offline'); return; }
+      var md = u.user_metadata || {}, p = res.data || { role:md.role, full_name:md.full_name, phone:md.phone, interest:md.interest, budget:md.budget ? +md.budget : null, approved:true };
+      if (p.role === 'developer'){ block('This app is for investors', 'You’re signed in with a developer account. Add and manage listings on the website.', 'dev'); return; }
+      if (p.role !== 'investor'){ block('This app is for investors', 'This account isn’t set up as an investor yet.', 'dev'); return; }
+      profile = p; start();
+    }, function(){ block('No connection', OFFLINE, 'offline'); });
+  }
+  function leave(say){
+    user = null; profile = null; demo = false; try { sessionStorage.removeItem('ari-app-demo'); } catch(e){}
+    reset(); setAuthMode('signin'); showMode('auth');
+    if (location.hash) history.replaceState(null, '', location.pathname);
+    tab = 'home'; if (say) toast('Signed out.');
+  }
+  function signOut(){ if (user && sb){ sb.auth.signOut().then(null, function(){ leave(true); }); return; } leave(true); }
+  $('#signOut').addEventListener('click', signOut);
+  $('#blockedOut').addEventListener('click', signOut);
+  /* deleting the account from inside the app (both stores require it); the database removes the profile and requests with it */
+  $('#delAcct').addEventListener('click', function(){
+    if (demo || !user){ toast('Sample account: changes are not saved.'); return; }
+    $('#delYes').disabled = false; openSheet('#delSheet');
+  });
+  $('#delYes').addEventListener('click', function(){
+    if (!user || !sb) return;
+    var btn = this, uid = user.id; btn.disabled = true;
+    sb.rpc('platform_delete_me').then(function(res){
+      btn.disabled = false;
+      if (!user || user.id !== uid) return;
+      if (res.error){ toast('Couldn’t delete the account. Try again or write to ARI.'); return; }
+      closeSheets();
+      try { localStorage.removeItem(savedKey()); localStorage.removeItem(seenKey()); } catch(e){}
+      sb.auth.signOut({ scope:'local' }).then(function(){}, function(){});
+      leave(false); toast('Your account was deleted.');
+    }, function(){ btn.disabled = false; toast(OFFLINE); });
+  });
+
+  applyLang();
+  var wasDemo = false; try { wasDemo = sessionStorage.getItem('ari-app-demo') === '1'; } catch(e){}
+  if (sb){
+    sb.auth.onAuthStateChange(function(ev, session){
+      setTimeout(function(){   /* never call the client from inside its own callback */
+        var u = session && session.user;
+        if (u && (!user || user.id !== u.id)) enter(u);
+        else if (!u && user) leave(true);
+        else if (!u && mode === 'boot'){ if (wasDemo) startDemo(); else showMode('auth'); }
+      }, 0);
+    });
+    setTimeout(function(){ if (mode === 'boot' && !user){ if (wasDemo) startDemo(); else showMode('auth'); } }, 3000);
+  } else if (wasDemo) startDemo(); else showMode('auth');
+
+  /* installable, and the shell opens without a connection */
+  if (!NATIVE && 'serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) navigator.serviceWorker.register('sw.js').catch(function(){});
+})();
+</script>
+</body>
+</html>

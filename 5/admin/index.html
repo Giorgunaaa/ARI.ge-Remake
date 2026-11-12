@@ -151,6 +151,18 @@ main{padding:26px 0 70px}
 .box.note{background:var(--no-bg);border-color:#EFC7BC}
 .m-foot{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;padding:14px 20px;background:var(--card);border-top:1px solid var(--line)}
 .m-foot .grow{margin-right:auto}
+/* user window: who this is, then what they listed (developer) or asked about (investor) */
+.row.usr.open{cursor:pointer}
+.row.usr.open:hover{border-color:var(--line-2);box-shadow:var(--shadow)}
+.u-head{display:flex;align-items:center;gap:14px}
+.u-ava{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:var(--champ);font:700 19px var(--f-display)}
+.u-head b{display:block;font:600 20px/1.2 var(--f-display)}
+.u-head div span{display:block;font-size:14px;color:var(--ink-3)}
+.u-sum{display:flex;flex-wrap:wrap;gap:6px}
+.mini{display:grid;gap:8px}
+.mini .row{grid-template-columns:64px minmax(0,1fr) auto;padding:10px 12px}
+.mini .row.noimg{grid-template-columns:minmax(0,1fr) auto;align-items:start}
+.mini .thumb{width:64px;height:52px}
 .reject{display:grid;gap:8px;width:100%}
 .toast{position:fixed;left:0;right:0;bottom:20px;margin-inline:auto;width:fit-content;max-width:min(92vw,520px);z-index:80;background:var(--navy);color:var(--on-navy);padding:12px 18px;border-radius:12px;box-shadow:0 14px 40px -10px rgba(0,0,0,.5);font-size:14.5px}
 
@@ -226,7 +238,7 @@ main{padding:26px 0 70px}
       lsSub:'Open a listing to check it, then approve or reject it.', search:'Search by district, developer or cadastral code', noListings:'No listings here.',
       developer:'Developer', investor:'Investor', developers:'Developers', investors:'Investors', company:'Company', phone:'Phone', added:'Added', updated:'Updated', unknown:'Unknown',
       apartment:'Apartment', land:'Land plot', commercial:'Commercial space',
-      size:'Size', floor:'Floor', view:'View', use:'Intended use', handover:'Handover condition', price:'Price', market:'Market price', discount:'Discount', ready:'Completion', cadastral:'Cadastral code', district:'District', status:'Status',
+      size:'Size', floor:'Floor', view:'View', use:'Intended use', handover:'Handover condition', price:'Price', market:'Market price', discount:'Discount', ready:'Completion', cadastral:'Cadastral code', cadOwn:'Cadastral code (own unit)', cadLand:'Cadastral code (land)', bankFin:'Financed by a bank', subdivided:'Subdivision done', yes:'Yes', no:'No', district:'District', status:'Status',
       black:'Black frame', white:'White frame', green:'Green frame', renovated:'Renovated',
       photos:'Photos', noPhotos:'No photos uploaded.', plan:'Floor plan', masterPlan:'Site master plan', openPlan:'Open file', noPlan:'No file uploaded.', info:'Additional information', devContact:'Developer contact',
       prevNote:'Note sent to the developer', approve:'Approve and publish', reject:'Reject', backToReview:'Return to review', unpublish:'Unpublish',
@@ -237,7 +249,11 @@ main{padding:26px 0 70px}
       reqConfirmed:'Confirmed. The investor sees it in their inbox.', reqClosed:'Request closed.', reqReopened:'Request reopened.',
       usSub:'Everyone registered on the platform.', registered:'Registered', listingsN:'Listings', requestsN:'Requests', access:'Access', accessOn:'Has access', accessOff:'Blocked', block:'Block access', allow:'Allow access', noUsers:'No users here.',
       dayOffer:'Offer of the day', makeDay:'Make it the offer of the day', removeDay:'Remove from offers of the day', dayOn:'Marked. Investors see it first on their page.', dayOff:'Removed from offers of the day.',
-      showMore:'Show more', loading:'Loading…', accessChanged:'Access updated.', needSql:'Run supabase/admin.sql once in Supabase to turn this on.', interest:'Interested in' },
+      showMore:'Show more', loading:'Loading…', accessChanged:'Access updated.', needSql:'Run supabase/admin.sql once in Supabase to turn this on.', interest:'Interested in',
+      role:'Role', theirListings:'Their listings', theirRequests:'Requests they sent', noUserListings:'No listings added yet.', noUserRequests:'No requests sent yet.', gone:'Listing removed',
+      message:'Message', msgDev:'Message the developer', msgTitle:'Write a message', msgTo:'To', msgAllDev:'Message all developers', msgAllInv:'Message all investors', allDev:'All developers', allInv:'All investors',
+      msgLabel:'Message text', msgPh:'For example: we need the ownership extract for your listing. Please send it this week.', msgHint:'It arrives in their inbox on the site and in the app. They can’t reply there.',
+      msgShort:'Write the message first.', send:'Send', msgSent:'Sent. It is in their inbox now.', needSqlMsg:'Run supabase/messages.sql once in Supabase to turn this on.' },
     ka:{ adminPanel:'ადმინის პანელი', signInTitle:'შესვლა ადმინის პანელში', email:'ელფოსტა', password:'პაროლი', signIn:'შესვლა', or:'ან', openDemo:'დემოს გახსნა სანიმუშო მონაცემებით',
       demoHint:'დემო ყველა ეკრანს სანიმუშო განცხადებებსა და მოთხოვნებზე აჩვენებს. არაფერი ინახება და არ იგზავნება.', signOut:'გასვლა',
       demoBar:'დემო: სანიმუშო მონაცემები. გვერდის განახლებისას ცვლილებები ქრება.',
@@ -248,7 +264,7 @@ main{padding:26px 0 70px}
       lsSub:'გახსენი განცხადება, შეამოწმე და დაამტკიცე ან უარყავი.', search:'ძიება რაიონით, დეველოპერით ან საკადასტრო კოდით', noListings:'აქ განცხადება არ არის.',
       developer:'დეველოპერი', investor:'ინვესტორი', developers:'დეველოპერები', investors:'ინვესტორები', company:'კომპანია', phone:'ტელეფონი', added:'დამატებულია', updated:'განახლებულია', unknown:'უცნობი',
       apartment:'ბინა', land:'მიწის ნაკვეთი', commercial:'კომერციული ფართი',
-      size:'ფართი', floor:'სართული', view:'ხედი', use:'დანიშნულება', handover:'ჩაბარების მდგომარეობა', price:'ფასი', market:'საბაზრო ფასი', discount:'ფასდაკლება', ready:'დასრულება', cadastral:'საკადასტრო კოდი', district:'რაიონი', status:'სტატუსი',
+      size:'ფართი', floor:'სართული', view:'ხედი', use:'დანიშნულება', handover:'ჩაბარების მდგომარეობა', price:'ფასი', market:'საბაზრო ფასი', discount:'ფასდაკლება', ready:'დასრულება', cadastral:'საკადასტრო კოდი', cadOwn:'საკადასტრო კოდი (საკუთარი ერთეული)', cadLand:'საკადასტრო კოდი (მიწა)', bankFin:'ბანკის მიერ დაფინანსებულია', subdivided:'განშლა გაკეთებულია', yes:'კი', no:'არა', district:'რაიონი', status:'სტატუსი',
       black:'შავი კარკასი', white:'თეთრი კარკასი', green:'მწვანე კარკასი', renovated:'რემონტით',
       photos:'ფოტოები', noPhotos:'ფოტო არ არის ატვირთული.', plan:'გეგმა', masterPlan:'გენგეგმა', openPlan:'ფაილის გახსნა', noPlan:'ფაილი არ არის ატვირთული.', info:'დამატებითი ინფორმაცია', devContact:'დეველოპერის კონტაქტი',
       prevNote:'დეველოპერისთვის გაგზავნილი შენიშვნა', approve:'დამტკიცება და გამოქვეყნება', reject:'უარყოფა', backToReview:'განხილვაში დაბრუნება', unpublish:'გამოქვეყნების მოხსნა',
@@ -259,7 +275,11 @@ main{padding:26px 0 70px}
       reqConfirmed:'დადასტურდა. ინვესტორი ამას თავის შეტყობინებებში ხედავს.', reqClosed:'მოთხოვნა დაიხურა.', reqReopened:'მოთხოვნა ხელახლა გაიხსნა.',
       usSub:'ყველა, ვინც პლატფორმაზე დარეგისტრირდა.', registered:'რეგისტრაცია', listingsN:'განცხადება', requestsN:'მოთხოვნა', access:'წვდომა', accessOn:'წვდომა აქვს', accessOff:'დაბლოკილია', block:'წვდომის დაბლოკვა', allow:'წვდომის მიცემა', noUsers:'აქ მომხმარებელი არ არის.',
       dayOffer:'დღის შეთავაზება', makeDay:'დღის შეთავაზებად მონიშვნა', removeDay:'დღის შეთავაზებიდან მოხსნა', dayOn:'მოინიშნა. ინვესტორები მას თავის გვერდზე პირველს ხედავენ.', dayOff:'მოიხსნა დღის შეთავაზებიდან.',
-      showMore:'მეტის ჩვენება', loading:'იტვირთება…', accessChanged:'წვდომა შეიცვალა.', needSql:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს' }
+      showMore:'მეტის ჩვენება', loading:'იტვირთება…', accessChanged:'წვდომა შეიცვალა.', needSql:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/admin.sql.', interest:'აინტერესებს',
+      role:'როლი', theirListings:'მისი განცხადებები', theirRequests:'მის მიერ გაგზავნილი მოთხოვნები', noUserListings:'განცხადება ჯერ არ დაუმატებია.', noUserRequests:'მოთხოვნა ჯერ არ გაუგზავნია.', gone:'განცხადება წაშლილია',
+      message:'შეტყობინება', msgDev:'შეტყობინება დეველოპერს', msgTitle:'შეტყობინების დაწერა', msgTo:'ვის', msgAllDev:'შეტყობინება ყველა დეველოპერს', msgAllInv:'შეტყობინება ყველა ინვესტორს', allDev:'ყველა დეველოპერი', allInv:'ყველა ინვესტორი',
+      msgLabel:'შეტყობინების ტექსტი', msgPh:'მაგალითად: შენი განცხადებისთვის საკუთრების ამონაწერი გვჭირდება. გთხოვ, ამ კვირაში გამოგვიგზავნე.', msgHint:'მიმღები მას საიტზე და აპში, შეტყობინებების ყუთში ნახავს. იქიდან პასუხს ვერ დაწერს.',
+      msgShort:'ჯერ შეტყობინება დაწერე.', send:'გაგზავნა', msgSent:'გაიგზავნა. უკვე მის შეტყობინებებშია.', needSqlMsg:'ამის ჩასართავად Supabase-ში ერთხელ გაუშვი supabase/messages.sql.' }
   };
   var KA_PLACE = { 'Saburtalo, Tbilisi':'საბურთალო, თბილისი','Vake, Tbilisi':'ვაკე, თბილისი','Tskneti, Tbilisi':'წყნეთი, თბილისი','Didube, Tbilisi':'დიდუბე, თბილისი','Didi Dighomi, Tbilisi':'დიდი დიღომი, თბილისი','Gldani, Tbilisi':'გლდანი, თბილისი','Isani, Tbilisi':'ისანი, თბილისი','Samgori, Tbilisi':'სამგორი, თბილისი','Nadzaladevi, Tbilisi':'ნაძალადევი, თბილისი','Chughureti, Tbilisi':'ჩუღურეთი, თბილისი','Krtsanisi, Tbilisi':'კრწანისი, თბილისი','Mtatsminda, Tbilisi':'მთაწმინდა, თბილისი','Lisi, Tbilisi':'ლისი, თბილისი' };
   var lang = 'en';
@@ -290,9 +310,9 @@ main{padding:26px 0 70px}
       { id:'i4', role:'investor', full_name:'Tamar Gelashvili', phone:'+995 574 12 34 56', budget:40000, interest:'Apartments', approved:false, created_at:ago(1) }
     ];
     var L = [
-      { id:'l1', owner:'d3', type:'apartment', status:'in_review', district:'Vake, Tbilisi', size_m2:90, floor:5, floors:9, view_type:'Courtyard', handover:'renovated', price_usd:153000, discount_pct:25, ready:'Q2 2027', cadastral:'01.14.05.011.027', info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan_path:'../img/interior.jpg', photos:['../img/room.jpg', '../img/interior.jpg'], created_at:ago(1), updated_at:ago(1) },
-      { id:'l2', owner:'d2', type:'land', status:'in_review', district:'Tskneti, Tbilisi', size_m2:620, price_usd:58000, discount_pct:28, ready:'Q1 2028', cadastral:'01.19.09.011.140', info:'Second phase of the cottage development. Road and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], created_at:ago(2), updated_at:ago(2) },
-      { id:'l3', owner:'d1', type:'commercial', status:'in_review', district:'Saburtalo, Tbilisi', size_m2:140, floor:1, floors:16, use_type:'Retail / showroom', handover:'white', price_usd:238000, discount_pct:20, ready:'Q4 2027', cadastral:'01.10.13.002.210', info:'', plan_path:null, photos:[], created_at:ago(3), updated_at:ago(3) },
+      { id:'l1', owner:'d3', type:'apartment', status:'in_review', district:'Vake, Tbilisi', size_m2:90, floor:5, floors:9, view_type:'Courtyard', handover:'renovated', price_usd:153000, discount_pct:25, ready:'Q2 2027', cadastral:'01.14.05.011.027.01.018', bank_financed:true, bank:'TBC Bank', subdivided:true, info:'Fully renovated with fitted kitchen. Two bedrooms facing a quiet courtyard.', plan_path:'../img/interior.jpg', photos:['../img/room.jpg', '../img/interior.jpg'], created_at:ago(1), updated_at:ago(1) },
+      { id:'l2', owner:'d2', type:'land', status:'in_review', district:'Tskneti, Tbilisi', size_m2:620, price_usd:58000, discount_pct:28, ready:'Q1 2028', cadastral:'01.19.09.011.140', bank_financed:false, bank:null, subdivided:true, info:'Second phase of the cottage development. Road and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], created_at:ago(2), updated_at:ago(2) },
+      { id:'l3', owner:'d1', type:'commercial', status:'in_review', district:'Saburtalo, Tbilisi', size_m2:140, floor:1, floors:16, use_type:'Retail / showroom', handover:'white', price_usd:238000, discount_pct:20, ready:'Q4 2027', cadastral:'01.10.13.002.210', bank_financed:true, bank:'Bank of Georgia', subdivided:false, info:'', plan_path:null, photos:[], created_at:ago(3), updated_at:ago(3) },
       { id:'l4', owner:'d1', type:'apartment', status:'published', district:'Saburtalo, Tbilisi', size_m2:65, floor:8, floors:14, view_type:'City view', handover:'black', price_usd:68250, discount_pct:20, ready:'Q3 2027', cadastral:'01.10.13.002.045', info:'Developer installment plan available up to 24 months. Underground parking on request.', plan_path:'../img/interior.jpg', photos:['../img/interior.jpg', '../img/room.jpg', '../img/home-inv.jpg'], created_at:ago(20), updated_at:ago(19) },
       { id:'l5', owner:'d2', type:'land', status:'published', district:'Tskneti, Tbilisi', size_m2:500, price_usd:45000, discount_pct:30, ready:'Q4 2027', cadastral:'01.19.09.011.112', info:'Part of a gated cottage development. Road, water and electricity to the plot boundary.', plan_path:'../img/land.jpg', photos:['../img/land.jpg'], featured:true, created_at:ago(15), updated_at:ago(14) },
       { id:'l6', owner:'d3', type:'apartment', status:'rejected', district:'Vake, Tbilisi', size_m2:48, floor:2, floors:9, view_type:'Courtyard', handover:'white', price_usd:92000, discount_pct:22, ready:'Q2 2027', cadastral:'01.14.05.011.031', info:'', plan_path:null, photos:['../img/room.jpg'], review_note:'The cadastral code belongs to a different unit. Please check it and send again.', created_at:ago(8), updated_at:ago(7) }
@@ -465,6 +485,20 @@ main{padding:26px 0 70px}
     if (S.demo){ row.approved = ok; return Promise.resolve(); }
     return sb.rpc('platform_set_approved', { target:id, ok:ok }).then(function(res){ if (res.error) throw res.error; row.approved = ok; });
   }
+  /* a text from ARI to one person (to.id) or to every developer / investor (to.aud); it shows in their inbox.
+     The demo keeps it in this browser so the sample inbox on the site can show it. */
+  function sendMsg(to, body){
+    if (S.demo){
+      try {
+        var a = JSON.parse(localStorage.getItem('ari-demo-msgs') || '[]');
+        a.push({ id:'dm' + Date.now(), to:to.aud || to.role, body:body, at:new Date().toISOString() });
+        localStorage.setItem('ari-demo-msgs', JSON.stringify(a.slice(-20)));
+      } catch(e){}
+      return Promise.resolve();
+    }
+    return sb.from('platform_messages').insert(to.id ? { recipient:to.id, body:body } : { audience:to.aud, body:body }).then(function(res){ if (res.error) throw res.error; });
+  }
+  function msgBtn(id, role, name){ return '<button class="btn btn-line btn-sm" data-act="msg" data-id="' + esc(id) + '" data-role="' + esc(role) + '" data-name="' + esc(name || '') + '">' + esc(t('message')) + '</button>'; }
 
   /* ---------- Pieces ---------- */
   function typeName(x){ return t(x.type) || x.type; }
@@ -493,7 +527,7 @@ main{padding:26px 0 70px}
       + (compact ? '' : '<span>' + esc(t('devContact')) + ': ' + esc(d.company || d.full_name || t('unknown')) + (d.phone ? ' · ' + esc(d.phone) : '') + '</span>')
       + '<div class="msg">' + (x.message ? esc(x.message) : '<i>' + esc(t('noQuestion')) + '</i>') + '</div></div>'
       + '<div class="r-col"><span>' + esc(day(x.created_at)) + '</span>' + pill(x.status) + '</div>'
-      + '<div class="acts">' + acts + '</div></div>';
+      + '<div class="acts">' + acts + (x.investor ? msgBtn(x.investor, 'investor', x.investor_name) : '') + '</div></div>';
   }
 
   /* ---------- Screens ---------- */
@@ -531,13 +565,14 @@ main{padding:26px 0 70px}
   function screenUsers(){
     var c = S.counts, D = S.list && S.list.tab === 'users' ? S.list : null;
     return '<div class="page-head"><div><h1>' + esc(t('users')) + '</h1><p>' + esc(t('usSub')) + '</p></div></div>'
-      + '<div class="bar">' + seg('uf', S.uf, [['developer', 'developers', c.developers || 0], ['investor', 'investors', c.investors || 0]]) + '</div>'
+      + '<div class="bar">' + seg('uf', S.uf, [['developer', 'developers', c.developers || 0], ['investor', 'investors', c.investors || 0]])
+      + '<button class="btn btn-gold btn-sm" type="button" style="margin-left:auto" data-act="msg" data-aud="' + S.uf + '">' + esc(t(S.uf === 'developer' ? 'msgAllDev' : 'msgAllInv')) + '</button></div>'
       + (!D ? waiting() : D.rows.length ? '<div class="rows">' + D.rows.map(function(p){
           var dev = p.role === 'developer', n = (D.n && D.n[p.id]) || 0;
-          return '<div class="row flat usr"><div class="r-main"><b>' + esc(p.full_name || t('unknown')) + '</b><span>' + esc(dev ? (p.company || '') : (p.interest ? t('interest') + ': ' + p.interest : '')) + '</span></div>'
+          return '<div class="row flat usr open" data-act="user" data-id="' + esc(p.id) + '" tabindex="0" role="button"><div class="r-main"><b>' + esc(p.full_name || t('unknown')) + '</b><span>' + esc(dev ? (p.company || '') : (p.interest ? t('interest') + ': ' + p.interest : '')) + '</span></div>'
             + '<div class="r-col"><b>' + esc(p.phone || '') + '</b><span>' + esc(t('registered')) + ': ' + esc(day(p.created_at)) + '</span></div>'
             + '<div class="r-col"><b>' + n + ' ' + esc(t(dev ? 'listingsN' : 'requestsN')) + '</b>' + (dev ? '' : '<span>' + esc(t('budget')) + ': ' + (p.budget ? money(p.budget) : '—') + '</span>') + '</div>'
-            + '<div class="acts">' + (dev ? '' : '<span class="pill ' + (p.approved ? 'p-ok' : 'p-no') + '">' + esc(t(p.approved ? 'accessOn' : 'accessOff')) + '</span><button class="btn btn-line btn-sm" data-act="access" data-id="' + esc(p.id) + '" data-ok="' + (!p.approved) + '">' + esc(t(p.approved ? 'block' : 'allow')) + '</button>') + '</div></div>';
+            + '<div class="acts">' + msgBtn(p.id, p.role, [p.full_name, dev ? p.company : ''].filter(Boolean).join(' · ')) + (dev ? '' : '<span class="pill ' + (p.approved ? 'p-ok' : 'p-no') + '">' + esc(t(p.approved ? 'accessOn' : 'accessOff')) + '</span><button class="btn btn-line btn-sm" data-act="access" data-id="' + esc(p.id) + '" data-ok="' + (!p.approved) + '">' + esc(t(p.approved ? 'block' : 'allow')) + '</button>') + '</div></div>';
         }).join('') + '</div>' + moreBtn(D.rows.length, D.total) : '<p class="empty panel">' + esc(t('noUsers')) + '</p>');
   }
 
@@ -556,15 +591,75 @@ main{padding:26px 0 70px}
     var keep = document.activeElement && document.activeElement.id === 'lq', pos = keep ? document.activeElement.selectionStart : 0;
     $('#view').innerHTML = S.tab === 'listings' ? screenListings() : S.tab === 'requests' ? screenRequests() : S.tab === 'users' ? screenUsers() : screenOverview();
     if (keep){ var f = $('#lq'); f.focus(); try { f.setSelectionRange(pos, pos); } catch(e){} }
-    if (!S.demo){   /* thumbnails come from private storage */
-      var imgs = $$('#view img[data-path]').filter(function(i){ return i.dataset.path; });
-      fileUrls(imgs.map(function(i){ return i.dataset.path; })).then(function(map){ imgs.forEach(function(i){ if (map[i.dataset.path]) i.src = map[i.dataset.path]; }); });
-    }
+    signThumbs($('#view'));
   }
 
   /* ---------- Listing window ---------- */
   var openId = null, rejecting = false;
-  function closeModal(){ $('#modal').hidden = true; openId = null; rejecting = false; document.body.style.overflow = ''; }
+  var msgTo = null, userOpen = null, userRows = null, fromUser = null;
+  function closeModal(){ $('#modal').hidden = true; openId = null; rejecting = false; msgTo = null; userOpen = null; document.body.style.overflow = ''; }
+  function signThumbs(root){   /* thumbnails come from private storage */
+    if (S.demo) return;
+    var imgs = $$('img[data-path]', root).filter(function(i){ return i.dataset.path; });
+    fileUrls(imgs.map(function(i){ return i.dataset.path; })).then(function(map){ imgs.forEach(function(i){ if (map[i.dataset.path]) i.src = map[i.dataset.path]; }); });
+  }
+  /* ---------- User window: a developer's listings, or the requests an investor sent ---------- */
+  function getUserRows(p){
+    var dev = p.role === 'developer', none = function(){ return []; };
+    var withL = function(rows){ rows = upsert(S.data.interests, rows); return need('platform_listings', S.data.listings, rows.map(function(x){ return x.listing_id; })).then(function(){ return rows; }); };
+    if (S.demo) return dev ? Promise.resolve(upsert(S.data.listings, DEMO.listings.filter(function(l){ return l.owner === p.id; }))) : withL(DEMO.interests.filter(function(x){ return x.investor === p.id; }));
+    if (dev) return sb.from('platform_listings').select('*').eq('owner', p.id).order('created_at', { ascending:false }).limit(100).then(function(r){ return upsert(S.data.listings, r.data || []); }, none);
+    return sb.from('platform_interests').select('*').eq('investor', p.id).order('created_at', { ascending:false }).limit(100).then(function(r){ return withL(r.data || []); }, none);
+  }
+  function openUser(id){
+    var p = byId(S.data.profiles, id); if (!p) return;
+    openId = null; msgTo = null; userOpen = id; userRows = null; drawUser();
+    getUserRows(p).then(function(rows){ if (userOpen !== id) return; userRows = rows; drawUser(); });
+  }
+  function drawUser(){
+    var p = byId(S.data.profiles, userOpen); if (!p) return;
+    var dev = p.role === 'developer', rows = userRows, name = p.full_name || t('unknown');
+    var email = !dev && rows && rows[0] && rows[0].investor_email;
+    var cells = [[t('phone'), p.phone || '—']];
+    if (dev) cells.unshift([t('company'), p.company || '—']);
+    if (email) cells.push([t('email'), email]);
+    cells.push([t('registered'), day(p.created_at)]);
+    if (!dev) cells.push([t('budget'), p.budget ? money(p.budget) : '—'], [t('interest'), p.interest || '—'], [t('access'), t(p.approved ? 'accessOn' : 'accessOff')]);
+    var n = function(st){ return rows.filter(function(x){ return x.status === st; }).length; };
+    var sum = !rows || !rows.length ? '' : '<div class="u-sum">' + (dev ? ['published', 'in_review', 'rejected'] : ['new', 'contacted', 'closed']).filter(n).map(function(st){ return pill(st).replace('</span>', ' · ' + n(st) + '</span>'); }).join('') + '</div>';
+    var list = !rows ? '<p>' + esc(t('loading')) + '</p>' : !rows.length ? '<p>' + esc(t(dev ? 'noUserListings' : 'noUserRequests')) + '</p>'
+      : '<div class="mini">' + rows.map(function(x){
+          if (dev) return '<button type="button" class="row" data-act="open" data-from="' + esc(p.id) + '" data-id="' + esc(x.id) + '">' + thumbOf(x)
+            + '<span class="r-main"><b>' + esc(typeName(x)) + ' · ' + esc(place(x.district)) + '</b><span>' + (+x.size_m2).toLocaleString('en-US') + ' m² · ' + money(x.price_usd) + ' (−' + x.discount_pct + '%) · ' + esc(quarter(x.ready)) + '</span><span>' + esc(t('added')) + ': ' + esc(day(x.created_at)) + '</span></span>'
+            + '<span>' + pill(x.status) + (isDay(x) ? '<br><span class="pill p-day" style="margin-top:6px">' + esc(t('dayOffer')) + '</span>' : '') + '</span></button>';
+          var l = byId(S.data.listings, x.listing_id), d = l ? who(l.owner) : {};
+          return '<' + (l ? 'button type="button" data-act="open" data-from="' + esc(p.id) + '" data-id="' + esc(l.id) + '"' : 'div') + ' class="row noimg' + (l ? '' : ' flat') + '">'
+            + '<span class="r-main"><b>' + (l ? sumLine(l) : esc(x.listing_summary || t('gone'))) + '</b>'
+            + (l && (d.company || d.full_name) ? '<span>' + esc(t('developer')) + ': ' + esc(d.company || d.full_name) + '</span>' : '')
+            + '<span class="msg">' + (x.message ? esc(x.message) : '<i>' + esc(t('noQuestion')) + '</i>') + '</span><span>' + esc(day(x.created_at)) + '</span></span>'
+            + '<span>' + pill(x.status) + '</span></' + (l ? 'button' : 'div') + '>';
+        }).join('') + '</div>';
+    var ini = name.split(/\s+/).map(function(w){ return w.charAt(0); }).join('').slice(0, 2).toUpperCase();
+    $('#modalCard').innerHTML = '<div class="m-head"><h2>' + esc(t(dev ? 'developer' : 'investor')) + '</h2><button class="x" type="button" data-act="close" aria-label="' + esc(t('close')) + '">×</button></div>'
+      + '<div class="m-body"><div class="u-head"><span class="u-ava" aria-hidden="true">' + esc(ini) + '</span><div><b>' + esc(name) + '</b><span>' + esc(dev ? (p.company || '') : '') + '</span></div></div>'
+      + '<dl class="dl">' + cells.map(function(c){ return '<div><dt>' + esc(c[0]) + '</dt><dd>' + esc(c[1]) + '</dd></div>'; }).join('') + '</dl>'
+      + '<div class="box"><h3>' + esc(t(dev ? 'theirListings' : 'theirRequests')) + (rows ? ' · ' + rows.length : '') + '</h3>' + sum + list + '</div></div>'
+      + '<div class="m-foot"><button class="btn btn-line" data-act="close">' + esc(t('close')) + '</button><button class="btn btn-primary" data-act="msg" data-backuser="' + esc(p.id) + '" data-id="' + esc(p.id) + '" data-role="' + esc(p.role) + '" data-name="' + esc([p.full_name, dev ? p.company : ''].filter(Boolean).join(' · ')) + '">' + esc(t('message')) + '</button></div>';
+    $('#modal').hidden = false; document.body.style.overflow = 'hidden';
+    signThumbs($('#modalCard'));
+  }
+  function drawMsg(){
+    var old = $('#msgBody'), val = old ? old.value : '';
+    var name = msgTo.aud ? t(msgTo.aud === 'developer' ? 'allDev' : 'allInv') : (msgTo.name || t('unknown')) + ' (' + t(msgTo.role === 'developer' ? 'developer' : 'investor') + ')';
+    $('#modalCard').innerHTML = '<div class="m-head"><h2>' + esc(t('msgTitle')) + '</h2><button class="x" type="button" data-act="close" aria-label="' + esc(t('close')) + '">×</button></div>'
+      + '<div class="m-body"><div class="reject"><p><b>' + esc(t('msgTo')) + ':</b> ' + esc(name) + '</p>'
+      + '<label for="msgBody" style="font-weight:600;font-size:14px">' + esc(t('msgLabel')) + '</label><textarea class="field" id="msgBody" style="min-height:150px" maxlength="2000" placeholder="' + esc(t('msgPh')) + '"></textarea>'
+      + '<p class="err" id="msgErr" hidden>' + esc(t('msgShort')) + '</p><p class="hint">' + esc(t('msgHint')) + '</p></div></div>'
+      + '<div class="m-foot"><button class="btn btn-line" data-act="close">' + esc(t('cancel')) + '</button><button class="btn btn-primary" data-act="msg-send">' + esc(t('send')) + '</button></div>';
+    $('#msgBody').value = val;
+    $('#modal').hidden = false; document.body.style.overflow = 'hidden';
+    setTimeout(function(){ var b = $('#msgBody'); if (b) b.focus(); }, 30);
+  }
   function openListing(id){
     var l = byId(S.data.listings, id); if (!l) return;
     openId = id; rejecting = false;
@@ -578,12 +673,17 @@ main{padding:26px 0 70px}
     if (l.view_type) cells.push([t('view'), l.view_type]);
     if (l.use_type) cells.push([t('use'), l.use_type]);
     if (l.handover) cells.push([t('handover'), t(l.handover)]);
-    cells.push([t('ready'), quarter(l.ready)], [t('cadastral'), l.cadastral], [t('added'), day(l.created_at)], [t('updated'), day(l.updated_at)]);
+    cells.push([t('ready'), quarter(l.ready)]);
+    /* asked since finance.sql; older listings have no answer and show the plain code */
+    if (l.bank_financed != null) cells.push([t('bankFin'), l.bank_financed ? t('yes') + (l.bank ? ' · ' + l.bank : '') : t('no')]);
+    if (l.subdivided != null) cells.push([t('subdivided'), l.subdivided ? t('yes') : t('no')]);
+    cells.push([l.subdivided == null ? t('cadastral') : l.subdivided ? t('cadOwn') : t('cadLand'), l.cadastral], [t('added'), day(l.created_at)], [t('updated'), day(l.updated_at)]);
     var photos = (l.photos || []).filter(function(p){ return urls[p]; });
     var foot = rejecting
       ? '<div class="reject"><label for="note" style="font-weight:600;font-size:14px">' + esc(t('rejectWhy')) + '</label><textarea class="field" id="note" placeholder="' + esc(t('rejectPh')) + '" maxlength="600"></textarea><p class="err" id="noteErr" hidden>' + esc(t('noteShort')) + '</p>'
         + '<div class="acts"><button class="btn btn-line" data-act="reject-cancel">' + esc(t('cancel')) + '</button><button class="btn btn-no" data-act="reject-send">' + esc(t('sendReject')) + '</button></div></div>'
       : '<span class="grow">' + pill(l.status) + '</span>'
+        + (l.owner ? '<button class="btn btn-line" data-act="msg" data-back="' + esc(l.id) + '" data-id="' + esc(l.owner) + '" data-role="developer" data-name="' + esc([d.full_name, d.company].filter(Boolean).join(' · ')) + '">' + esc(t('msgDev')) + '</button>' : '')
         + (l.status === 'in_review' ? '<button class="btn btn-no" data-act="reject">' + esc(t('reject')) + '</button><button class="btn btn-primary" data-act="approve">' + esc(t('approve')) + '</button>'
           : l.status === 'published' ? '<button class="btn btn-line" data-act="review">' + esc(t('unpublish')) + '</button><button class="btn ' + (l.featured ? 'btn-line' : 'btn-gold') + '" data-act="day" data-on="' + (!l.featured) + '">' + esc(t(l.featured ? 'removeDay' : 'makeDay')) + '</button>'
           : '<button class="btn btn-line" data-act="review">' + esc(t('backToReview')) + '</button><button class="btn btn-primary" data-act="approve">' + esc(t('approve')) + '</button>');
@@ -611,15 +711,20 @@ main{padding:26px 0 70px}
   /* ---------- Clicks ---------- */
   document.addEventListener('click', function(e){
     var lg = e.target.closest('[data-lang]');
-    if (lg){ lang = lg.dataset.lang; try { localStorage.setItem('bm-lang', lang); } catch(x){} render(); if (openId) redrawOpen(); return; }
+    if (lg){ lang = lg.dataset.lang; try { localStorage.setItem('bm-lang', lang); } catch(x){} render(); if (openId) redrawOpen(); else if (msgTo) drawMsg(); else if (userOpen) drawUser(); return; }
     var a = e.target.closest('[data-act]'); if (!a) return;
     var act = a.dataset.act;
     if (act === 'tab'){ S.tab = a.dataset.tab; show(); window.scrollTo(0, 0); }
     else if (act === 'go'){ S.tab = a.dataset.tab; if (a.dataset.lf) S.lf = a.dataset.lf; if (a.dataset.rf) S.rf = a.dataset.rf; show(); window.scrollTo(0, 0); }
     else if (act === 'filter'){ S[a.dataset.name] = a.dataset.val; show(); }
     else if (act === 'more'){ S.more[S.tab] += STEP; a.disabled = true; refresh(); }
-    else if (act === 'open') openListing(a.dataset.id);
-    else if (act === 'close') closeModal();
+    else if (act === 'open'){ fromUser = a.dataset.from || null; userOpen = null; openListing(a.dataset.id); }
+    else if (act === 'user') openUser(a.dataset.id);
+    else if (act === 'close'){   /* a window opened from another one returns to it: message -> listing or user, listing -> user */
+      var m = msgTo, u = m ? m.backUser : (openId && fromUser);
+      closeModal(); if (!m) fromUser = null;
+      if (m && m.back) openListing(m.back); else if (u) openUser(u);
+    }
     else if (act === 'approve') decide({ status:'published', review_note:null }, 'approved');
     else if (act === 'review') decide({ status:'in_review' }, 'returned');
     else if (act === 'day'){
@@ -638,6 +743,14 @@ main{padding:26px 0 70px}
       a.disabled = true;
       saveInterest(a.dataset.id, a.dataset.to).then(function(){ refresh(); toast(t(a.dataset.to === 'contacted' ? 'reqConfirmed' : a.dataset.to === 'closed' ? 'reqClosed' : 'reqReopened')); }, function(){ a.disabled = false; toast(t('saveFail')); });
     }
+    else if (act === 'msg'){ msgTo = a.dataset.aud ? { aud:a.dataset.aud } : { id:a.dataset.id, role:a.dataset.role, name:a.dataset.name, back:a.dataset.back, backUser:a.dataset.backuser }; openId = null; userOpen = null; rejecting = false; drawMsg(); }
+    else if (act === 'msg-send'){
+      var body = $('#msgBody').value.trim();
+      if (body.length < 2){ $('#msgErr').hidden = false; $('#msgBody').focus(); return; }
+      a.disabled = true;
+      sendMsg(msgTo, body).then(function(){ var m = msgTo || {}; closeModal(); if (m.back) openListing(m.back); else if (m.backUser) openUser(m.backUser); toast(t('msgSent')); },
+        function(err){ a.disabled = false; toast(t(/platform_messages|schema cache|relation|not find/i.test((err && err.message) || '') ? 'needSqlMsg' : 'saveFail')); });
+    }
     else if (act === 'access'){
       a.disabled = true;
       saveAccess(a.dataset.id, a.dataset.ok === 'true').then(function(){ refresh(); toast(t('accessChanged')); }, function(err){ a.disabled = false; toast(t(/function|schema cache|not find/i.test((err && err.message) || '') ? 'needSql' : 'saveFail')); });
@@ -648,7 +761,10 @@ main{padding:26px 0 70px}
     if (e.target.id !== 'lq') return;
     S.lq = e.target.value; S.more.listings = STEP; clearTimeout(searchTimer); searchTimer = setTimeout(refresh, 300);   /* wait until typing pauses */
   });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !$('#modal').hidden) closeModal();
+    else if (e.key === 'Enter' && e.target.matches && e.target.matches('.row.usr.open')) openUser(e.target.dataset.id);
+  });
 
   /* ---------- Sign in ---------- */
   function showErr(k){ var el = $('#loginErr'); el.textContent = k ? t(k) : ''; el.dataset.k = k || ''; el.hidden = !k; }
