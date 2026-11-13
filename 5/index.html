@@ -340,6 +340,18 @@ html[lang="ka"] .door2 .h2{font-size:clamp(1.45rem,2.4vw,2.1rem)}
 .crumb{display:flex;gap:8px;font-size:13.5px;color:var(--on-navy-2)}
 .crumb a{text-decoration:none}
 .crumb a:hover{color:var(--on-navy);text-decoration:underline}
+/* legal pages: plain reading pages, no hero */
+.legal{padding-block:clamp(36px,6vw,80px)}
+.legal .wrap{max-width:860px}
+.legal .crumb{color:var(--ink-3);margin-bottom:18px}
+.legal .crumb a:hover{color:var(--ink)}
+.legal h1{font-size:clamp(2rem,4.4vw,3.1rem);letter-spacing:-.03em}
+.legal-date{margin-top:10px;font-size:13.5px;color:var(--ink-3)}
+.legal h2{font-size:clamp(1.15rem,2vw,1.35rem);margin-top:34px}
+.legal p,.legal li{color:var(--ink-2);font-size:15.5px;line-height:1.65;max-width:70ch}
+.legal p{margin-top:12px}
+.legal ul{margin:12px 0 0;padding-left:20px;display:grid;gap:8px}
+.legal a{color:var(--accent-ink);font-weight:600}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
 .hero-ctas .btn{min-height:52px;font-size:16px}
 .hero-note{display:flex;gap:10px;align-items:flex-start;max-width:52ch;padding:12px 14px;border-radius:12px;background:rgba(227,184,96,.12);border:1px solid rgba(227,184,96,.4);color:var(--on-navy);font-size:14.5px}
@@ -1080,7 +1092,6 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <span class="logo-text"><b>ARI</b><span>Investment platform</span></span>
     </a>
     <nav class="nav" aria-label="Pages">
-      <a href="#home" data-nav="home">Home</a>
       <a href="#developers" data-nav="developers" data-when="not-inv">For developers</a>
       <a href="#investors" data-nav="investors" data-when="not-dev">For investors</a>
       <a href="#offers" data-nav="offers" data-when="dev" hidden>My offers</a>
@@ -1159,7 +1170,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       </span>
     </a>
     <div class="mid2" aria-hidden="true">ARI</div>
-    <div class="home2-foot"><a href="#platform">How the platform works</a><a href="#home">Privacy policy</a><a href="#home">Terms of use</a><span>© 2026 ARI Development</span></div>
+    <div class="home2-foot"><a href="#platform">How the platform works</a><a href="#privacy">Privacy policy</a><a href="#terms">Terms of use</a><span>© 2026 ARI Development</span></div>
   </section>
 </div>
 
@@ -1997,6 +2008,106 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     </div>
   </section>
 </div>
+
+<!-- ============ LEGAL: privacy policy and terms of use ============ -->
+<div class="view" data-view="privacy" hidden>
+  <section class="legal" aria-labelledby="priv-h">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>Privacy policy</span></nav>
+      <h1 id="priv-h">Privacy policy</h1>
+      <p class="legal-date">Last updated: 13 November 2026</p>
+      <p>This policy explains what personal data the ARI investment platform collects, why, and what you can do about it. The platform is run by ARI Development, Tbilisi, Georgia.</p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li>Account details you give at registration: full name, email, phone number and password. The password is stored only in encrypted form; ARI staff cannot read it.</li>
+        <li>For investors: the available budget and the kind of property you are interested in.</li>
+        <li>For developers: the company name and website, and the listings you submit, with their prices, cadastral codes, floor plans and photos.</li>
+        <li>Requests and messages you send to ARI through the platform.</li>
+      </ul>
+
+      <h2>Why we use it</h2>
+      <ul>
+        <li>To create and protect your account.</li>
+        <li>To check developers, listings and investors before they reach the other side.</li>
+        <li>To show published listings to registered investors and to pass on your requests.</li>
+        <li>To contact you about your account, your listings or your requests.</li>
+      </ul>
+      <p>We do not sell your data and we do not use it for third-party advertising.</p>
+
+      <h2>Who can see it</h2>
+      <ul>
+        <li>ARI staff who review listings and support deals.</li>
+        <li>Registered investors see published listings. They do not see a developer’s account details.</li>
+        <li>A request an investor sends goes to ARI only. ARI shares an investor’s contact details with a developer only when arranging a viewing or a deal.</li>
+        <li>Service providers that host the platform and its database for us. They process data only on our instructions.</li>
+      </ul>
+
+      <h2>What is kept on your device</h2>
+      <p>The site keeps your sign-in session, your language, saved listings, saved filters and unfinished listing drafts in your browser’s storage. We do not use advertising or tracking cookies.</p>
+
+      <h2>How long we keep it</h2>
+      <p>We keep your data while your account is open. When an account is deleted, its profile and requests are removed; a developer’s listings are removed with the account. We may keep records that the law requires us to keep.</p>
+
+      <h2>Your rights</h2>
+      <ul>
+        <li>You can ask for a copy of your data, and ask us to correct or delete it.</li>
+        <li>Investors can delete their account themselves in the investor app, under Profile. Anyone can ask us to delete an account by email.</li>
+        <li>If you think your data is handled wrongly, you can complain to the Personal Data Protection Service of Georgia.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p><span>Questions about your data? Write to</span> <a href="mailto:info@ari.ge">info@ari.ge</a></p>
+    </div>
+  </section>
+</div>
+
+<div class="view" data-view="terms" hidden>
+  <section class="legal" aria-labelledby="terms-h">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Home</a><span aria-hidden="true">/</span><span>Terms of use</span></nav>
+      <h1 id="terms-h">Terms of use</h1>
+      <p class="legal-date">Last updated: 13 November 2026</p>
+      <p>These terms apply to everyone who uses the ARI investment platform, run by ARI Development, Tbilisi, Georgia. By creating an account you agree to them.</p>
+
+      <h2>Accounts</h2>
+      <ul>
+        <li>Developers register a company; investors register as individuals or companies. Registration is free.</li>
+        <li>Give accurate details and keep them up to date. Keep your password to yourself; you are responsible for what is done from your account.</li>
+        <li>ARI may check an account before opening it, and may suspend or close an account that breaks these terms or gives false details.</li>
+      </ul>
+
+      <h2>For developers</h2>
+      <ul>
+        <li>List only property you have the right to sell, and state its size, price, discount, completion date and cadastral code truthfully.</li>
+        <li>ARI reviews every listing before investors see it and may ask for changes or reject it. An edited listing goes back to review.</li>
+        <li>You can remove your own listings at any time.</li>
+      </ul>
+
+      <h2>For investors</h2>
+      <ul>
+        <li>Listings, prices and discounts are shown to registered members only. Do not copy or publish them elsewhere.</li>
+        <li>Sending a request is not a commitment to buy. ARI contacts you to arrange the next step.</li>
+      </ul>
+
+      <h2>ARI’s role</h2>
+      <ul>
+        <li>ARI checks listings and documents and connects developers with investors.</li>
+        <li>ARI is not a party to the sale contract between a developer and an investor, unless a separate written agreement says so.</li>
+        <li>Nothing on the platform is investment, legal or tax advice. ARI does not guarantee an investment, a price or a completion date. Every purchase decision is your own.</li>
+      </ul>
+
+      <h2>Content and availability</h2>
+      <p>Photos marked as illustrative do not show the actual property. We work to keep the platform available and accurate, but we do not promise that it will be free of interruptions or errors.</p>
+
+      <h2>Changes and law</h2>
+      <p>We may update these terms; the date above shows the latest version. If you keep using the platform after a change, the new terms apply. These terms are governed by the law of Georgia.</p>
+
+      <h2>Contact</h2>
+      <p><span>Questions about these terms? Write to</span> <a href="mailto:info@ari.ge">info@ari.ge</a></p>
+    </div>
+  </section>
+</div>
 </main>
 
 <footer class="foot">
@@ -2009,9 +2120,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         </a>
         <p class="foot-tag">ARI’s members-only development and investment platform for apartments and land in Georgia.</p>
         <div class="socials">
-          <a href="#home" aria-label="Facebook (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h2.5V4.5H14A3.5 3.5 0 0010.5 8v2.5H8V14h2.5v6.5H14V14h2.5l.5-3.5h-3V8.6c0-.3.3-.6.5-.6z" fill="currentColor"/></svg></a>
-          <a href="#home" aria-label="LinkedIn (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h3v10H5zM6.5 4.5a1.75 1.75 0 110 3.5 1.75 1.75 0 010-3.5zM10 9h2.9v1.4c.4-.8 1.5-1.6 3-1.6 3 0 3.6 2 3.6 4.5V19h-3v-5c0-1.2 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V19H10z" fill="currentColor"/></svg></a>
-          <a href="#home" aria-label="Instagram (placeholder)"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/></g><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg></a>
+          <a href="https://www.facebook.com/aridevelopment.georgia" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h2.5V4.5H14A3.5 3.5 0 0010.5 8v2.5H8V14h2.5v6.5H14V14h2.5l.5-3.5h-3V8.6c0-.3.3-.6.5-.6z" fill="currentColor"/></svg></a>
+          <a href="https://www.instagram.com/ari_development_company" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/></g><circle cx="16.8" cy="7.2" r="1.1" fill="currentColor"/></svg></a>
         </div>
       </div>
       <div>
@@ -2020,17 +2130,16 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       </div>
       <div>
         <h4>Contact</h4>
-        <div class="email"><code id="email">hello@yourdomain.ge</code><button class="copy" type="button" id="copyBtn">Copy</button></div>
+        <div class="email"><code id="email">info@ari.ge</code><button class="copy" type="button" id="copyBtn">Copy</button></div>
         <p style="margin-top:8px;font-size:13px;color:var(--ink-3)">Tbilisi, Georgia</p>
       </div>
       <div>
         <h4>Legal</h4>
-        <ul><li><a href="#home">Privacy policy</a></li><li><a href="#home">Terms of use</a></li></ul>
+        <ul><li><a href="#privacy">Privacy policy</a></li><li><a href="#terms">Terms of use</a></li></ul>
       </div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 ARI Development · Photos: Unsplash</span>
-      <span>Product concept for stakeholder review · Not a live service</span>
     </div>
   </div>
 </footer>
@@ -2218,7 +2327,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   window.addEventListener('resize', measure);
 
   /* ---------- Routing ---------- */
-  var views = ['home','developers','investors','platform','offers','saved'];
+  var views = ['home','developers','investors','platform','offers','saved','privacy','terms'];
   function route(){
     var v = (location.hash || '#home').slice(1);
     if (views.indexOf(v) < 0) v = 'home';
@@ -2232,6 +2341,31 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     window.scrollTo(0, 0);
   }
   window.addEventListener('hashchange', route);
+
+  /* Moving between pages. The browser history is kept as Home with at most one page on top of it, so Back from
+     any page returns to Home: Home -> a page adds an entry; page -> another page takes that entry's place;
+     a page -> Home steps back onto the Home entry underneath (overHome marks that there is one). */
+  function viewOf(h){ var v = (h || '#home').replace(/^#/, ''); return views.indexOf(v) < 0 ? 'home' : v; }
+  function go(hash){
+    var to = viewOf(hash), cur = viewOf(location.hash), st = history.state || {}, base = location.pathname + location.search;
+    if (to === cur){ route(); return; }
+    try {
+      if (to === 'home'){
+        if (st.overHome){ history.back(); return; }   /* the hashchange it causes shows Home */
+        history.replaceState({ ari:1 }, '', base + '#home');
+      }
+      else if (cur === 'home') history.pushState({ ari:1, overHome:true }, '', base + hash);
+      else history.replaceState({ ari:1, overHome:!!st.overHome }, '', base + hash);
+    } catch(e){ location.hash = hash; return; }
+    route();
+  }
+  document.addEventListener('click', function(e){
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest('a[href^="#"]'); if (!a) return;
+    var h = a.getAttribute('href');
+    if (views.indexOf(h.slice(1)) < 0) return;   /* an in-page anchor, not a page */
+    e.preventDefault(); go(h);
+  });
 
   /* Opened straight on an inner page (a shared link, a bookmark, a typed address): Back should reach Home before it
      leaves the site. The Home entry is put under the page at the first tap or key press, because browsers skip
@@ -2248,13 +2382,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       var h = location.hash, base = location.pathname + location.search;
       if (history.state && history.state.ari) return;
       if (!h || h === '#home'){ seen(); return; }
-      try { history.replaceState({ ari:1 }, '', base + '#home'); history.pushState({ ari:1 }, '', base + h); } catch(e){}
+      try { history.replaceState({ ari:1 }, '', base + '#home'); history.pushState({ ari:1, overHome:true }, '', base + h); } catch(e){}
     }
     evs.forEach(function(n){ window.addEventListener(n, seed, true); });
   })();
 
   /* ---------- Phone menu: the header button names the current page and opens the list of pages ---------- */
-  var PAGE_NAME = { home:'Home', developers:'For developers', investors:'For investors', offers:'My offers', saved:'My offers', platform:'How the platform works' };
+  var PAGE_NAME = { home:'Home', developers:'For developers', investors:'For investors', offers:'My offers', saved:'My offers', platform:'How the platform works', privacy:'Privacy policy', terms:'Terms of use' };
   function closeMenu(){ $('#menuPanel').hidden = true; $('#menuBack').hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); }
   $('#menuBtn').addEventListener('click', function(){
     var open = $('#menuPanel').hidden;
@@ -2378,7 +2512,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var n = INBOX[+b.dataset.note]; if (n.kind === 'msg') return;   /* a text from ARI is read in place: nothing to open */
     closeInbox(); renderInbox();
     if (state.role === 'developer'){
-      if (location.hash !== '#offers') location.hash = '#offers';
+      if (location.hash !== '#offers') go('#offers');
       setTimeout(function(){
         var c = n.id && $('.preview-grid .my-card[data-id="' + n.id + '"]');
         if (c){ c.scrollIntoView({ behavior:'smooth', block:'center' }); c.classList.add('is-edited'); }
@@ -2386,7 +2520,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       return;
     }
     var card = n.id ? $('#results .listing[data-id="' + n.id + '"]') : $('#results .listing[data-demo="' + n.demo + '"]');
-    if (location.hash !== '#investors') location.hash = '#investors';
+    if (location.hash !== '#investors') go('#investors');
     if (card){ setTimeout(function(){ openDetail(card); }, 150); return; }
     if (!user || !n.id){ toast('This listing is no longer published.'); return; }
     var uid = user.id, lid = n.id;
@@ -2465,7 +2599,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
   function goTo(hash, target){
-    if (location.hash !== hash) location.hash = hash;
+    if (location.hash !== hash) go(hash);
     setTimeout(function(){ var el = $(target); if (el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
   }
   function signIn(role, msg){
@@ -2600,8 +2734,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     user = null; MINE = {}; PUB = {}; SENT = {}; INTS = []; MSGS = []; DEMO_NOTES = demoNotes(); daySig = null; pg.seq++; noFeat = false; state.role = null; saveRole(); setTab(null);
     restoreDemo(); applyAuth(); update();
     toast('Signed out. Listings and tools are hidden again.');
-    if (location.hash === '#offers') location.hash = '#developers';
-    if (location.hash === '#saved') location.hash = '#investors';
+    if (location.hash === '#offers') go('#developers');
+    if (location.hash === '#saved') go('#investors');
   }
   $('#signOut').addEventListener('click', function(){
     if (user && sb){ sb.auth.signOut().then(null, function(){ leave(); }); return; }
@@ -3635,7 +3769,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     var open = e.target.closest('[data-ss-open]'), del = e.target.closest('[data-ss-del]'), list;
     if (open){
       var f = getSearches()[+open.dataset.ssOpen]; if (!f) return;
-      applySearch(f); location.hash = '#investors';
+      applySearch(f); go('#investors');
       setTimeout(function(){ $('.filters').scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
     } else if (del){
       list = getSearches(); list.splice(+del.dataset.ssDel, 1); putSearches(list); renderSearches();
@@ -4141,7 +4275,53 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Pages':'გვერდები','Contact':'კონტაქტი','Copy':'კოპირება','Copied':'დაკოპირდა','Selected':'მონიშნულია','Tbilisi, Georgia':'თბილისი, საქართველო',
     'Legal':'იურიდიული','Privacy policy':'კონფიდენციალურობის პოლიტიკა','Terms of use':'გამოყენების პირობები',
     '© 2026 ARI Development · Photos: Unsplash':'© 2026 ARI Development · ფოტოები: Unsplash',
-    'Product concept for stakeholder review · Not a live service':'პროდუქტის კონცეფცია განსახილველად · არ არის მოქმედი სერვისი',
+    /* legal pages */
+    'Last updated: 13 November 2026':'ბოლო განახლება: 2026 წლის 13 ნოემბერი',
+    'This policy explains what personal data the ARI investment platform collects, why, and what you can do about it. The platform is run by ARI Development, Tbilisi, Georgia.':'ეს პოლიტიკა განმარტავს, რა პერსონალურ მონაცემებს აგროვებს ARI-ის საინვესტიციო პლატფორმა, რატომ, და რა შეგიძლია გააკეთო. პლატფორმას მართავს ARI Development, თბილისი, საქართველო.',
+    'What we collect':'რას ვაგროვებთ',
+    'Account details you give at registration: full name, email, phone number and password. The password is stored only in encrypted form; ARI staff cannot read it.':'რეგისტრაციისას მითითებული მონაცემები: სახელი და გვარი, ელფოსტა, ტელეფონის ნომერი და პაროლი. პაროლი მხოლოდ დაშიფრული სახით ინახება; ARI-ის თანამშრომლები მას ვერ ხედავენ.',
+    'For investors: the available budget and the kind of property you are interested in.':'ინვესტორებისთვის: ხელმისაწვდომი ბიუჯეტი და ქონების ტიპი, რომელიც გაინტერესებს.',
+    'For developers: the company name and website, and the listings you submit, with their prices, cadastral codes, floor plans and photos.':'დეველოპერებისთვის: კომპანიის სახელი და ვებსაიტი, ასევე გაგზავნილი განცხადებები ფასებით, საკადასტრო კოდებით, გეგმებით და ფოტოებით.',
+    'Requests and messages you send to ARI through the platform.':'მოთხოვნები და შეტყობინებები, რომლებსაც პლატფორმით ARI-ს უგზავნი.',
+    'Why we use it':'რისთვის ვიყენებთ',
+    'To create and protect your account.':'შენი ანგარიშის შესაქმნელად და დასაცავად.',
+    'To check developers, listings and investors before they reach the other side.':'დეველოპერების, განცხადებების და ინვესტორების შესამოწმებლად, სანამ ისინი მეორე მხარემდე მივა.',
+    'To show published listings to registered investors and to pass on your requests.':'გამოქვეყნებული განცხადებების დარეგისტრირებული ინვესტორებისთვის საჩვენებლად და შენი მოთხოვნების გადასაცემად.',
+    'To contact you about your account, your listings or your requests.':'შენთან დასაკავშირებლად ანგარიშის, განცხადებების ან მოთხოვნების შესახებ.',
+    'We do not sell your data and we do not use it for third-party advertising.':'შენს მონაცემებს არ ვყიდით და მესამე მხარის რეკლამისთვის არ ვიყენებთ.',
+    'Who can see it':'ვინ ხედავს',
+    'ARI staff who review listings and support deals.':'ARI-ის თანამშრომლები, რომლებიც ამოწმებენ განცხადებებს და გარიგებებს ეხმარებიან.',
+    'Registered investors see published listings. They do not see a developer’s account details.':'დარეგისტრირებული ინვესტორები ხედავენ გამოქვეყნებულ განცხადებებს. დეველოპერის ანგარიშის მონაცემებს ისინი ვერ ხედავენ.',
+    'A request an investor sends goes to ARI only. ARI shares an investor’s contact details with a developer only when arranging a viewing or a deal.':'ინვესტორის გაგზავნილი მოთხოვნა მხოლოდ ARI-სთან მიდის. ინვესტორის საკონტაქტო მონაცემებს ARI დეველოპერს მხოლოდ დათვალიერების ან გარიგების მოწყობისას უზიარებს.',
+    'Service providers that host the platform and its database for us. They process data only on our instructions.':'მომსახურების მომწოდებლები, რომლებიც ჩვენთვის პლატფორმასა და მის მონაცემთა ბაზას ათავსებენ. ისინი მონაცემებს მხოლოდ ჩვენი მითითებით ამუშავებენ.',
+    'What is kept on your device':'რა ინახება შენს მოწყობილობაზე',
+    'The site keeps your sign-in session, your language, saved listings, saved filters and unfinished listing drafts in your browser’s storage. We do not use advertising or tracking cookies.':'საიტი ბრაუზერის მეხსიერებაში ინახავს შესვლის სესიას, ენას, შენახულ განცხადებებს, შენახულ ფილტრებს და განცხადების დაუსრულებელ მონახაზებს. სარეკლამო ან თვალთვალის ქუქიებს არ ვიყენებთ.',
+    'How long we keep it':'რამდენ ხანს ვინახავთ',
+    'We keep your data while your account is open. When an account is deleted, its profile and requests are removed; a developer’s listings are removed with the account. We may keep records that the law requires us to keep.':'მონაცემებს ვინახავთ, სანამ ანგარიში ღიაა. ანგარიშის წაშლისას იშლება მისი პროფილი და მოთხოვნები; დეველოპერის განცხადებები ანგარიშთან ერთად იშლება. შეიძლება შევინახოთ ჩანაწერები, რომელთა შენახვასაც კანონი გვავალებს.',
+    'Your rights':'შენი უფლებები',
+    'You can ask for a copy of your data, and ask us to correct or delete it.':'შეგიძლია მოითხოვო შენი მონაცემების ასლი, მათი გასწორება ან წაშლა.',
+    'Investors can delete their account themselves in the investor app, under Profile. Anyone can ask us to delete an account by email.':'ინვესტორს შეუძლია ანგარიში თავად წაშალოს ინვესტორის აპში, „პროფილში“. ნებისმიერს შეუძლია ანგარიშის წაშლა ელფოსტით მოგვთხოვოს.',
+    'If you think your data is handled wrongly, you can complain to the Personal Data Protection Service of Georgia.':'თუ ფიქრობ, რომ შენი მონაცემები არასწორად მუშავდება, შეგიძლია მიმართო საქართველოს პერსონალურ მონაცემთა დაცვის სამსახურს.',
+    'Questions about your data? Write to':'კითხვები გაქვს შენს მონაცემებზე? მოგვწერე:',
+    'These terms apply to everyone who uses the ARI investment platform, run by ARI Development, Tbilisi, Georgia. By creating an account you agree to them.':'ეს პირობები ვრცელდება ყველაზე, ვინც იყენებს ARI-ის საინვესტიციო პლატფორმას, რომელსაც მართავს ARI Development, თბილისი, საქართველო. ანგარიშის შექმნით ამ პირობებს ეთანხმები.',
+    'Accounts':'ანგარიშები',
+    'Developers register a company; investors register as individuals or companies. Registration is free.':'დეველოპერები არეგისტრირებენ კომპანიას; ინვესტორები რეგისტრირდებიან როგორც ფიზიკური პირები ან კომპანიები. რეგისტრაცია უფასოა.',
+    'Give accurate details and keep them up to date. Keep your password to yourself; you are responsible for what is done from your account.':'მიუთითე ზუსტი მონაცემები და განაახლე ისინი. პაროლი არავის გაუზიარო; შენი ანგარიშიდან შესრულებულ მოქმედებებზე პასუხისმგებელი შენ ხარ.',
+    'ARI may check an account before opening it, and may suspend or close an account that breaks these terms or gives false details.':'ARI-ს შეუძლია ანგარიში გახსნამდე შეამოწმოს, ასევე შეაჩეროს ან დახუროს ანგარიში, რომელიც ამ პირობებს არღვევს ან ცრუ მონაცემებს უთითებს.',
+    'List only property you have the right to sell, and state its size, price, discount, completion date and cadastral code truthfully.':'დაამატე მხოლოდ ის ქონება, რომლის გაყიდვის უფლებაც გაქვს, და სწორად მიუთითე ფართი, ფასი, ფასდაკლება, დასრულების თარიღი და საკადასტრო კოდი.',
+    'ARI reviews every listing before investors see it and may ask for changes or reject it. An edited listing goes back to review.':'ARI ყველა განცხადებას ამოწმებს, სანამ ინვესტორები ნახავენ, და შეუძლია ცვლილება მოითხოვოს ან უარყოს. შეცვლილი განცხადება ისევ განხილვაში ბრუნდება.',
+    'You can remove your own listings at any time.':'საკუთარი განცხადებების წაშლა ნებისმიერ დროს შეგიძლია.',
+    'Listings, prices and discounts are shown to registered members only. Do not copy or publish them elsewhere.':'განცხადებები, ფასები და ფასდაკლებები მხოლოდ დარეგისტრირებულ წევრებს უჩანთ. ნუ დააკოპირებ და ნუ გამოაქვეყნებ მათ სხვაგან.',
+    'Sending a request is not a commitment to buy. ARI contacts you to arrange the next step.':'მოთხოვნის გაგზავნა ყიდვის ვალდებულებას არ ნიშნავს. ARI დაგიკავშირდება შემდეგი ნაბიჯის მოსაწყობად.',
+    'ARI’s role':'ARI-ის როლი',
+    'ARI checks listings and documents and connects developers with investors.':'ARI ამოწმებს განცხადებებსა და დოკუმენტებს და დეველოპერებს ინვესტორებთან აკავშირებს.',
+    'ARI is not a party to the sale contract between a developer and an investor, unless a separate written agreement says so.':'ARI არ არის დეველოპერსა და ინვესტორს შორის ნასყიდობის ხელშეკრულების მხარე, თუ ცალკე წერილობითი შეთანხმება სხვა რამეს არ ადგენს.',
+    'Nothing on the platform is investment, legal or tax advice. ARI does not guarantee an investment, a price or a completion date. Every purchase decision is your own.':'პლატფორმაზე არსებული ინფორმაცია არ არის საინვესტიციო, იურიდიული ან საგადასახადო რჩევა. ARI არ იძლევა ინვესტიციის, ფასის ან დასრულების თარიღის გარანტიას. ყიდვის გადაწყვეტილებას შენ თავად იღებ.',
+    'Content and availability':'შინაარსი და ხელმისაწვდომობა',
+    'Photos marked as illustrative do not show the actual property. We work to keep the platform available and accurate, but we do not promise that it will be free of interruptions or errors.':'საილუსტრაციოდ მონიშნული ფოტოები რეალურ ქონებას არ ასახავს. ვცდილობთ, პლატფორმა ხელმისაწვდომი და ზუსტი იყოს, მაგრამ შეფერხებების ან შეცდომების არარსებობას ვერ გპირდებით.',
+    'Changes and law':'ცვლილებები და სამართალი',
+    'We may update these terms; the date above shows the latest version. If you keep using the platform after a change, the new terms apply. These terms are governed by the law of Georgia.':'შეიძლება ეს პირობები განვაახლოთ; ზემოთ მითითებული თარიღი ბოლო ვერსიას აჩვენებს. თუ ცვლილების შემდეგ პლატფორმის გამოყენებას გააგრძელებ, ახალი პირობები მოქმედებს. ამ პირობებზე ვრცელდება საქართველოს კანონმდებლობა.',
+    'Questions about these terms? Write to':'კითხვები გაქვს ამ პირობებზე? მოგვწერე:',
     // auth modal
     'Create your account':'შექმენი ანგარიში',
     'Listings are visible only to members. Choose how you’ll use the platform.':'განცხადებები მხოლოდ წევრებისთვის ჩანს. აირჩიე, როგორ გამოიყენებ პლატფორმას.',
@@ -4228,7 +4408,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       /* the new page goes into the browser history now, inside the tap itself: iPhone browsers skip, on Back, a page
          that was added later without a touch, and Back from the opened page would then leave the site */
       var href = door.getAttribute('href'), pushed = false, switched = false;
-      try { history.pushState({ ari:1 }, '', href); pushed = true; } catch(err){}
+      try { history.pushState({ ari:1, overHome:true }, '', href); pushed = true; } catch(err){}
       var go = function(){ if (switched) return; switched = true; if (!pushed) location.hash = href; route(); };
       var home = $('.home2'), from = door.getBoundingClientRect(), to = home.getBoundingClientRect();
       /* phones (photos stacked): the same move as on desktop, turned vertical. The tapped photo opens out from
