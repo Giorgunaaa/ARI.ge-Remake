@@ -89,6 +89,10 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 .pw-eye svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
 .pw-eye[aria-pressed="true"]{color:var(--ink)}
 .pw-eye[aria-pressed="false"]::after{content:"";position:absolute;width:24px;height:2px;background:currentColor;transform:rotate(-45deg);border-radius:2px}
+.forgot{margin:-6px 0 0;text-align:right}
+.link-btn{border:0;background:none;padding:6px 0;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.forgot-h{margin:0;font-size:20px}
+.forgot-p{margin:0;color:var(--ink-2);font-size:14.5px}
 .pw-rules{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink-3)}
 .pw-rules li{display:inline-flex;align-items:center;gap:6px}
 .pw-rules li::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid currentColor;flex:none;box-sizing:border-box}
@@ -334,9 +338,25 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     <form id="signForm" novalidate>
       <label class="field"><span data-t>Email</span><input class="input" id="s-email" type="email" autocomplete="email" inputmode="email" required></label>
       <div class="field"><span data-t>Password</span><div class="pw"><input class="input" id="s-pass" type="password" autocomplete="current-password" required aria-label="Password" data-ta><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password" data-ta><svg><use href="#i-eye"/></svg></button></div></div>
+      <p class="forgot"><button class="link-btn" type="button" data-mode="forgot" data-t>Forgot password?</button></p>
       <p class="err" id="signErr" hidden></p>
       <button class="btn btn-primary btn-block" id="signSubmit" type="submit" data-t>Sign in</button>
     </form>
+    <!-- forgotten password: the emailed link opens the website, where the new password is set -->
+    <form id="forgotForm" novalidate hidden>
+      <h2 class="forgot-h" data-t>Reset your password</h2>
+      <p class="forgot-p" data-t>Enter your account email. We’ll send a link to set a new password.</p>
+      <label class="field"><span data-t>Email</span><input class="input" id="f-email" type="email" autocomplete="email" inputmode="email" required></label>
+      <p class="err" id="forgotErr" hidden></p>
+      <button class="btn btn-primary btn-block" id="forgotSubmit" type="submit" data-t>Send reset link</button>
+      <button class="btn btn-ghost btn-block" type="button" data-mode="signin" data-t>Back to sign in</button>
+    </form>
+    <div class="done-box" id="forgotDone" hidden>
+      <span class="ok-ico"><svg style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg></span>
+      <h2 data-t>Check your email</h2>
+      <p><span data-t>If this email has an account, we sent a reset link to</span> <b id="forgotDoneEmail"></b>. <span data-t>Open it, set a new password on the website, then sign in here.</span></p>
+      <button class="btn btn-line" type="button" data-mode="signin" data-t>Sign in</button>
+    </div>
     <form id="regForm" novalidate hidden>
       <label class="field"><span data-t>Full name</span><input class="input" id="r-name" autocomplete="name" required maxlength="120"></label>
       <label class="field"><span data-t>Email</span><input class="input" id="r-email" type="email" autocomplete="email" inputmode="email" required></label>
@@ -531,7 +551,7 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
      write is decided by the database rules (an investor sees only published listings and their own requests). */
   var SB_URL = 'https://jirqxouwxetighqvhzjh.supabase.co', SB_KEY = 'sb_publishable_K-MhgBEzBTzo4zNR1iK0Cw_UWnEcVJL', BUCKET = 'platform-listings';
   /* inside the store app (Capacitor) the page is served from the phone itself, so links back to the web use the full address */
-  var NATIVE = !!window.Capacitor, WEB_APP = 'https://designhub.ge/5/app/';
+  var NATIVE = !!window.Capacitor, WEB_APP = 'https://designhub.ge/5/app/', WEB_SITE = 'https://designhub.ge/5/';
   var sb = null;
   try { if (window.supabase) sb = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){}
 
@@ -541,6 +561,10 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     'Verified apartments, land plots and commercial spaces below market price.':'გადამოწმებული ბინები, მიწის ნაკვეთები და კომერციული ფართები საბაზრო ფასზე იაფად.',
     'Sign in':'შესვლა', 'Register':'რეგისტრაცია', 'Email':'ელფოსტა', 'Password':'პაროლი', 'Full name':'სახელი და გვარი', 'Phone':'ტელეფონი',
     'Available budget':'ხელმისაწვდომი ბიუჯეტი', 'Interested in':'რა გაინტერესებს', 'Create investor account':'ინვესტორის ანგარიშის შექმნა',
+    'Forgot password?':'დაგავიწყდა პაროლი?', 'Reset your password':'პაროლის აღდგენა', 'Enter your account email. We’ll send a link to set a new password.':'შეიყვანე შენი ანგარიშის ელფოსტა. გამოგიგზავნით ბმულს ახალი პაროლის დასაყენებლად.',
+    'Send reset link':'ბმულის გაგზავნა', 'Back to sign in':'შესვლაზე დაბრუნება', 'Enter your email.':'შეიყვანე ელფოსტა.', 'If this email has an account, we sent a reset link to':'თუ ამ ელფოსტით ანგარიში არსებობს, აღდგენის ბმული გავგზავნეთ მისამართზე',
+    'Open it, set a new password on the website, then sign in here.':'გახსენი ის, საიტზე დააყენე ახალი პაროლი და შემდეგ აქ შედი.',
+    'Enter a 9-digit phone number. For a foreign number, start with + and the country code.':'შეიყვანე 9-ციფრიანი ნომერი. უცხოური ნომრისთვის დაიწყე +-ით და ქვეყნის კოდით.',
     'Check your email':'შეამოწმე ელფოსტა', 'We sent a confirmation link to':'დადასტურების ბმული გავგზავნეთ მისამართზე', 'Open it, then sign in here.':'გახსენი ის და შემდეგ აქ შედი.',
     'Look around with a sample account':'სანიმუშო ანგარიშით დათვალიერება', 'This app is for investors. Developers use the website.':'ეს აპი ინვესტორებისთვისაა. დეველოპერები საიტს იყენებენ.',
     'Open the website':'საიტის გახსნა', 'Try again':'თავიდან ცდა', 'Sign out':'გასვლა',
@@ -1205,8 +1229,11 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
     if (m !== 'shell'){ hideListing(); $('#toast').style.bottom = '24px'; } else $('#toast').style.bottom = '';
   }
   function setAuthMode(m){
-    $$('.seg [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
-    $('.seg').hidden = false; $('#signForm').hidden = m !== 'signin'; $('#regForm').hidden = m !== 'register'; $('#regDone').hidden = true;
+    var tab = m === 'register' ? 'register' : 'signin';
+    $$('.seg [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === tab)); });
+    $('.seg').hidden = m === 'forgot'; $('#signForm').hidden = m !== 'signin'; $('#regForm').hidden = m !== 'register'; $('#regDone').hidden = true;
+    $('#forgotForm').hidden = m !== 'forgot'; $('#forgotDone').hidden = true;
+    if (m === 'forgot'){ showErr('#forgotErr', ''); if (!$('#f-email').value) $('#f-email').value = $('#s-email').value; }
   }
   document.addEventListener('click', function(e){ var b = e.target.closest('[data-mode]'); if (b) setAuthMode(b.dataset.mode); });
   function showErr(sel, msg){ var el = $(sel); el.textContent = msg ? t(msg) : ''; el.hidden = !msg; }
@@ -1249,14 +1276,42 @@ select.input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
       form.reset();   /* the auth listener below does the rest */
     }, function(){ btn.disabled = false; showErr('#signErr', OFFLINE); });
   });
+  /* forgotten password: the emailed link opens the website, which asks for the new password. The answer is the
+     same whether or not the address has an account. */
+  $('#forgotForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = this;
+    if (!form.checkValidity()){ showErr('#forgotErr', 'Enter your email.'); return; }
+    if (!sb){ showErr('#forgotErr', 'Sign-in is unavailable right now. Try the sample account.'); return; }
+    var btn = $('#forgotSubmit'), email = $('#f-email').value.trim();
+    showErr('#forgotErr', ''); btn.disabled = true;
+    sb.auth.resetPasswordForEmail(email, { redirectTo:NATIVE ? WEB_SITE : location.origin + location.pathname.replace(/app\/(index\.html)?$/, '') }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#forgotErr', authMsg(res.error)); return; }
+      form.reset();
+      $('#forgotDoneEmail').textContent = email; form.hidden = true; $('#forgotDone').hidden = false;
+    }, function(){ btn.disabled = false; showErr('#forgotErr', OFFLINE); });
+  });
+  /* phone at registration: a Georgian number is 9 digits after +995; a foreign one starts with + and its country code */
+  var PHONE_MSG = 'Enter a 9-digit phone number. For a foreign number, start with + and the country code.';
+  function phoneOf(v){
+    v = v.trim(); var d = v.replace(/\D/g, '');
+    if (/[^\d\s+\-()]/.test(v)) return null;
+    if (v.charAt(0) === '+' && d.slice(0, 3) !== '995') return d.length >= 8 && d.length <= 15 ? '+' + d : null;
+    if (d.length === 12 && d.slice(0, 3) === '995') d = d.slice(3);
+    if (d.length === 10 && d.charAt(0) === '0') d = d.slice(1);
+    return d.length === 9 ? '+995 ' + d : null;
+  }
   $('#regForm').addEventListener('submit', function(e){
     e.preventDefault();
     var form = this;
     if (!form.checkValidity()){ showErr('#regErr', 'Fill in every field.'); return; }
+    var phone = phoneOf($('#r-phone').value);
+    if (!phone){ showErr('#regErr', PHONE_MSG); $('#r-phone').focus(); return; }
     if (!pwCheck(true)){ showErr('#regErr', PW_MSG); $('#r-pass').focus(); return; }
     if (!sb){ showErr('#regErr', 'Sign-in is unavailable right now. Try the sample account.'); return; }
     var b = $('#r-budget').value, email = $('#r-email').value.trim(), btn = $('#regSubmit');
-    var meta = { role:'investor', full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim(), budget:String(b === '250000+' ? 250000 : +b), interest:$('#r-interest').value };
+    var meta = { role:'investor', full_name:$('#r-name').value.trim(), phone:phone, budget:String(b === '250000+' ? 250000 : +b), interest:$('#r-interest').value };
     showErr('#regErr', ''); btn.disabled = true;
     sb.auth.signUp({ email:email, password:$('#r-pass').value, options:{ data:meta, emailRedirectTo:NATIVE ? WEB_APP : location.origin + location.pathname.replace(/index\.html$/, '') } }).then(function(res){
       btn.disabled = false;

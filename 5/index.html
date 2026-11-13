@@ -1018,6 +1018,7 @@ body[data-view="home"] .foot{display:none}
 .modal-note{font-size:12.5px;color:var(--ink-3);margin-top:12px;text-align:center}
 .demo-acc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line-2)}
 .demo-acc span{width:100%;text-align:center;font-size:12.5px;font-weight:600;color:var(--ink-3)}
+.forgot{margin:8px 0 0;text-align:right;font-size:13px}
 .switch-link{border:0;background:none;color:var(--accent-ink);font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
 @media (max-width:480px){.form-grid{grid-template-columns:1fr}.modal-card{padding:22px 18px}}
 
@@ -2082,6 +2083,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <div class="fg full"><label for="s-email">Email</label><input id="s-email" type="email" required autocomplete="email"></div>
         <div class="fg full"><label for="s-pass">Password</label><div class="pw"><input id="s-pass" type="password" required autocomplete="current-password"><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password"><svg aria-hidden="true"><use href="#i-eye"/></svg></button></div></div>
       </div>
+      <p class="forgot"><button class="switch-link" type="button" data-mode="forgot">Forgot password?</button></p>
       <p class="form-err" id="signErr" role="alert" hidden></p>
       <button class="btn btn-primary btn-block" type="submit" id="signSubmit" style="margin-top:18px">Sign in</button>
       <p class="modal-note">New here? <button class="switch-link" type="button" data-mode="register">Create an account</button></p>
@@ -2090,6 +2092,33 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <button class="btn btn-outline btn-sm" type="button" data-demo="developer">Sign in as developer</button>
         <button class="btn btn-outline btn-sm" type="button" data-demo="investor">Sign in as investor</button>
       </div>
+    </form>
+
+    <!-- forgotten password: the link in the email opens this page again, on the "new password" form below -->
+    <form id="forgotForm" novalidate hidden>
+      <h3>Reset your password</h3>
+      <p class="modal-sub">Enter your account email. We’ll send a link to set a new password.</p>
+      <div class="form-grid">
+        <div class="fg full"><label for="f-email">Email</label><input id="f-email" type="email" required autocomplete="email"></div>
+      </div>
+      <p class="form-err" id="forgotErr" role="alert" hidden></p>
+      <button class="btn btn-primary btn-block" type="submit" id="forgotSubmit" style="margin-top:18px">Send reset link</button>
+      <p class="modal-note"><button class="switch-link" type="button" data-mode="signin">Back to sign in</button></p>
+    </form>
+    <div class="auth-done" id="forgotDone" hidden>
+      <h3>Check your email</h3>
+      <p class="modal-sub"><span>If this email has an account, we sent a reset link to</span> <b id="forgotDoneEmail"></b><span>. Open it to set a new password.</span></p>
+      <button class="btn btn-primary btn-block" type="button" data-close>Got it</button>
+    </div>
+    <form id="newPassForm" novalidate hidden>
+      <h3>Set a new password</h3>
+      <p class="modal-sub">Choose a new password for your account.</p>
+      <div class="form-grid">
+        <div class="fg full"><label for="n-pass">New password</label><div class="pw"><input id="n-pass" type="password" required autocomplete="new-password" aria-describedby="pwRules2"><button class="pw-eye" type="button" data-pw-eye aria-pressed="false" aria-label="Show password"><svg aria-hidden="true"><use href="#i-eye"/></svg></button></div>
+          <ul class="pw-rules" id="pwRules2"><li data-pw="len">At least 8 characters</li><li data-pw="up">One capital letter (A–Z)</li><li data-pw="num">One number</li></ul></div>
+      </div>
+      <p class="form-err" id="newPassErr" role="alert" hidden></p>
+      <button class="btn btn-primary btn-block" type="submit" id="newPassSubmit" style="margin-top:18px">Save new password</button>
     </form>
   </div>
 </div>
@@ -2389,10 +2418,20 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
 
   /* ---------- Modal ---------- */
   var modal = $('#authModal'), lastFocus = null, pick = 'investor', submitted = false;
+  var recovering = /type=recovery/.test(location.hash);   /* came back from a password-reset email */
   function setMode(m){
-    $$('.auth-tabs [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === m)); });
+    var tab = m === 'register' ? 'register' : 'signin';
+    $$('.auth-tabs [data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.mode === tab)); });
+    $('.auth-tabs').hidden = m === 'newpass';
     $('#regForm').hidden = m !== 'register'; $('#regDone').hidden = true;
     $('#signForm').hidden = m !== 'signin';
+    $('#forgotForm').hidden = m !== 'forgot'; $('#forgotDone').hidden = true;
+    $('#newPassForm').hidden = m !== 'newpass';
+    if (m === 'forgot'){
+      showErr('#forgotErr', '');
+      if (!$('#f-email').value) $('#f-email').value = $('#s-email').value;
+      setTimeout(function(){ $('#f-email').focus(); }, 30);
+    }
   }
   function setPick(p){
     pick = p;
@@ -2407,10 +2446,10 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     setPick(role || pick);
     modal.hidden = false;
     document.body.classList.add('modal-open');
-    setTimeout(function(){ var f = $(mode === 'signin' ? '#s-email' : '#r-name'); if (f) f.focus(); }, 30);
+    setTimeout(function(){ var f = $(mode === 'signin' ? '#s-email' : mode === 'newpass' ? '#n-pass' : '#r-name'); if (f) f.focus(); }, 30);
   }
   function closeModal(){
-    modal.hidden = true;
+    modal.hidden = true; recovering = false;
     document.body.classList.remove('modal-open');
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -2439,30 +2478,43 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     if (/email not confirmed/i.test(m)) return 'Confirm your email first. The link is in your inbox.';
     if (/already registered|already been registered/i.test(m)) return 'This email is already registered. Sign in instead.';
     if (/rate limit|too many|only request this after/i.test(m)) return 'Too many attempts. Try again in a few minutes.';
+    if (/different from the old/i.test(m)) return 'Choose a password you haven’t used on this account.';
     if (/password/i.test(m)) return PW_MSG;
     return 'Something went wrong. Try again.';
   }
-  /* password rules for a new account, ticked off under the field while typing; "strict" also marks what is missing */
+  /* password rules for a new account, ticked off under the field while typing; "strict" also marks what is missing.
+     The same rules sit under the "new password" field after a reset (inp, list). */
   var PW_MSG = 'Password needs at least 8 characters, a capital letter and a number.';
   var PW_RULES = { len:function(v){ return v.length >= 8; }, up:function(v){ return /[A-Z]/.test(v); }, num:function(v){ return /\d/.test(v); } };
-  function pwCheck(strict){
-    var v = $('#r-pass').value, all = true;
-    $$('#pwRules [data-pw]').forEach(function(li){
+  function pwCheck(strict, inp, list){
+    var v = $(inp || '#r-pass').value, all = true;
+    $$((list || '#pwRules') + ' [data-pw]').forEach(function(li){
       var ok = PW_RULES[li.dataset.pw](v); if (!ok) all = false;
       li.classList.toggle('ok', ok); li.classList.toggle('bad', !ok && (strict || (li.classList.contains('bad') && !!v)));
     });
     return all;
   }
   $('#r-pass').addEventListener('input', function(){ pwCheck(false); });
+  $('#n-pass').addEventListener('input', function(){ pwCheck(false, '#n-pass', '#pwRules2'); });
+  /* phone at registration: a Georgian number is 9 digits after +995; a foreign one starts with + and its country code */
+  var PHONE_MSG = 'Enter a 9-digit phone number. For a foreign number, start with + and the country code.';
+  function phoneOf(v){
+    v = v.trim(); var d = v.replace(/\D/g, '');
+    if (/[^\d\s+\-()]/.test(v)) return null;
+    if (v.charAt(0) === '+' && d.slice(0, 3) !== '995') return d.length >= 8 && d.length <= 15 ? '+' + d : null;
+    if (d.length === 12 && d.slice(0, 3) === '995') d = d.slice(3);
+    if (d.length === 10 && d.charAt(0) === '0') d = d.slice(1);
+    return d.length === 9 ? '+995 ' + d : null;
+  }
   document.addEventListener('click', function(e){
     var b = e.target.closest('[data-pw-eye]'); if (!b) return;
     var inp = b.parentNode.querySelector('input'), show = inp.type === 'password';
     inp.type = show ? 'text' : 'password';
     b.setAttribute('aria-pressed', String(show)); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
   });
-  ['#regForm', '#signForm'].forEach(function(sel){ $(sel).addEventListener('reset', function(){   /* a cleared form hides the password again */
+  ['#regForm', '#signForm', '#newPassForm'].forEach(function(sel){ $(sel).addEventListener('reset', function(){   /* a cleared form hides the password again */
     $$('[data-pw-eye]', this).forEach(function(b){ b.parentNode.querySelector('input').type = 'password'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Show password'); });
-    $$('#pwRules li').forEach(function(li){ li.className = ''; });
+    $$('.pw-rules li', this).forEach(function(li){ li.className = ''; });
   }); });
   function showErr(sel, msg){ var el = $(sel); el.textContent = msg || ''; el.hidden = !msg; }
   var OFFLINE = 'Couldn’t reach the server. Check your connection.';
@@ -2471,6 +2523,8 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     e.preventDefault();
     var form = this;
     if (!form.checkValidity()){ form.reportValidity(); return; }
+    var phone = phoneOf($('#r-phone').value);
+    if (!phone){ showErr('#regErr', PHONE_MSG); $('#r-phone').focus(); return; }
     if (!pwCheck(true)){ showErr('#regErr', PW_MSG); $('#r-pass').focus(); return; }
     var b = $('#r-budget').value, budget = b === '250000+' ? 250000 : +b;
     if (!sb){   /* library unavailable: fall back to the sample-data account */
@@ -2479,7 +2533,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       form.reset(); setPick(pick); return;
     }
     var btn = $('#regSubmit'), email = $('#r-email').value.trim();
-    var meta = { role:pick, full_name:$('#r-name').value.trim(), phone:'+995 ' + $('#r-phone').value.trim() };
+    var meta = { role:pick, full_name:$('#r-name').value.trim(), phone:phone };
     if (pick === 'investor'){ meta.budget = String(budget); meta.interest = $('#r-interest').value; }
     else { meta.company = $('#r-company').value.trim(); meta.website = $('#r-site').value.trim(); }
     showErr('#regErr', ''); btn.disabled = true;
@@ -2506,6 +2560,36 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       form.reset();   /* the auth listener below does the rest */
     }, function(){ btn.disabled = false; showErr('#signErr', OFFLINE); });
   });
+  /* forgotten password: email a link that opens this page again; the answer is the same whether or not the
+     address has an account, so the form can't be used to find out who is registered */
+  $('#forgotForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = this;
+    if (!form.checkValidity()){ form.reportValidity(); return; }
+    if (!sb){ showErr('#forgotErr', 'Sign-in is unavailable right now. Try a demo account.'); return; }
+    var btn = $('#forgotSubmit'), email = $('#f-email').value.trim();
+    showErr('#forgotErr', ''); btn.disabled = true;
+    sb.auth.resetPasswordForEmail(email, { redirectTo:location.origin + location.pathname.replace(/index\.html$/, '') }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#forgotErr', authMsg(res.error)); return; }
+      form.reset();
+      $('#forgotDoneEmail').textContent = email; form.hidden = true; $('#forgotDone').hidden = false;
+    }, function(){ btn.disabled = false; showErr('#forgotErr', OFFLINE); });
+  });
+  $('#newPassForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = this;
+    if (!pwCheck(true, '#n-pass', '#pwRules2')){ showErr('#newPassErr', PW_MSG); $('#n-pass').focus(); return; }
+    if (!sb || !user){ showErr('#newPassErr', 'This reset link has expired. Ask for a new one.'); return; }
+    var btn = $('#newPassSubmit');
+    showErr('#newPassErr', ''); btn.disabled = true;
+    sb.auth.updateUser({ password:$('#n-pass').value }).then(function(res){
+      btn.disabled = false;
+      if (res.error){ showErr('#newPassErr', authMsg(res.error)); return; }
+      form.reset(); closeModal();
+      toast('Password changed. You’re signed in.');
+    }, function(){ btn.disabled = false; showErr('#newPassErr', OFFLINE); });
+  });
   $$('[data-demo]').forEach(function(b){ b.addEventListener('click', function(){
     var r = b.dataset.demo;
     signIn(r, r === 'developer' ? 'Signed in as a developer (demo).' : 'Signed in as an investor (demo). Listings are unlocked.');
@@ -2530,10 +2614,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     sb.from('platform_profiles').select('role,budget').eq('id', u.id).maybeSingle().then(function(res){
       if (!user || user.id !== u.id) return;
       var prof = res.data || {}, role = prof.role || (u.user_metadata || {}).role;
+      if (recovering) openModal('newpass');   /* from a reset email: ask for the new password before anything else */
       if (role !== 'developer' && role !== 'investor'){ toast('This account isn’t set up for the platform yet.'); return; }
       state.role = role; try { sessionStorage.removeItem('bm-role'); } catch(e){}
       setDemoOnly(false); applyAuth(); update();
-      if (!modal.hidden) closeModal();
+      if (!modal.hidden && !recovering) closeModal();
       if (role === 'developer') loadMine(); else loadPublished();
       loadMsgs();
       if (announce){
@@ -2543,9 +2628,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     }, function(){ toast(OFFLINE); });
   }
   if (sb) sb.auth.onAuthStateChange(function(ev, session){
+    if (ev === 'PASSWORD_RECOVERY') recovering = true;
     setTimeout(function(){   /* never call the client from inside its own callback */
       var u = session && session.user;
-      if (u && (!user || user.id !== u.id)){ var announce = !modal.hidden || fromEmail; fromEmail = false; enter(u, announce); }
+      if (u && (!user || user.id !== u.id)){ var announce = (!modal.hidden || fromEmail) && !recovering; fromEmail = false; enter(u, announce); }
+      else if (u && recovering && modal.hidden) openModal('newpass');
       else if (!u && user) leave();
     }, 0);
   });
@@ -3666,6 +3753,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'Password':'პაროლი','At least 8 characters':'მინიმუმ 8 სიმბოლო','One capital letter (A–Z)':'ერთი დიდი ასო (A–Z)','One number':'ერთი ციფრი','Show password':'პაროლის ჩვენება','Hide password':'პაროლის დამალვა',
     'Password needs at least 8 characters, a capital letter and a number.':'პაროლში უნდა იყოს მინიმუმ 8 სიმბოლო, ერთი დიდი ასო და ერთი ციფრი.','(8+ characters)':'(მინიმუმ 8 სიმბოლო)','We’ll email you a link to confirm your address.':'ელფოსტაზე გამოგიგზავნით ბმულს მისამართის დასადასტურებლად.',
     'Check your email':'შეამოწმე ელფოსტა','We sent a confirmation link to':'დადასტურების ბმული გავგზავნეთ მისამართზე','. Open it to finish creating your account.':'. გახსენი ის, რომ ანგარიშის შექმნა დაასრულო.','Got it':'გასაგებია',
+    'Forgot password?':'დაგავიწყდა პაროლი?','Reset your password':'პაროლის აღდგენა','Enter your account email. We’ll send a link to set a new password.':'შეიყვანე შენი ანგარიშის ელფოსტა. გამოგიგზავნით ბმულს ახალი პაროლის დასაყენებლად.',
+    'Send reset link':'ბმულის გაგზავნა','Back to sign in':'შესვლაზე დაბრუნება','If this email has an account, we sent a reset link to':'თუ ამ ელფოსტით ანგარიში არსებობს, აღდგენის ბმული გავგზავნეთ მისამართზე','. Open it to set a new password.':'. გახსენი ის და დააყენე ახალი პაროლი.',
+    'Set a new password':'ახალი პაროლის დაყენება','Choose a new password for your account.':'აირჩიე ახალი პაროლი შენი ანგარიშისთვის.','New password':'ახალი პაროლი','Save new password':'ახალი პაროლის შენახვა',
+    'Password changed. You’re signed in.':'პაროლი შეიცვალა. ანგარიშში ხარ.','This reset link has expired. Ask for a new one.':'აღდგენის ბმულს ვადა გაუვიდა. მოითხოვე ახალი.','Choose a password you haven’t used on this account.':'აირჩიე პაროლი, რომელიც ამ ანგარიშზე არ გამოგიყენებია.',
+    'Enter a 9-digit phone number. For a foreign number, start with + and the country code.':'შეიყვანე 9-ციფრიანი ნომერი. უცხოური ნომრისთვის დაიწყე +-ით და ქვეყნის კოდით.',
     'New here?':'ახალი ხარ?','Wrong email or password.':'ელფოსტა ან პაროლი არასწორია.','Confirm your email first. The link is in your inbox.':'ჯერ დაადასტურე ელფოსტა. ბმული შენს საფოსტო ყუთშია.',
     'This email is already registered. Sign in instead.':'ეს ელფოსტა უკვე დარეგისტრირებულია. შედი ანგარიშში.','Too many attempts. Try again in a few minutes.':'ზედმეტად ბევრი ცდა. სცადე რამდენიმე წუთში.',
     'Use a password with at least 8 characters.':'გამოიყენე მინიმუმ 8-სიმბოლოიანი პაროლი.','Something went wrong. Try again.':'რაღაც შეცდომა მოხდა. სცადე თავიდან.',
