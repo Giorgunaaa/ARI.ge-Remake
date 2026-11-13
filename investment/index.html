@@ -13,12 +13,10 @@
 <meta property="og:url" content="https://designhub.ge/investment/">
 <meta property="og:image" content="https://designhub.ge/investment/img/house.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 /* Georgian glyphs: Noto Sans Georgian drawn ~12% smaller so it matches the Latin faces optically */
-@font-face{font-family:"KA Sans";font-style:normal;font-weight:400 700;font-display:swap;size-adjust:88%;src:url(https://fonts.gstatic.com/s/notosansgeorgian/v49/PlIVFke5O6RzLfvNNVSitxkr76PRHBC4Ytyq-Gof7PUs4S7zcGyUkdjo.woff2) format("woff2");unicode-range:U+0589,U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+205A,U+2D00-2D2F,U+2E31}
+@font-face{font-family:"KA Sans";font-style:normal;font-weight:400 700;font-display:swap;size-adjust:88%;src:url(fonts/noto-sans-georgian-georgian.woff2) format("woff2");unicode-range:U+0589,U+10A0-10FF,U+1C90-1CBA,U+1CBD-1CBF,U+205A,U+2D00-2D2F,U+2E31}
 /* Layout: a one-screen Home with two entry doors; Developers and Investors are public info pages whose tools (listing form, search and listings) appear only after sign-in; a Platform page holds the flow diagram. Navy heroes over photos, white content bands in a 1180px track. */
 :root{
   --bg:#FFFFFF; --band:#F7F4EC; --card:#FFFFFF; --field:#FAF8F3;
@@ -2038,6 +2036,14 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       </ul>
       <p>We do not sell your data and we do not use it for third-party advertising.</p>
 
+      <h2>Legal grounds</h2>
+      <ul>
+        <li>Your account, listings and requests: to provide the platform under the terms you accept when you register.</li>
+        <li>Checking developers, listings and investors: our legitimate interest, and our members’, in a safe and accurate platform.</li>
+        <li>Records we must keep: our legal obligations.</li>
+        <li>Anything we ask your consent for: your consent, which you can withdraw at any time by writing to us.</li>
+      </ul>
+
       <h2>Who can see it</h2>
       <ul>
         <li>ARI staff who review listings and support deals.</li>
@@ -2045,6 +2051,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
         <li>A request an investor sends goes to ARI only. ARI shares an investor’s contact details with a developer only when arranging a viewing or a deal.</li>
         <li>Service providers that host the platform and its database for us. They process data only on our instructions.</li>
       </ul>
+
+      <h2>Where it is stored</h2>
+      <p>The platform’s database and uploaded files are hosted by Supabase, Inc. Its servers may be outside Georgia, so your data may be transferred abroad for this purpose only.</p>
 
       <h2>What is kept on your device</h2>
       <p>The site keeps your sign-in session, your language, saved listings, saved filters and unfinished listing drafts in your browser’s storage. We do not use advertising or tracking cookies.</p>
@@ -4292,6 +4301,13 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     'To show published listings to registered investors and to pass on your requests.':'გამოქვეყნებული განცხადებების დარეგისტრირებული ინვესტორებისთვის საჩვენებლად და შენი მოთხოვნების გადასაცემად.',
     'To contact you about your account, your listings or your requests.':'შენთან დასაკავშირებლად ანგარიშის, განცხადებების ან მოთხოვნების შესახებ.',
     'We do not sell your data and we do not use it for third-party advertising.':'შენს მონაცემებს არ ვყიდით და მესამე მხარის რეკლამისთვის არ ვიყენებთ.',
+    'Legal grounds':'სამართლებრივი საფუძველი',
+    'Your account, listings and requests: to provide the platform under the terms you accept when you register.':'შენი ანგარიში, განცხადებები და მოთხოვნები: პლატფორმის მომსახურების გაწევა იმ პირობებით, რომლებსაც რეგისტრაციისას ეთანხმები.',
+    'Checking developers, listings and investors: our legitimate interest, and our members’, in a safe and accurate platform.':'დეველოპერების, განცხადებებისა და ინვესტორების შემოწმება: ჩვენი და ჩვენი წევრების კანონიერი ინტერესი, რომ პლატფორმა უსაფრთხო და სანდო იყოს.',
+    'Records we must keep: our legal obligations.':'ჩანაწერები, რომელთა შენახვაც გვევალება: კანონით დაკისრებული ვალდებულება.',
+    'Anything we ask your consent for: your consent, which you can withdraw at any time by writing to us.':'ყველაფერი, რაზეც თანხმობას გთხოვთ: შენი თანხმობა, რომლის გამოხმობაც ნებისმიერ დროს შეგიძლია, თუ მოგვწერ.',
+    'Where it is stored':'სად ინახება',
+    'The platform’s database and uploaded files are hosted by Supabase, Inc. Its servers may be outside Georgia, so your data may be transferred abroad for this purpose only.':'პლატფორმის მონაცემთა ბაზა და ატვირთული ფაილები განთავსებულია Supabase, Inc.-ის სერვერებზე. ეს სერვერები შეიძლება საქართველოს გარეთ იყოს, ამიტომ შენი მონაცემები შეიძლება საზღვარგარეთ გადაიცეს, მხოლოდ ამ მიზნით.',
     'Who can see it':'ვინ ხედავს',
     'ARI staff who review listings and support deals.':'ARI-ის თანამშრომლები, რომლებიც ამოწმებენ განცხადებებს და გარიგებებს ეხმარებიან.',
     'Registered investors see published listings. They do not see a developer’s account details.':'დარეგისტრირებული ინვესტორები ხედავენ გამოქვეყნებულ განცხადებებს. დეველოპერის ანგარიშის მონაცემებს ისინი ვერ ხედავენ.',

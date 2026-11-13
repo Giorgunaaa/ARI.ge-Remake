@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ARI — სართულები</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;600;800&family=Noto+Serif+Georgian:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
   :root {
@@ -646,7 +645,7 @@ function closeFloor() {
 function setFvFloor(fl) { if (FV_FLOORS.includes(fl) && fl !== fvFloor) { fvFloor = fl; drawFloorView(); syncBuilding(fl); } }
 // -1-დან ზემოთ: ვხურავთ გეგმას და შენობაზე პირველ სართულზე ვბრუნდებით
 function upFromBase() { closeFloor(); go(order.indexOf(floors.findIndex(f => f.n === 1))); }
-// ბმული: /2/#3 — სართული 3, /2/#3-15 — ბინა №15
+// ბმული: /korpusimagalitze/#3 — სართული 3, /korpusimagalitze/#3-15 — ბინა №15
 function setHash() {
   const h = avOpen ? (isPark(avApt.fl) ? `#${avApt.fl}-${PARK[avApt.fl].spots[avApt.n][0]}` : isCom(avApt.fl) ? `#${avApt.fl}-s${avApt.n}` : `#${avApt.fl}-${aptNo(avApt.fl, avApt.n)}`) : fvOpen ? `#${fvFloor}` : '';
   history.replaceState(null, '', h || location.pathname);

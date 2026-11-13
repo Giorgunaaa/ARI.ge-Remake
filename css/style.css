@@ -241,6 +241,9 @@ body.nav-open { overflow: hidden; }
 .office-list svg { font-size: 1.2rem; color: var(--green); margin-top: 3px; }
 .office-list a:hover { color: var(--green); }
 .map { width: 100%; height: 240px; border: 0; border-radius: var(--radius-sm); margin-top: auto; }
+/* map waiting for a click: nothing from Google loads until then */
+.map-off { display: grid; place-content: center; justify-items: center; gap: 10px; padding: 20px; text-align: center; background: var(--cream); }
+.map-off small { max-width: 26em; color: var(--muted); font-size: .8rem; }
 @media (min-width: 768px) { .offices { grid-template-columns: 1fr 1fr; } }
 
 /* ---------- footer ---------- */

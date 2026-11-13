@@ -7,11 +7,9 @@
   <meta name="description" data-i18n-attr="content:meta.desc" content="">
   <meta name="theme-color" content="#f6f1e6">
   <link rel="icon" href="assets/img/ari-mark.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600&family=Noto+Serif+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-  <link rel="stylesheet" href="css/style.css?v=20261113b">
+  <link rel="stylesheet" href="css/style.css?v=20261113c">
 </head>
 <body>
   <main>
@@ -110,8 +108,10 @@
             <li><svg><use href="#i-mail"/></svg><a href="mailto:info@ari.ge">info@ari.ge</a></li>
             <li><svg><use href="#i-clock"/></svg><span data-i18n="hours"></span></li>
           </ul>
-          <iframe class="map" title="Tbilisi office map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q=95%20Lvovi%20St%2C%20Tbilisi&z=16&output=embed"></iframe>
+          <div class="map map-off" data-map-src="https://maps.google.com/maps?q=95%20Lvovi%20St%2C%20Tbilisi&z=16&output=embed" data-map-title="Tbilisi office map">
+            <button class="btn btn-primary" type="button"><svg><use href="#i-pin"/></svg><span data-i18n="map.show"></span></button>
+            <small data-i18n="map.note"></small>
+          </div>
         </article>
         <article class="card office">
           <h3 data-i18n="office.limassol"></h3>
@@ -121,8 +121,10 @@
             <li><svg><use href="#i-mail"/></svg><a href="mailto:info@cronaproperty.com">info@cronaproperty.com</a></li>
             <li><svg><use href="#i-clock"/></svg><span data-i18n="hours"></span></li>
           </ul>
-          <iframe class="map" title="Limassol office map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q=21%20Andrea%20Kariolou%2C%20Limassol&z=16&output=embed"></iframe>
+          <div class="map map-off" data-map-src="https://maps.google.com/maps?q=21%20Andrea%20Kariolou%2C%20Limassol&z=16&output=embed" data-map-title="Limassol office map">
+            <button class="btn btn-primary" type="button"><svg><use href="#i-pin"/></svg><span data-i18n="map.show"></span></button>
+            <small data-i18n="map.note"></small>
+          </div>
         </article>
       </div>
     </section>
@@ -130,8 +132,8 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="js/layout.js?v=20261021b"></script>
-  <script src="js/i18n.js?v=20261109"></script>
+  <script src="js/i18n.js?v=20261113"></script>
   <script src="js/projects.js?v=20261021b"></script>
-  <script src="js/main.js?v=20261109"></script>
+  <script src="js/main.js?v=20261113"></script>
 </body>
 </html>

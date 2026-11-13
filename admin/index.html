@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>ARI — ადმინი</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
 <!-- integrity: CDN-ზე შეცვლილ ფაილს ბრაუზერი არ გაუშვებს. ჰეში npm-ის პაკეტიდანაა; ვერსიის შეცვლისას ჰეშიც შეცვალე. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
         integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous"></script>
@@ -100,7 +99,7 @@
 
 <main>
   <div class="note" id="noConfig" hidden>
-    Supabase ჯერ არ არის დაკავშირებული. ჩაწერე Project URL და anon key ფაილში <code>2/sales.js</code> (ინსტრუქცია — README).
+    Supabase ჯერ არ არის დაკავშირებული. ჩაწერე Project URL და anon key ფაილში <code>korpusimagalitze/sales.js</code> (ინსტრუქცია — README).
   </div>
 
   <form id="login" hidden>
@@ -133,9 +132,9 @@
   </section>
 </main>
 
-<script src="../2/floorplan.js?v=20261021b"></script>
-<script src="../2/units.js?v=20261021b"></script>
-<script src="../2/sales.js?v=20261021b"></script>
+<script src="../korpusimagalitze/floorplan.js?v=20261021b"></script>
+<script src="../korpusimagalitze/units.js?v=20261021b"></script>
+<script src="../korpusimagalitze/sales.js?v=20261021b"></script>
 <script>
 // სხვა საიტის iframe-ში ადმინი არ ჩაირთვება (clickjacking): შესვლის ფორმა და სია მხოლოდ ამ სკრიპტით ჩნდება
 if (window.top !== window.self) throw new Error('admin is framed');
@@ -188,7 +187,7 @@ if (!Sales.configured) {
       rows.map(u => {
         const s = cur(u.id);
         return `<div class="row${u.id in edits ? ' changed' : ''}${s.status === 'reserved' ? ' is-res' : ''}${open.has(u.id) ? ' open' : ''}" data-id="${u.id}">
-          <div><a href="../2/#${u.link}" target="_blank">${u.name}</a><button type="button" class="rt${expired(s) ? ' late' : ''}">${rtLabel(s)}</button></div>
+          <div><a href="../korpusimagalitze/#${u.link}" target="_blank">${u.name}</a><button type="button" class="rt${expired(s) ? ' late' : ''}">${rtLabel(s)}</button></div>
           <span class="m">${u.type}</span>
           <span class="m">${u.fl}</span>
           <span class="m">${u.area ? u.area + ' მ²' : '—'}</span>

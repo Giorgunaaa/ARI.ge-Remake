@@ -344,5 +344,19 @@
     counters.forEach(function (c) { c.textContent = c.dataset.count; });
   }
 
+  /* ---------- office maps ---------- */
+
+  // Google Maps sets cookies and sees the visitor's address, so a map loads only when asked for.
+  document.querySelectorAll(".map-off").forEach(function (box) {
+    box.querySelector("button").addEventListener("click", function () {
+      var frame = document.createElement("iframe");
+      frame.className = "map";
+      frame.title = box.dataset.mapTitle;
+      frame.referrerPolicy = "no-referrer-when-downgrade";
+      frame.src = box.dataset.mapSrc;
+      box.replaceWith(frame);
+    });
+  });
+
   applyLang(lang);
 })();
