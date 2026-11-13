@@ -103,8 +103,12 @@ body.nav-open { overflow: hidden; }
 .hero { display: grid; gap: 24px; padding-top: 24px; padding-bottom: 8px; }
 .hero h1 { font-size: clamp(1.9rem, 6.4vw, 3.1rem); line-height: 1.25; margin-bottom: 16px; }
 .hero p { font-size: clamp(.95rem, 3.4vw, 1.05rem); color: var(--muted); margin-bottom: 26px; max-width: 32em; }
+/* hero photo: a plain picture, not a link */
+.hero-media { margin: 0; border-radius: 18px; overflow: hidden; aspect-ratio: 3 / 2; box-shadow: var(--shadow); }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; }
+
 @media (min-width: 900px) {
-  .hero { padding-top: 32px; padding-bottom: 16px; }
+  .hero { grid-template-columns: 1fr 1.05fr; align-items: center; gap: 56px; padding-top: 32px; padding-bottom: 16px; }
 }
 
 /* ---------- project map ---------- */
