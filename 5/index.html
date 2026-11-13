@@ -582,6 +582,13 @@ div.view[data-view="offers"] .sec{padding-block:clamp(28px,4vw,48px)}
 
 .card-owner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
 .card-owner .btn svg{width:16px;height:16px}
+.owner-acts{display:flex;align-items:center;gap:8px;flex:none}
+.card-owner .btn-del{width:38px;padding:0;color:var(--ink-2)}
+.my-card .card-owner .btn-del{width:34px;padding:0}
+.card-owner .btn-del:hover,.card-owner .btn-del:focus-visible{border-color:var(--bad);color:var(--bad)}
+.btn-danger{background:var(--bad);color:var(--card);border-color:var(--bad)}
+.btn-danger:hover{filter:brightness(.92)}
+.btn-danger[disabled]{opacity:.6;cursor:default}
 .my-card.is-edited{box-shadow:0 0 0 3px var(--gold-soft);border-color:var(--gold-line)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .modal-card.detail-card{width:min(100%,760px);padding:0}
@@ -1059,6 +1066,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     <symbol id="i-dl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></g></symbol>
     <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></g></symbol>
     <symbol id="i-handshake" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M2.5 11.5l4-4 3 1 2.5-1.5 3 .5 6.5 4"/><path d="M6.5 7.5l-4 4 6 6 1.5-1.5"/><path d="M21.5 11.5l-6 6-2-2"/><path d="M10 16l2 2 1.5-1.5M12 13.5l2.5 2.5M9.5 9.5l3.5 3.5"/></g></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/></g></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></g></symbol>
     <symbol id="i-trend" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></g></symbol>
   </defs>
@@ -1780,7 +1788,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                 <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$85,300</s><strong>$68,250</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $17,050</span><span>$1,050 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>65 m²</dd></div><div><dt>Floor</dt><dd>8 of 14</dd></div><div><dt>Ready</dt><dd>Q3 2027</dd></div></dl>
-              <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
+              <div class="card-owner"><span class="status st-pub" data-status>Published</span><span class="owner-acts"><button class="btn btn-outline btn-sm btn-del" type="button" data-del aria-label="Delete listing" title="Delete listing"><svg aria-hidden="true"><use href="#i-trash"/></svg></button><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></span></div>
               </div>
             </article>
           <article class="listing my-card" data-price="45000" data-discount="30" data-size="500">
@@ -1797,7 +1805,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                 <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$64,300</s><strong>$45,000</strong><span class="price-pct" title="Discount vs market price">−30%</span></div>
               <div class="price-meta"><span class="saving"><span>You save</span> $19,300</span><span>$90 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>500 m²</dd></div><div><dt>Plot</dt><dd>Residential</dd></div><div><dt>Ready</dt><dd>Q4 2027</dd></div></dl>
-              <div class="card-owner"><span class="status st-pub" data-status>Published</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
+              <div class="card-owner"><span class="status st-pub" data-status>Published</span><span class="owner-acts"><button class="btn btn-outline btn-sm btn-del" type="button" data-del aria-label="Delete listing" title="Delete listing"><svg aria-hidden="true"><use href="#i-trash"/></svg></button><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></span></div>
               </div>
             </article>
         </div>
@@ -1817,7 +1825,7 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
                 <div class="listing-price"><s class="was" title="Market price" aria-label="Market price">$270,000</s><strong>$216,000</strong><span class="price-pct" title="Discount vs market price">−20%</span></div>
                 <div class="price-meta"><span class="saving"><span>You save</span> $54,000</span><span>$1,800 / m²</span></div>
                 <dl class="specs"><div><dt>Size</dt><dd>120 m²</dd></div><div><dt>Floor</dt><dd>1 of 14</dd></div><div><dt>Ready</dt><dd>Q2 2027</dd></div></dl>
-              <div class="card-owner"><span class="status st-rev" data-status>In review</span><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></div>
+              <div class="card-owner"><span class="status st-rev" data-status>In review</span><span class="owner-acts"><button class="btn btn-outline btn-sm btn-del" type="button" data-del aria-label="Delete listing" title="Delete listing"><svg aria-hidden="true"><use href="#i-trash"/></svg></button><button class="btn btn-outline btn-sm" type="button" data-edit><svg aria-hidden="true"><use href="#i-edit"/></svg>Edit</button></span></div>
               </div>
             </article>
         </template>
@@ -2137,6 +2145,17 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       <p class="hint" style="margin:14px 0 16px">Changes go to ARI for a quick review before investors see them.</p>
       <div class="edit-btns"><button class="btn btn-outline" type="button" data-close-edit>Cancel</button><button class="btn btn-primary" type="submit">Save changes</button></div>
     </form>
+  </div>
+</div>
+
+<div class="modal" id="delModal" hidden role="dialog" aria-modal="true" aria-labelledby="delTitle">
+  <div class="modal-backdrop" data-close-del></div>
+  <div class="modal-card">
+    <button class="modal-x" type="button" data-close-del aria-label="Close">×</button>
+    <h3 id="delTitle">Delete this listing?</h3>
+    <p class="modal-sub" id="delWhat"></p>
+    <p class="hint" style="margin:0 0 18px">The listing, its photos and its plan are removed for good. Investors stop seeing it. This can’t be undone.</p>
+    <div class="edit-btns"><button class="btn btn-outline" type="button" data-close-del>Cancel</button><button class="btn btn-danger" type="button" id="delYes">Delete listing</button></div>
   </div>
 </div>
 
@@ -3104,6 +3123,46 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     toast('Changes sent to ARI for review (demo).');
   });
 
+  /* delete a listing card: asks first; a stored listing is removed from the database with its files */
+  var delCard = null;
+  function closeDel(){ $('#delModal').hidden = true; document.body.classList.remove('modal-open'); delCard = null; }
+  function countMine(){
+    var cards = $$('.preview-grid .my-card');
+    $('#statPub').textContent = String(cards.filter(function(c){ return c.querySelector('[data-status]').classList.contains('st-pub'); }).length);
+    $('#statRev').textContent = String(cards.filter(function(c){ return c.querySelector('[data-status]').classList.contains('st-rev'); }).length);
+    $('#mineEmpty').hidden = cards.length > 0;
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-del]');
+    if (b){
+      delCard = b.closest('.my-card');
+      $('#delWhat').textContent = delCard.querySelector('.loc').textContent.trim() + ' · ' + delCard.querySelector('.specs dd').textContent.trim() + ' · ' + delCard.querySelector('.listing-price strong').textContent.trim();
+      $('#delYes').disabled = false;
+      $('#delModal').hidden = false; document.body.classList.add('modal-open');
+      setTimeout(function(){ $('#delYes').focus(); }, 30);
+      return;
+    }
+    if (e.target.closest('[data-close-del]')) closeDel();
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('#delModal').hidden) closeDel(); });
+  $('#delYes').addEventListener('click', function(){
+    var c = delCard, btn = this; if (!c) return;
+    var row = user && MINE[c.dataset.id];
+    if (!row){   /* sample card: nothing is stored */
+      c.parentNode.removeChild(c); countMine(); closeDel(); toast('Listing deleted (demo).'); return;
+    }
+    var uid = user.id; btn.disabled = true;
+    sb.from('platform_listings').delete().eq('id', row.id).select('id').then(function(res){
+      if (res.error || !(res.data && res.data.length)) throw res.error || new Error('not deleted');
+      var files = (row.photos || []).concat(row.plan_path || []).filter(Boolean);
+      if (files.length) sb.storage.from(BUCKET).remove(files).then(null, function(){});
+      if (!user || user.id !== uid) return;
+      closeDel(); loadMine(); toast('Listing deleted.');
+    }).catch(function(){
+      btn.disabled = false; toast('Couldn’t delete the listing. Try again.');
+    });
+  });
+
   /* a stored listing: new price, discount and optionally a new first photo; any change goes back to review */
   function saveEdit(row, v){
     var f = $('#editFile').files && $('#editFile').files[0], store = sb.storage.from(BUCKET), photos = (row.photos || []).slice(), old = photos[0], fresh = null;
@@ -3660,6 +3719,9 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
     "Views":"ნახვა",
     "Leads":"მოთხოვნა",
     "Edit":"რედაქტირება",
+    "Delete listing":"განცხადების წაშლა","Delete this listing?":"წავშალოთ ეს განცხადება?",
+    "The listing, its photos and its plan are removed for good. Investors stop seeing it. This can’t be undone.":"განცხადება, მისი ფოტოები და გეგმა სამუდამოდ წაიშლება. ინვესტორები მას ვეღარ ნახავენ. ამის გაუქმება შეუძლებელია.",
+    "Listing deleted.":"განცხადება წაიშალა.","Listing deleted (demo).":"განცხადება წაიშალა (დემო).","Couldn’t delete the listing. Try again.":"განცხადება ვერ წაიშალა. სცადე თავიდან.",
     "Saburtalo · 65 m² · Floor 8":"საბურთალო · 65 m² · მე-8 სართული",
     "Tskneti · 500 m²":"წყნეთი · 500 m²",
     "Didi Digomi · 78 m² · Floor 4":"დიდი დიღომი · 78 m² · მე-4 სართული",
