@@ -2205,15 +2205,16 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   window.addEventListener('hashchange', route);
 
   /* Opened straight on an inner page (a shared link, a bookmark, a typed address): Back should reach Home before it
-     leaves the site. The Home entry is put under the page at the first touch or key press, because browsers skip
+     leaves the site. The Home entry is put under the page at the first tap or key press, because browsers skip
      entries a page adds on its own. Every entry the site has shown is marked, so a refresh never adds Home twice. */
   (function(){
     function seen(){ try { if (!(history.state && history.state.ari)) history.replaceState({ ari:1 }, ''); } catch(e){} }
     var v = location.hash.slice(1), fresh = !(history.state && history.state.ari);
     window.addEventListener('hashchange', seen);
     if (!fresh || fromEmail || v === 'home' || views.indexOf(v) < 0){ if (!fromEmail) seen(); return; }
-    var evs = ['pointerdown', 'touchstart', 'keydown'];
+    var evs = ['touchend', 'click', 'keydown'];
     function seed(){
+      if (navigator.userActivation && !navigator.userActivation.isActive) return;   /* a scroll is not a touch the browser counts */
       evs.forEach(function(n){ window.removeEventListener(n, seed, true); });
       var h = location.hash, base = location.pathname + location.search;
       if (history.state && history.state.ari) return;
@@ -4132,6 +4133,11 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       e.preventDefault();
       if (fxBusy) return;
       fxBusy = true;
+      /* the new page goes into the browser history now, inside the tap itself: iPhone browsers skip, on Back, a page
+         that was added later without a touch, and Back from the opened page would then leave the site */
+      var href = door.getAttribute('href'), pushed = false, switched = false;
+      try { history.pushState({ ari:1 }, '', href); pushed = true; } catch(err){}
+      var go = function(){ if (switched) return; switched = true; if (!pushed) location.hash = href; route(); };
       var home = $('.home2'), from = door.getBoundingClientRect(), to = home.getBoundingClientRect();
       /* phones (photos stacked): the same move as on desktop, turned vertical. The tapped photo opens out from
          its own place until it fills both photos (the upper one downwards, the lower one upwards). The picture
@@ -4170,12 +4176,12 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
       grow.onfinish = function(){
         if (beforeSwitch) beforeSwitch();
         document.body.classList.add('fx-enter');
-        location.hash = door.getAttribute('href'); route();
+        go();
         var out = fx.animate([{ opacity:1 }, { opacity:0 }], { duration:560, delay:60, easing:'ease', fill:'forwards' });
         out.onfinish = finish; out.oncancel = finish;
       };
       grow.oncancel = finish;
-      setTimeout(function(){ if (!fx.isConnected) return; if (location.hash !== door.getAttribute('href')){ location.hash = door.getAttribute('href'); route(); } finish(); }, 2600);   /* never leave the cover stuck */
+      setTimeout(function(){ if (!fx.isConnected) return; go(); finish(); }, 2600);   /* never leave the cover stuck */
     });
   });
 
