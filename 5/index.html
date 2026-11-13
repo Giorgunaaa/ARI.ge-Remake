@@ -2204,6 +2204,25 @@ html[lang="ka"] .btn{white-space:normal;text-align:center;line-height:1.25}
   }
   window.addEventListener('hashchange', route);
 
+  /* Opened straight on an inner page (a shared link, a bookmark, a typed address): Back should reach Home before it
+     leaves the site. The Home entry is put under the page at the first touch or key press, because browsers skip
+     entries a page adds on its own. Every entry the site has shown is marked, so a refresh never adds Home twice. */
+  (function(){
+    function seen(){ try { if (!(history.state && history.state.ari)) history.replaceState({ ari:1 }, ''); } catch(e){} }
+    var v = location.hash.slice(1), fresh = !(history.state && history.state.ari);
+    window.addEventListener('hashchange', seen);
+    if (!fresh || fromEmail || v === 'home' || views.indexOf(v) < 0){ if (!fromEmail) seen(); return; }
+    var evs = ['pointerdown', 'touchstart', 'keydown'];
+    function seed(){
+      evs.forEach(function(n){ window.removeEventListener(n, seed, true); });
+      var h = location.hash, base = location.pathname + location.search;
+      if (history.state && history.state.ari) return;
+      if (!h || h === '#home'){ seen(); return; }
+      try { history.replaceState({ ari:1 }, '', base + '#home'); history.pushState({ ari:1 }, '', base + h); } catch(e){}
+    }
+    evs.forEach(function(n){ window.addEventListener(n, seed, true); });
+  })();
+
   /* ---------- Phone menu: the header button names the current page and opens the list of pages ---------- */
   var PAGE_NAME = { home:'Home', developers:'For developers', investors:'For investors', offers:'My offers', saved:'My offers', platform:'How the platform works' };
   function closeMenu(){ $('#menuPanel').hidden = true; $('#menuBack').hidden = true; $('#menuBtn').setAttribute('aria-expanded', 'false'); }
